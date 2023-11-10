@@ -35,7 +35,7 @@ def main():
     reader = vtkHDFReader()
     reader.SetFileName(fn)
     reader.Update()
-    print('number of steps: ', reader.GetNumberOfSteps())
+    print('Number of steps: ', reader.GetNumberOfSteps())
     polydata = reader.GetOutput()
 
     # Render the dataset
@@ -63,6 +63,7 @@ def main():
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
     iren.CreateRepeatingTimer(50)
+
     # Add the animation callback
     observer = AnimationObserver(iren, reader)
     iren.AddObserver('TimerEvent', observer)
@@ -137,8 +138,8 @@ class AnimationObserver(object):
         self.reader = reader
 
     def __call__(self, caller, ev):
-        x = 0 if (self.reader.GetStep() == self.reader.GetNumberOfSteps() - 1) else self.reader.GetStep() + 1
-        self.reader.SetStep(x)
+        step = 0 if (self.reader.GetStep() == self.reader.GetNumberOfSteps() - 1) else self.reader.GetStep() + 1
+        self.reader.SetStep(step)
         print('Current step: ', self.reader.GetStep())
         self.reader.Update()
         self.interactor.Render()
