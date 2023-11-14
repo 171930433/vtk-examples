@@ -31,14 +31,14 @@ def main():
 
     colors = vtkNamedColors()
 
-    # Read the dataset
+    # Read the dataset.
     reader = vtkHDFReader()
     reader.SetFileName(fn)
     reader.Update()
     print('Number of steps: ', reader.GetNumberOfSteps())
     polydata = reader.GetOutput()
 
-    # Render the dataset
+    # Render the dataset.
     mapper = vtkPolyDataMapper()
     mapper.SetInputData(polydata)
     mapper.SetLookupTable(get_ctf())
@@ -59,14 +59,18 @@ def main():
     ren_win.SetSize(1024, 512)
     ren_win.Render()
 
-    # Add the interactor
+    # Add the interactor.
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
-    iren.CreateRepeatingTimer(50)
 
-    # Add the animation callback
+    # Add the animation callback.
     observer = AnimationObserver(iren, reader)
+
+    # You must initialize the vtkRenderWindowInteractor
+    # before adding the observer and setting the repeating timer.
+    iren.Initialize()
     iren.AddObserver('TimerEvent', observer)
+    iren.CreateRepeatingTimer(50)
 
     i_style = vtkInteractorStyleTrackballCamera()
     iren.SetInteractorStyle(i_style)
