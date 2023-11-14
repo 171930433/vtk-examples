@@ -20,8 +20,9 @@
 namespace {
 vtkNew<vtkDiscretizableColorTransferFunction> GetCTF();
 
-void Animate(vtkObject* caller, unsigned long eid, void* clientdata,
-             void* calldata);
+void Animate(vtkObject* caller, unsigned long /*eid*/, void* clientdata,
+             void* /*calldata*/);
+
 } // namespace
 
 int main(int ac, char* av[])
@@ -69,9 +70,12 @@ int main(int ac, char* av[])
 
   // Add the animation callback.
   vtkNew<vtkCallbackCommand> command;
-  command->SetCallback(&Animate);
+  command->SetCallback(Animate);
   command->SetClientData(reader);
 
+  // You must initialize the vtkRenderWindowInteractor
+  // before adding the observer and setting the repeating timer.
+  iren->Initialize();
   iren->AddObserver(vtkCommand::TimerEvent, command);
   iren->CreateRepeatingTimer(50);
 
@@ -144,8 +148,8 @@ vtkNew<vtkDiscretizableColorTransferFunction> GetCTF()
   return ctf;
 }
 
-void Animate(vtkObject* caller, unsigned long eid, void* clientdata,
-             void* calldata)
+void Animate(vtkObject* caller, unsigned long /*eid*/, void* clientdata,
+             void* /*calldata*/)
 {
   vtkRenderWindowInteractor* interactor =
       vtkRenderWindowInteractor::SafeDownCast(caller);
