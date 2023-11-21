@@ -33,14 +33,14 @@ def get_program_parameters(argv):
 
     parser.add_argument('file_name', help='The path to the XML file e.g Fast.xml.')
     parser.add_argument('-d', action='store_true', dest='discretize', help='Discretize the colormap.')
-    parser.add_argument('-n', dest='table_size', default=None, type=int,
+    parser.add_argument('-s', dest='size', default=None, type=int,
                         help='Specify the size of the colormap.')
     parser.add_argument('-g', dest='generate_function', default=None,
                         help='Generate code for the color transfer function,'
                              ' specify the desired language one of: Cxx, Python.')
 
     args = parser.parse_args()
-    return args.file_name, args.discretize, args.table_size, args.generate_function
+    return args.file_name, args.discretize, args.size, args.generate_function
 
 
 def main(file_name, discretize, table_size, generate_function):
@@ -55,14 +55,11 @@ def main(file_name, discretize, table_size, generate_function):
         print('Please enter a path to the XML file.')
         return
     parameters = parse_xml(fn_path)
-    # Do some checks.
-    if len(parameters['data_values']) != len(parameters['color_values']):
-        sys.exit('The data values length must be the same as colors.')
 
     if generate_function is not None:
         generate_function = generate_function.lower()
         available_languages = {k.lower(): k for k in ['Cxx', 'Python']}
-        available_languages.update({'cpp': 'Cxx', 'c++': 'Cxx'})
+        available_languages.update({'cpp': 'Cxx', 'c++': 'Cxx', 'py': 'Python'})
         if generate_function not in available_languages:
             print(f'The language: {generate_function} is not available.')
             tmp = ', '.join(sorted([lang for lang in set(available_languages.values())]))
@@ -73,12 +70,15 @@ def main(file_name, discretize, table_size, generate_function):
     else:
         language = None
 
-    ctf = make_ctf(parameters, discretize, table_size)
+    # There is just one entry in the parameters dict.
+    colormap_name = list(parameters.keys())[0]
+    ctf = make_ctf(parameters[colormap_name], discretize, table_size)
+
     if language is not None and language in ['Cxx', 'Python']:
         if language == 'Python':
-            generate_ctf_python(parameters, discretize, table_size)
+            generate_ctf_python(parameters[colormap_name], discretize, table_size)
         else:
-            generate_ctf_cpp(parameters, discretize, table_size)
+            generate_ctf_cpp(parameters[colormap_name], discretize, table_size)
 
     colors = vtkNamedColors()
     colors.SetColor('ParaViewBkg', 82, 87, 110, 255)
@@ -92,13 +92,15 @@ def main(file_name, discretize, table_size, generate_function):
     cone.SetDirection(0, 1, 0)
     cone.SetHeight(1)
     cone.Update()
+
+    # bounds = sphere.GetOutput().GetBounds()
     bounds = cone.GetOutput().GetBounds()
 
     elevation_filter = vtkElevationFilter()
     elevation_filter.SetLowPoint(0, bounds[2], 0)
     elevation_filter.SetHighPoint(0, bounds[3], 0)
-    elevation_filter.SetInputConnection(cone.GetOutputPort())
     # elevation_filter.SetInputConnection(sphere.GetOutputPort())
+    elevation_filter.SetInputConnection(cone.GetOutputPort())
 
     mapper = vtkPolyDataMapper()
     mapper.SetInputConnection(elevation_filter.GetOutputPort())
@@ -108,7 +110,6 @@ def main(file_name, discretize, table_size, generate_function):
 
     actor = vtkActor()
     actor.SetMapper(mapper)
-    # actor.GetProperty().SetDiffuseColor(colors.GetColor3d('bisque'))
 
     # Visualize
     ren = vtkRenderer()
@@ -140,36 +141,65 @@ def parse_xml(fn_path):
     """
     with open(fn_path) as data_file:
         xml_doc = etree.parse(data_file)
-    data_values = list()
-    color_values = list()
-    # opacity_values = list()
-    nan = None
-    above = None
-    below = None
+
+    def extract(d):
+        """
+        Pull out the data we need.
+
+        :param d: The parsed XML data.
+        :return: The extracted data.
+        """
+        color_map_details = dict()
+        data_values = list()
+        color_values = list()
+        opacity_values = list()
+        nan = None
+        above = None
+        below = None
+        if d is not None:
+            color_map_details = dict(d.attrib)
+            if 'space' in color_map_details:
+                # Some XML files use space instead of interpolation space.
+                if color_map_details['space'].lower() not in ['rgb', 'hsv']:
+                    color_map_details['interpolationspace'] = color_map_details['space']
+                    # Assume RGB
+                    color_map_details['space'] = 'RGB'
+        for pt in d.findall('.//Point'):
+            # "o" is opacity it (along with "cms" and "isMoT") are ignored.
+            # "x" is the scalar value associated with the color (specified by "r", "g", and "b").
+            data_values.append(pt.attrib['x'])
+            color_values.append((pt.attrib['r'], pt.attrib['g'], pt.attrib['b']))
+            if pt.attrib['o']:
+                opacity_values.append(pt.attrib['o'])
+        val = d.find('.//NaN')
+        if val is not None:
+            nan = (val.attrib['r'], val.attrib['g'], val.attrib['b'])
+        val = d.find('.//Above')
+        if val is not None:
+            above = (val.attrib['r'], val.attrib['g'], val.attrib['b'])
+        val = d.find('.//Below')
+        if val is not None:
+            below = (val.attrib['r'], val.attrib['g'], val.attrib['b'])
+        return {'color_map_details': color_map_details, 'data_values': data_values,
+                'color_values': color_values, 'opacity_values': opacity_values, 'NaN': nan, 'Above': above,
+                'Below': below}
 
     s = xml_doc.getroot().find('ColorMap')
-    if s is not None:
-        color_map_details = dict(s.attrib)
-    else:
-        color_map_details = None
+    if s is None:
         sys.exit('The attribute "ColorMap" is not found.')
-    for s in xml_doc.getroot().findall('.//Point'):
-        # "o" is opacity it (along with "cms" and "isMoT") are ignored.
-        # "x" is the scalar value associated with the color (specified by "r", "g", and "b").
-        data_values.append(s.attrib['x'])
-        color_values.append((s.attrib['r'], s.attrib['g'], s.attrib['b']))
-        # opacity_values.append(s.attrib['o'])
-    s = xml_doc.getroot().find('.//NaN')
-    if s is not None:
-        nan = (s.attrib['r'], s.attrib['g'], s.attrib['b'])
-    s = xml_doc.getroot().find('.//Above')
-    if s is not None:
-        above = (s.attrib['r'], s.attrib['g'], s.attrib['b'])
-    s = xml_doc.getroot().find('.//Below')
-    if s is not None:
-        below = (s.attrib['r'], s.attrib['g'], s.attrib['b'])
-    return {'path': fn_path.name, 'color_map_details': color_map_details, 'data_values': data_values,
-            'color_values': color_values, 'NaN': nan, 'Above': above, 'Below': below}
+    res = dict()
+    parameters = extract(s)
+    parameters['path'] = fn_path.name
+    cm_name = parameters['color_map_details']['name']
+    # Do some checks.
+    if cm_name is not None:
+        if len(parameters['data_values']) != len(parameters['color_values']):
+            sys.exit(f'{parameters["path"]}: The data values length must be the same as colors.')
+        if len(parameters['opacity_values']) > 0:
+            if len(parameters['opacity_values']) != len(parameters['color_values']):
+                sys.exit(f'{parameters["path"]}: The opacity values length must be the same as colors.')
+        res[cm_name] = parameters
+    return res
 
 
 def make_ctf(parameters, discretize, table_size=None):
@@ -189,6 +219,8 @@ def make_ctf(parameters, discretize, table_size=None):
         if interp_space == 'hsv':
             ctf.SetColorSpaceToHSV()
         elif interp_space == 'lab':
+            ctf.SetColorSpaceToLab()
+        elif interp_space == 'cielab':
             ctf.SetColorSpaceToLab()
         elif interp_space == 'ciede2000':
             ctf.SetColorSpaceToLabCIEDE2000()
@@ -251,7 +283,7 @@ def make_ctf(parameters, discretize, table_size=None):
 
 def generate_ctf_python(parameters, discretize, table_size=None):
     """
-    Generate a function do the ctf.
+    Generate a function for the ctf.
 
     :param parameters: The parameters.
     :param discretize: True if the values are to be mapped after discretization.
@@ -264,8 +296,14 @@ def generate_ctf_python(parameters, discretize, table_size=None):
     if 'name' in parameters['color_map_details']:
         comment += f' name: {parameters["color_map_details"]["name"]},'
     if 'creator' in parameters['color_map_details']:
-        comment += f' creator: {parameters["color_map_details"]["creator"]},'
-    comment += f' file name: {parameters["path"]}'
+        comment += f' creator: {parameters["color_map_details"]["creator"]}'
+    if 'interpolationspace' in parameters['color_map_details']:
+        comment += f'\n{indent}# interpolationspace: {parameters["color_map_details"]["interpolationspace"]},'
+    if 'interpolationtype' in parameters['color_map_details']:
+        comment += f' interpolationtype: {parameters["color_map_details"]["interpolationtype"]},'
+    if 'space' in parameters['color_map_details']:
+        comment += f' space: {parameters["color_map_details"]["space"]}'
+    comment += f'\n{indent}# file name: {parameters["path"]}\n'
 
     s = ['', f'def get_ctf():', comment, f'{indent}ctf = vtkDiscretizableColorTransferFunction()', '']
 
@@ -275,6 +313,8 @@ def generate_ctf_python(parameters, discretize, table_size=None):
         if interp_space == 'hsv':
             s.append(f'{indent}ctf.SetColorSpaceToHSV()')
         elif interp_space == 'lab':
+            s.append(f'{indent}ctf.SetColorSpaceToLab()')
+        elif interp_space == 'cielab':
             s.append(f'{indent}ctf.SetColorSpaceToLab()')
         elif interp_space == 'ciede2000':
             s.append(f'{indent}ctf.SetColorSpaceToLabCIEDE2000()')
@@ -344,7 +384,7 @@ def generate_ctf_python(parameters, discretize, table_size=None):
 
 def generate_ctf_cpp(parameters, discretize, table_size=None):
     """
-    Generate a function do the ctf.
+    Generate a function for the ctf.
 
     :param parameters: The parameters.
     :param discretize: True if the values are to be mapped after discretization.
@@ -357,8 +397,14 @@ def generate_ctf_cpp(parameters, discretize, table_size=None):
     if 'name' in parameters['color_map_details']:
         comment += f' name: {parameters["color_map_details"]["name"]},'
     if 'creator' in parameters['color_map_details']:
-        comment += f' creator: {parameters["color_map_details"]["creator"]},'
-    comment += f' file name: {parameters["path"]}'
+        comment += f' creator: {parameters["color_map_details"]["creator"]}'
+    if 'interpolationspace' in parameters['color_map_details']:
+        comment += f'\n{indent}// interpolationspace: {parameters["color_map_details"]["interpolationspace"]},'
+    if 'interpolationtype' in parameters['color_map_details']:
+        comment += f' interpolationtype: {parameters["color_map_details"]["interpolationtype"]},'
+    if 'space' in parameters['color_map_details']:
+        comment += f' space: {parameters["color_map_details"]["space"]}'
+    comment += f'\n{indent}// file name: {parameters["path"]}\n'
 
     s = ['', f'vtkNew<vtkDiscretizableColorTransferFunction> getCTF()', '{', comment,
          f'{indent}vtkNew<vtkDiscretizableColorTransferFunction> ctf;', '']
@@ -369,6 +415,8 @@ def generate_ctf_cpp(parameters, discretize, table_size=None):
         if interp_space == 'hsv':
             s.append(f'{indent}ctf->SetColorSpaceToHSV();')
         elif interp_space == 'lab':
+            s.append(f'{indent}ctf->SetColorSpaceToLab();')
+        elif interp_space == 'cielab':
             s.append(f'{indent}ctf->SetColorSpaceToLab();')
         elif interp_space == 'ciede2000':
             s.append(f'{indent}ctf->SetColorSpaceToLabCIEDE2000();')
