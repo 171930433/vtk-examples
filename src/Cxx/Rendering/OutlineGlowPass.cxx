@@ -10,6 +10,8 @@
 #include <vtkRenderStepsPass.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkSmartPointer.h>
+#include <vtkVersion.h>
 
 #include <iomanip>
 #include <iostream>

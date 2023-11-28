@@ -14,6 +14,7 @@
 #include <vtkRenderer.h>
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
+#include <vtkVersion.h>
 
 #include <array>
 #include <iostream>
@@ -49,7 +50,6 @@ BarChartQt::BarChartQt(QWidget* parent)
 #else
   this->ui->qvtkWidget->SetRenderWindow(renderWindow);
 #endif
-
   vtkNew<vtkNamedColors> colors;
   vtkColor3d backgroundColor = colors->GetColor3d("Seashell");
   vtkColor3d axisColor = colors->GetColor3d("Black");

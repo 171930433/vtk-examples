@@ -13,6 +13,7 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
 #include <vtkTable.h>
+#include <vtkVersion.h>
 
 #include <sstream>
 
