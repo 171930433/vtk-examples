@@ -16,7 +16,7 @@ A good initial source for color maps is: [SciVisColor](https://sciviscolor.org/)
 **Note:** 
 
 - The XML parser is [lxml](https://lxml.de/)
-- Currently the parsing only works for XML colormaps with no Section key.
+- Currently, the parsing only works for XML colormaps with no Section key.
 
 Further information:
 

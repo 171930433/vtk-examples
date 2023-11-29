@@ -458,7 +458,7 @@ def generate_ctf_cpp(parameters, discretize, table_size=None):
         comment += f' space: {parameters["color_map_details"]["space"]}'
     comment += f'\n{indent}// file name: {parameters["path"]}\n'
 
-    s = ['', f'vtkNew<vtkDiscretizableColorTransferFunction> getCTF()', '{', comment,
+    s = ['', f'vtkNew<vtkDiscretizableColorTransferFunction> GetCTF()', '{', comment,
          f'{indent}vtkNew<vtkDiscretizableColorTransferFunction> ctf;', '']
 
     interp_space = parameters['color_map_details'].get('interpolationspace', None)
