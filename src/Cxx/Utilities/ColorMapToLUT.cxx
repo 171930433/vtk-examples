@@ -15,7 +15,7 @@
 #include <array>
 
 namespace {
-vtkNew<vtkDiscretizableColorTransferFunction> getCTF();
+vtkNew<vtkDiscretizableColorTransferFunction> GetCTF();
 
 }
 
@@ -55,7 +55,7 @@ int main(int, char*[])
   elevation_filter->SetInputConnection(cone->GetOutputPort());
   // elevation_filter->SetInputConnection(sphere->GetOutputPort());
 
-  auto ctf = getCTF();
+  auto ctf = GetCTF();
 
   vtkNew<vtkPolyDataMapper> mapper;
   mapper->SetInputConnection(elevation_filter->GetOutputPort());
@@ -75,7 +75,7 @@ int main(int, char*[])
 }
 
 namespace {
-vtkNew<vtkDiscretizableColorTransferFunction> getCTF()
+vtkNew<vtkDiscretizableColorTransferFunction> GetCTF()
 {
   // name: Fast, creator: Francesca Samsel
   // interpolationspace: RGB, space: rgb

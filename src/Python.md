@@ -379,6 +379,7 @@ This section includes vtkUnstructuredGrid.
 [LUTUtilities](/Python/Utilities/LUTUtilities) | A utility class for vtkLookupTable allowing you to output the table contents or to compare tables.
 [MultipleRenderWindows](/Python/Visualization/MultipleRenderWindows) | Multiple Render Windows.
 [MultipleViewports](/Python/Visualization/MultipleViewports) | Multiple Viewports.
+[RescaleReverseLUT](/Python/Utilities/RescaleReverseLUT) | Demonstrate how to adjust a colormap so that the colormap scalar range matches the scalar range on the object. You can optionally reverse the colors.
 [ResetCameraOrientation](/Python/Utilities/ResetCameraOrientation) | Reset camera orientation to a previously saved orientation.
 [SaveSceneToFieldData](/Python/Utilities/SaveSceneToFieldData) | Save a vtkCamera's state in a vtkDataSet's vtkFieldData and restore it.
 [SaveSceneToFile](/Python/Utilities/SaveSceneToFile) | Save a vtkCamera's state in a file and restore it.
