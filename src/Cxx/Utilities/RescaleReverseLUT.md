@@ -1,6 +1,6 @@
 ### Description
 
-This example shows how to adjust a colormap so that the colormap scalar range matches the scalar range on the object. This is done by rescaling and or reversing the control points in the colormap.
+This example shows how to adjust a colormap so that the colormap scalar range matches the scalar range on the object. This is done by adjusting the colormap so that the colormap scalar range matches the scalar range of the object by rescaling the control points and, optionally, reversing the order of the colors.
 
 Of course, if you are generating the scalars, it may be easier to just change the scalar range of your filter. However, this may not be possible in some cases.
 
