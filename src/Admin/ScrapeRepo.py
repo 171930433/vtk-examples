@@ -643,6 +643,12 @@ def get_example_paths(src_path, available_languages, example_paths):
                 if vv in example_paths[lang]:
                     example_paths[lang].pop(vv)
 
+# check if example is excluded
+def check_excluded(exclusion_list, example_name):
+    for elem in exclusion_list:
+        if elem == example_name + '\n':
+            return True
+    return False
 
 def make_markdown_example_page(example_paths, available_languages, src_path, doc_path,
                                repo_name, web_repo_url, vtk_modules_cache,
@@ -670,6 +676,11 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
     cmake_qt_template = src_path / '/'.join(['Admin', 'VTKQtCMakeLists'])
     cmake_template = src_path / '/'.join(['Admin', 'VTKCMakeLists'])
     module_prefix = 'VTK::'
+
+    #parse WASM exclusion list
+    with open(src_path / '/'.join(['Admin', 'WASM', 'exclude_wasm.txt']), 'r') as exclude:
+        excluded_examples = exclude.readlines()
+
     for lang in example_paths:
         for source_path in example_paths[lang]:
             other_languages = list()
@@ -691,14 +702,65 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                 if baseline_path.is_file():
                     image_url = '/'.join([web_repo_url, 'blob/gh-pages/src/Testing/Baseline', parts[-3], parts[-2],
                                           'Test' + source_path.stem + '.png?raw=true'])
-                    # href to open image in new tab
-                    md_file.write('<a href="' + image_url + ' target="_blank">' + '\n')
-                    md_file.write(
-                        '<img style="border:2px solid beige;float:center" src="' +
-                        image_url + '" width="256" />' + '\n')
-                    md_file.write('</a>' + '\n')
-                    md_file.write('<hr>\n')
-                    md_file.write('\n')
+                    if lang == 'Cxx' and not check_excluded(excluded_examples, source_path.stem):
+                        # href to open image in new tab
+                        md_file.write('''<button id="screenshot-button" class="wasm-tab" disabled>Screenshot</button><button id="wasm-button" class="wasm-tab">Interactive example</button><hr style="margin-top: 10px; margin-bottom: 10px;"><div id="screenshot-div"><a href="''' + image_url + ' target="_blank">' + '\n')
+                        md_file.write(
+                            '<img style="border:2px solid beige;float:center" src="' +
+                            image_url + '" width="256" />' + '\n')
+                        md_file.write('</a></div>' + '\n')
+
+                        # wasmified example
+                        md_file.write('''<div id="wasm-div" style="display: none;">
+                                      <button id="reload-wasm-button" class="wasm-button" style="display: inline;">Reload example</button>
+                                      <button id="open-wasm-button" class="wasm-button" style="display: inline;">Open in new tab</button>''')
+                        md_file.write('<iframe id="frame" src="about:blank" style="width: 80vw; height: 80vh; border: medium;"></iframe></div>\n')
+                        md_file.write('''<script>
+                                      var btn_screenshot = document.getElementById("screenshot-button");
+                                      var btn_wasm = document.getElementById("wasm-button");
+                                      var btn_reload = document.getElementById("reload-wasm-button");
+                                      var btn_open = document.getElementById("open-wasm-button");
+                                      var frame = document.getElementById("frame");
+                                      var wasm = document.getElementById("wasm-div");
+                                      var img = document.getElementById("screenshot-div");
+                                      btn_screenshot.onclick = function() {
+                                          img.style.display = "block";
+                                          wasm.style.display = "none";
+                                          frame.src = "about:blank";
+                                          btn_screenshot.disabled = true;
+                                          btn_wasm.disabled = false;
+                                        }
+                                      btn_wasm.onclick = function () {
+                                          img.style.display = "none";
+                                          wasm.style.display = "block";
+                                          frame.src = \'https://vtk.org/files/examples/'''
+                                                + source_path.stem + '''/index.html\',\'_blank\';
+                                          btn_screenshot.disabled = false;
+                                          btn_wasm.disabled = true;
+                                      }
+                                      btn_reload.onclick = function() {
+                                          frame.src = frame.src;
+                                      }
+                                      btn_open.onclick = function(){
+                                        window.open(\'https://vtk.org/files/examples/'''
+                                              + source_path.stem + '''/index.html\', "_blank");
+                                        img.style.display = "block";
+                                        wasm.style.display = "none";
+                                        frame.src = "about:blank";
+                                        btn_screenshot.disabled = true;
+                                        btn_wasm.disabled = false;
+                                      } 
+                        </script>\n''')
+                        md_file.write('<hr>\n')
+                        md_file.write('\n')
+
+                    else:
+                        # href to open image in new tab
+                        md_file.write('<a href="' + image_url + ' target="_blank">' + '\n')
+                        md_file.write(
+                            '<img style="border:2px solid beige;float:center" src="' +
+                            image_url + '" width="256" />' + '\n')
+                        md_file.write('</a>' + '\n')
 
                 description_path = src_path / '/'.join([parts[-3], parts[-2], source_path.stem + ".md"])
                 # Add a description if a .md file exists for the example
@@ -850,6 +912,51 @@ def make_instruction_pages(web_repo_url, web_site_url, site_repo_url, src_path, 
         for line in lines:
             ofh.write(line)
 
+def make_wasm_instruction_pages(web_repo_url, web_site_url, site_repo_url, src_path, doc_path, from_file,
+                           to_file):
+    """
+    Make the instruction pages. The keys in the dictionary patterns are used to replace the
+    corresponding keys in the instructions.
+
+    :param web_repo_url: The web repository URL.
+    :param web_site_url: The web site URL.
+    :param site_repo_url: The URL corresponding to the source files repository.
+    :param src_path: Path to the src folder e.g. vtk-examples/src.
+    :param doc_path: Usually 'docs'.
+    :param from_file: The file to copy/edit
+    :param to_file: The save file name.
+    :return:
+    """
+    src = src_path / '/'.join(['WASM', from_file])
+    dest = doc_path / '/'.join(['WASM', to_file])
+
+    patterns = {'__BLOB__': site_repo_url + '/blob/master',
+                '__TREE__': site_repo_url + '/tree/master',
+                '__SITE_REPOSITORY__': site_repo_url,
+                '__ARCHIVE__': site_repo_url + '/archive/master.zip',
+                '__GIT_REPO__': site_repo_url + '.git',
+                '__REPO_NAME__': list(filter(None, site_repo_url.split('/')))[-1],
+                '__USER_NAME__': list(filter(None, site_repo_url.split('/')))[-2],
+                '__WEB_BLOB__': web_repo_url + '/blob/gh-pages',
+                '__WEB_SITE__': web_repo_url + '/site',
+                '__WEB_SITE_URL__': web_site_url,
+                '__WEB_REPOSITORY__': web_repo_url,
+                '__WEB_REPO_NAME__': list(filter(None, web_repo_url.split('/')))[-1],
+                '__WEB_USER_NAME__': list(filter(None, web_repo_url.split('/')))[-2],
+                }
+    keys = patterns.keys()
+    with open(src, 'r') as ifh:
+        lines = ifh.readlines()
+        lines_to_update = list()
+    for idx in range(0, len(lines)):
+        if any(k in lines[idx] for k in keys):
+            lines_to_update.append(idx)
+    for idx in lines_to_update:
+        for k in keys:
+            lines[idx] = re.sub(k, patterns[k], lines[idx])
+    with open(dest, 'w') as ofh:
+        for line in lines:
+            ofh.write(line)
 
 def make_examples_sources_html(example_paths, src_path, doc_path, web_repo_url, web_site_url):
     """
@@ -1494,6 +1601,13 @@ def main():
     dest = doc_path / 'VTKBookLaTeX'
     dest.mkdir(parents=True, exist_ok=True)
     shutil.copy(src_path / 'VTKBookLaTeX/VTKTextBook.md', dest)
+
+    # Copy WASM files
+    dest = doc_path / 'WASM'
+    dest.mkdir(parents=True, exist_ok=True)
+    wasm_files = ['1_WASM.md', '2_NoWASMIntegration.md', '3_BuildingWASM.md', '4_ContributingWASM.md']
+    for f in wasm_files:
+        make_wasm_instruction_pages(web_repo_url, web_site_url, site_url, src_path, doc_path, f, f)
 
     # Get a list of all the examples.
     get_example_paths(src_path, available_languages, example_paths)

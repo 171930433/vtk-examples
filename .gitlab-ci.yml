@@ -1,0 +1,97 @@
+stages:
+    - prep
+    - build
+    - deploy
+
+default:
+    image: ubuntu:22.04
+    tags:
+        - linux-x86_64
+        - build
+        - vtk-examples
+    artifacts:
+        expire_in: 1 day
+
+build-vtk:
+    image: $CI_REGISTRY/vtk/vtk-examples:20240119
+    stage: prep
+    cache:
+        key: vtk-cache
+        paths:
+            - vtk
+        policy: pull-push
+    script:
+        - bash .gitlab/ci/scripts/build_vtk.sh
+    artifacts:
+        paths: 
+            - vtk
+
+package-data:
+    image: $CI_REGISTRY/vtk/vtk-examples:20240119
+    stage: build
+    script:
+        - bash .gitlab/ci/scripts/package_data.sh
+    artifacts:
+        paths:
+            - packaged_data/
+
+build-examples:
+    image: $CI_REGISTRY/vtk/vtk-examples:20240119
+    stage: build
+    script:
+        - bash .gitlab/ci/scripts/build_examples.sh
+    artifacts:
+        paths:
+            - build_examples/
+
+
+build-gh-pages:
+    rules:
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+    stage: build
+    before_script:
+        - bash .gitlab/ci/scripts/before_build_gh-pages.sh
+    script:
+        - eval $(ssh-agent -s)
+        - ssh-add $GH_KEY
+        - bash .gitlab/ci/scripts/build_gh-pages.sh
+    environment:
+        name: deploy-gh-pages
+        url: https://github.com/Kitware/vtk-examples
+
+
+deploy-examples:
+    rules:
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+    needs:
+        - build-examples
+    stage: deploy
+    dependencies:
+        - build-examples
+    before_script:
+        - bash .gitlab/ci/scripts/before_deploy_examples.sh
+    script:
+        - eval $(ssh-agent -s)
+        - ssh-add $RSYNC_KEY
+        - bash .gitlab/ci/scripts/deploy_examples.sh
+    environment:
+        name: deploy-examples
+        url: https://web.kitware.com
+
+deploy-data:
+    rules:
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+    needs:
+        - package-data
+    stage: deploy
+    dependencies:
+        - package-data
+    before_script:
+        - bash .gitlab/ci/scripts/before_deploy_data.sh
+    script:
+        - eval $(ssh-agent -s)
+        - ssh-add $RSYNC_KEY
+        - bash .gitlab/ci/scripts/deploy_data.sh
+    environment:
+        name: deploy-examples
+        url: https://web.kitware.com
