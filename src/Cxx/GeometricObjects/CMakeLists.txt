@@ -50,6 +50,7 @@ Requires_Module(OpenVROrientedArrow RenderingOpenVR)
 Requires_Module(OpenVROrientedCylinder RenderingOpenVR)
 Requires_Module(OpenVRSphere RenderingOpenVR)
 Requires_Module(OpenVRTessellatedBoxSource RenderingOpenVR)
+Requires_Module(OpenXRCone RenderingOpenXR)
 Requires_Module(ParametricObjectsDemo cli11)
 Requires_Module(ParametricObjectsDemo fmt)
 

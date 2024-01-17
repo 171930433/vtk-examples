@@ -182,6 +182,7 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 [OpenVROrientedCylinder](/Cxx/GeometricObjects/OpenVROrientedCylinder) | Show an oriented cylinder in VR using OpenVR.
 [OpenVRSphere](/Cxx/GeometricObjects/OpenVRSphere) | Show a sphere in VR using OpenVR.
 [OpenVRTessellatedBoxSource](/Cxx/GeometricObjects/OpenVRTessellatedBoxSource) | Show a tesselated box in VR using OpenVR.
+[OpenXRCone](/Cxx/GeometricObjects/OpenXRCone) | Show a cone in VR using OpenXR.
 [PlaneSourceDemo](/Cxx/GeometricObjects/PlaneSourceDemo) | Display the instance variables that define a vtkPlaneSource.
 [Planes](/Cxx/GeometricObjects/Planes) |
 [PlanesIntersection](/Cxx/GeometricObjects/PlanesIntersection) |
