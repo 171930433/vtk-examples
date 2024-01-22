@@ -64,6 +64,7 @@ class Patterns:
     suffix_patterns['Cxx'] = re.compile(r'(?i)^.*(\.h|\.hpp|\.hxx|\.hh|\.txx|\.cpp|\.cxx|\.c|\.cc)$')
     suffix_patterns['Java'] = re.compile(r'(?i)^.*(\.java)$')
     suffix_patterns['Python'] = re.compile(r'(?i)^.*(\.py)$')
+    suffix_patterns['Python1'] = re.compile(r'(?i)^.*(\.py)$')
 
     cxx_class_includes = re.compile(
         r'^[ \t]*#include +<(vtk[A-Za-z0-9]+).h>$'  # match: #include <vtkClass.h>
@@ -74,6 +75,7 @@ class Patterns:
     class_patterns['Cxx'] = re.compile(r'(vtk[A-Za-z0-9]+)')  # match: vtkClass
     class_patterns['Java'] = re.compile(r'(vtk[A-Za-z0-9]+)')  # match: vtkClass
     class_patterns['Python'] = re.compile(r'(vtk[A-Za-z0-9]+)')  # match: vtkClass
+    class_patterns['Python1'] = re.compile(r'(vtk[A-Za-z0-9]+)')  # match: vtkClass
     class_patterns['VTK Doc'] = re.compile(r'^(vtk[A-Za-z0-9]+)$')  # match ^vtkClass$
 
     # Skip some lines in the files.
@@ -120,7 +122,7 @@ class VTKClassesInExamples:
         :param add_vtk_html: True if the Doxygen documentation paths are to be added to the vtk classes in the tables.
         :param format_json: True if the JSON file should be formatted.
         """
-        self.example_types = ['CSharp', 'Cxx', 'Java', 'Python']
+        self.example_types = ['CSharp', 'Cxx', 'Java', 'Python', 'Python1']
         # Classes common to most examples.
         self.excluded_classes = ['vtkActor', 'vtkCamera', 'vtkNamedColors', 'vtkPolyDataMapper', 'vtkProperty',
                                  'vtkRenderer', 'vtkRenderWindow', 'vtkRenderWindowInteractor', ]
@@ -156,7 +158,7 @@ class VTKClassesInExamples:
         # This dictionary cross-references the VTK Class with the relevant example
         #    indexed by the VTK Class and Language.
         # The first index is the VTK class.
-        # The second index corresponds to the languages: CSharp, Cxx, Java, Python
+        # The second index corresponds to the languages: CSharp, Cxx, Java, Python, Python1
         #    and, additionally, VTKLink.
         # For the indexed languages, each value contains a dictionary consisting of
         #    the example name as the key and the link as the value or None.
@@ -200,6 +202,7 @@ class VTKClassesInExamples:
         excluded_dirs['Cxx'] = ['CMakeTechniques', 'Untested']
         excluded_dirs['Java'] = ['Untested']
         excluded_dirs['Python'] = ['Problems']
+        excluded_dirs['Python1'] = ['Problems']
         for d in excluded_dirs:
             excluded_dirs[d] = sorted(['Deprecated', 'Snippets'] + excluded_dirs[d])
 
@@ -467,8 +470,8 @@ class VTKClassesInExamples:
         self.classes_used[eg] = res
 
     def get_python_vtk_classes_from_examples(self, eg='Python'):
-        if eg != 'Python':
-            print(f'Expected Python, got {eg}')
+        if eg not in ['Python', 'Python1']:
+            print(f'Expected Python or Python1, got {eg}')
             return
         print(f'   Processing the {eg} examples.')
         implementation_classes = defaultdict(lambda: defaultdict(set))
@@ -549,7 +552,7 @@ class VTKClassesInExamples:
         Find the vtk classes used in the examples.
         """
         print('Extracting the classes used in the examples.')
-        # self.example_types = ['CSharp', 'Cxx', 'Java', 'Python']
+        # self.example_types = ['CSharp', 'Cxx', 'Java', 'Python', 'Python1']
         for eg in self.example_types:
             if eg == 'CSharp':
                 self.get_csharp_vtk_classes_from_examples(eg)
@@ -558,6 +561,8 @@ class VTKClassesInExamples:
             elif eg == 'Java':
                 self.get_java_vtk_classes_from_examples(eg)
             elif eg == 'Python':
+                self.get_python_vtk_classes_from_examples(eg)
+            elif eg == 'Python1':
                 self.get_python_vtk_classes_from_examples(eg)
             else:
                 print(f'Unknown example type {eg}.')
