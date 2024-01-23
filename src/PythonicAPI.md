@@ -1,4 +1,4 @@
-# Improved VTK Python Interface Examples
+# PythonicAPI Examples
 
 These examples use the improved VTK Python interface.
 
@@ -8,27 +8,27 @@ See [More Pythonic VTK wrapping](https://discourse.vtk.org/t/more-pythonic-vtk-w
 
 ## Upgrading an existing example to use the improved VTK Python interface
 
-1. Copy the example from the **src/Python** folder into the **src/Python1** folder maintaining the same path structure. If there is a corresponding markdown file, copy it.
-2. Copy the corresponding test image from **src/Testing/Baseline/Python/** into **src/Testing/Baseline/Python1/**
-3. Edit **src/Python1.md**, possibly creating a table and headings to match the original example in **src/Python**.
+1. Copy the example from the **src/Python** folder into the **src/PythonicAPI** folder maintaining the same path structure. If there is a corresponding markdown file, copy it.
+2. Copy the corresponding test image from **src/Testing/Baseline/Python/** into **src/Testing/Baseline/PythonicAPI/**
+3. Edit **src/PythonicAPI.md**, possibly creating a table and headings to match the original example in **src/Python**.
 4. Upgrade the Python example.
 5. The associated markdown file (if any) may need checking to ensure any links in the document remain valid.
 6. Check everything is working and do a Merge Request.
 
 ## Adding a new example
 
-Follow the documented procedure [ForDevelopers](https://examples.vtk.org/site/Instructions/ForDevelopers/) remembering that the folder to use is **Python1**.
+Follow the documented procedure [ForDevelopers](https://examples.vtk.org/site/Instructions/ForDevelopers/) remembering that the folder to use is **PythonicAPI**.
 
 ## VTK Classes Summary
 
 This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will let you select examples based on a VTK Class and language. It requires Python 3.7 or later. The following tables will produce similar information.
 
-- [VTK Classes with Examples](/Coverage/Python1VTKClassesUsed.md), this table is really useful when searching for example(s) using a particular class.
+- [VTK Classes with Examples](/Coverage/PythonicAPIVTKClassesUsed.md), this table is really useful when searching for example(s) using a particular class.
 
-- [VTK Classes with No Examples](/Coverage/Python1VTKClassesNotUsed.md), please add examples in your area of expertise!
+- [VTK Classes with No Examples](/Coverage/PythonicAPIVTKClassesNotUsed.md), please add examples in your area of expertise!
 
 ## Hello World
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
-[A hello world example](/Python1/GeometricObjects/CylinderExample) | Cylinder example from the VTK Textbook and source code. A hello world example.
+[A hello world example](/PythonicAPI/GeometricObjects/CylinderExample) | Cylinder example from the VTK Textbook and source code. A hello world example.

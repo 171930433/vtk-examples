@@ -520,7 +520,7 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
                             v[1] = re.sub(r'][ ]*\([ ]*/', r'](', v[1])
                             v[1] = v[1].replace('.md', '')
                             line_changed = True
-                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[1] or '/Python1/' in v[1]:
+                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
                             # Make the language link relative, also drop off the language.
                             v[1] = re.sub(r'][ ]*\([ ]*/\w+/', r'](', v[1])
                             line_changed = True
@@ -530,7 +530,7 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
                 for k, v in lines.items():
                     line_changed = False
                     if v[1] != '':
-                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[1] or '/Python1/' in v[1]:
+                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
                             # Make the language link relative to the src folder.
                             link_head = r'](' + r'../' + lang + r'/'
                             if '.md' in v[1]:
@@ -742,7 +742,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                     stats['cs_count'] += 1
                 elif source_path.suffix == '.py':
                     md_file.write('``` python ' + hilite_lines + '\n')
-                    if lang == 'Python1':
+                    if lang == 'PythonicAPI':
                         stats['py1_count'] += 1
                     else:
                         stats['py_count'] += 1
@@ -1309,7 +1309,7 @@ def get_statistics(stats):
     res.append('  C++ examples:             ' + str(stats['cxx_count']))
     res.append('  CSharp examples:          ' + str(stats['cs_count']))
     res.append('  Python examples:          ' + str(stats['py_count']))
-    res.append('  Python1 examples:         ' + str(stats['py1_count']))
+    res.append('  PythonicAPI examples:     ' + str(stats['py1_count']))
     res.append('  Java examples:            ' + str(stats['java_count']))
     res.append('  Trame examples:           ' + str(stats['trame_count']))
     res.append('  Total examples:           ' + str(sum(totals)))
@@ -1416,7 +1416,7 @@ def main():
     # Add thumbnails and language links to each of the language summary pages, Snippets and Book figures
     pages = ['Cxx.md', 'CxxHowTo.md',
              'Python.md', 'PythonHowTo.md',
-             'Python1.md',
+             'PythonicAPI.md',
              'CSharp.md', 'CSharpHowTo.md',
              'Java.md', 'JavaHowTo.md',
              'JavaScript.md',
@@ -1455,7 +1455,7 @@ def main():
 
     # Get a list of all  examples
     # A dictionary of available languages and extensions
-    available_languages = {'Cxx': '.cxx', 'Python': '.py', 'Python1': '.py', 'Java': '.java', 'CSharp': '.cs'}
+    available_languages = {'Cxx': '.cxx', 'Python': '.py', 'PythonicAPI': '.py', 'Java': '.java', 'CSharp': '.cs'}
 
     # Copy coverage files
     for k in available_languages.keys():
