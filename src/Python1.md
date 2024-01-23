@@ -1,10 +1,23 @@
-# Python1 Examples
+# Improved VTK Python Interface Examples
 
-Please see [this page](https://www.vtk.org/Wiki/VTK/PythonDevelopment) to learn how to setup your environment to use VTK in Python.
+These examples use the improved VTK Python interface.
 
-THese examples use the improved VTK Python interface. They are either new examples or existing Python examples that use the improved VTK Python interface.
+The examples here are either newly crafted ones or upgraded existing Python examples using the improved VTK Python interface.
 
 See [More Pythonic VTK wrapping](https://discourse.vtk.org/t/more-pythonic-vtk-wrapping/13092) for the VTK Discourse discussion and [Wrap VTK properties to pythonic properties with snake_case names](https://gitlab.kitware.com/vtk/vtk/-/merge_requests/10820) for the merge request.
+
+## Upgrading an existing example to use the improved VTK Python interface
+
+1. Copy the example from the **src/Python** folder into the **src/Python1** folder maintaining the same path structure. If there is a corresponding markdown file, copy it.
+2. Copy the corresponding test image from **src/Testing/Baseline/Python/** into **src/Testing/Baseline/Python1/**
+3. Edit **src/Python1.md**, possibly creating a table and headings to match the original example in **src/Python**.
+4. Upgrade the Python example.
+5. The associated markdown file (if any) may need checking to ensure any links in the document remain valid.
+6. Check everything is working and do a Merge Request.
+
+## Adding a new example
+
+Follow the documented procedure [ForDevelopers](https://examples.vtk.org/site/Instructions/ForDevelopers/) remembering that the folder to use is **Python1**.
 
 ## VTK Classes Summary
 
