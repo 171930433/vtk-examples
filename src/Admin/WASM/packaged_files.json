@@ -1,0 +1,884 @@
+{
+    "cube_map": {
+        "CubeMap": {
+            "type": "dir",
+            "path": ["Skyboxes/skybox1/skybox-*.jpg"]
+        }
+    },
+    "DicomTestImages": {
+        "DicomTestImages": {
+            "type": "dir",
+            "path": ["DicomTestImages/matlab/examples/sample_data/DICOM/digest_article/*"]
+        }
+    },
+    "doorman": {
+        "doorman": {
+            "type": "dir",
+            "path": ["doorman/*.png"]
+        },
+        "doorman.mtl": {
+            "type": "file",
+            "path": ["doorman/doorman.mtl"]
+        },
+        "doorman.obj": {
+            "type": "file",
+            "path": ["doorman/doorman.obj"]
+        }
+    },
+    "ExportBunny": {
+        "ExportBunny": {
+            "type": "dir",
+            "path": ["ExportBunny/*"]
+        }
+    },
+    "FlightHelmet": {
+        "FlightHelmet": {
+            "type": "dir",
+            "path": ["glTF/FlightHelmet/glTF/*"]
+        }
+    },
+    "Frog": {
+        "Frog": {
+            "type": "dir",
+            "path": ["Frog/*"]
+        }
+    },
+    "frog": {
+        "frog.mhd": {
+            "type": "file",
+            "path": ["Frog/frog.mhd"]
+        },
+        "frog.zraw": {
+            "type": "file",
+            "path": ["Frog/frog.zraw"]
+        }
+    },
+    "frogtissue": {
+        "frogtissue.mhd": {
+            "type": "file",
+            "path": ["Frog/frogtissue.mhd"]
+        },
+        "frogtissue.zraw": {
+            "type": "file",
+            "path": ["Frog/frogtissue.zraw"]
+        }
+    },
+    "FullHead": {
+        "FullHead.mhd": {
+            "type": "file",
+            "path": ["FullHead.mhd"]
+        },
+        "FullHead.raw.gz": {
+            "type": "file",
+            "path": ["FullHead.raw.gz"]
+        }
+    },
+    "HeadMRVolume": {
+        "HeadMRVolume.mhd": {
+            "type": "file",
+            "path": ["HeadMRVolume.mhd"]
+        },
+        "HeadMRVolume.raw": {
+            "type": "file",
+            "path": ["HeadMRVolume.raw"]
+        },
+        "polyline.vtk": {
+            "type": "file",
+            "path": ["polyline.vtk"]
+        }
+    },
+    "PBR_Examples": {
+        "Textures": {
+            "type": "dir",
+            "path": ["Textures/*"]
+        },
+        "Skyboxes": {
+            "type": "dir",
+            "path": ["Skyboxes/*"]
+        },
+        "PBR_Parameters.json": {
+            "type": "file",
+            "path": ["PBR_Parameters.json"]
+        },
+        "PBR_Skybox.json": {
+            "type": "file",
+            "path": ["PBR_Skybox.json"]
+        },
+        "PBR_Skybox_Anisotropy.json": {
+            "type": "file",
+            "path": ["PBR_Skybox_Anisotropy.json"]
+        },
+        "PBR_Skybox_Texturing.json": {
+            "type": "file",
+            "path": ["PBR_Skybox_Texturing.json"]
+        }
+    },
+    "Skyboxes": {
+        "skybox0": {
+            "type": "dir",
+            "path": ["Skyboxes/skybox0/*"]
+        },
+        "skybox1": {
+            "type": "dir",
+            "path": ["Skyboxes/skybox1/*"]
+        },
+        "skybox2": {
+            "type": "dir",
+            "path": ["Skyboxes/skybox2/*"]
+        },
+        "MapCubeFacesToEquirectangular.md": {
+            "type": "file",
+            "path": ["Skyboxes/MapCubeFacesToEquirectangular.md"]
+        },
+        "spiaggia_di_mondello_1k.hdr": {
+            "type": "file",
+            "path": ["Skyboxes/spiaggia_di_mondello_1k.hdr"]
+        },
+        "spiaggia_di_mondello_4k.hdr": {
+            "type": "file",
+            "path": ["Skyboxes/spiaggia_di_mondello_4k.hdr"]
+        },
+        "wintersun.jpg": {
+            "type": "file",
+            "path": ["Skyboxes/wintersun.jpg"]
+        }
+    },
+    "2j6g.pdb": {
+        "2j6g.pdb": {
+            "type": "file",
+            "path": ["2j6g.pdb"]
+        }
+    },
+    "42400-IDGH.stl": {
+        "42400-IDGH.stl": {
+            "type": "file",
+            "path": ["42400-IDGH.stl"]
+        }
+    },
+    "Armadillo.ply": {
+        "Armadillo.ply": {
+            "type": "file",
+            "path": ["Armadillo.ply"]
+        }
+    },
+    "AttenuationArtifact.pgm": {
+        "AttenuationArtifact.pgm": {
+            "type": "file",
+            "path": ["AttenuationArtifact.pgm"]
+        }
+    },
+    "B.pgm": {
+        "B.pgm": {
+            "type": "file",
+            "path": ["B.pgm"]
+        }
+    },
+    "binary.pgm": {
+        "binary.pgm": {
+            "type": "file",
+            "path": ["binary.pgm"]
+        }
+    },
+    "blow.vtk": {
+        "blow.vtk": {
+            "type": "file",
+            "path": ["blow.vtk"]
+        }
+    },
+    "bluntfinq.bin": {
+        "bluntfinq.bin": {
+            "type": "file",
+            "path": ["bluntfinq.bin"]
+        }
+    },
+    "bluntfinxyz.bin": {
+        "bluntfinxyz.bin": {
+            "type": "file",
+            "path": ["bluntfinxyz.bin"]
+        }
+    },
+    "brain.vtk": {
+        "brain.vtk": {
+            "type": "file",
+            "path": ["brain.vtk"]
+        }
+    },
+    "Bunny.vtp": {
+        "Bunny.vtp": {
+            "type": "file",
+            "path": ["Bunny.vtp"]
+        }
+    },
+    "caffeine.pdb": {
+        "caffeine.pdb": {
+            "type": "file",
+            "path": ["caffeine.pdb"]
+        }
+    },
+    "cake_easy.jpg": {
+        "cake_easy.jpg": {
+            "type": "file",
+            "path": ["cake_easy.jpg"]
+        }
+    },
+    "Canterbury.ttf": {
+        "Canterbury.ttf": {
+            "type": "file",
+            "path": ["Canterbury.ttf"]
+        }
+    },
+    "carotid.vtk": {
+        "carotid.vtk": {
+            "type": "file",
+            "path": ["carotid.vtk"]
+        }
+    },
+    "coarseGrid.e": {
+        "coarseGrid.e": {
+            "type": "file",
+            "path": ["coarseGrid.e"]
+        }
+    },
+    "ColorCells.tif": {
+        "ColorCells.tif": {
+            "type": "file",
+            "path": ["ColorCells.tif"]
+        }
+    },
+    "combq.bin": {
+        "combq.bin": {
+            "type": "file",
+            "path": ["combq.bin"]
+        }
+    },
+    "combxyz.bin": {
+        "combxyz.bin": {
+            "type": "file",
+            "path": ["combxyz.bin"]
+        }
+    },
+    "coords.txt": {
+        "coords.txt": {
+            "type": "file",
+            "path": ["coords.txt"]
+        }
+    },
+    "CopyPaste.ttf": {
+        "CopyPaste.ttf": {
+            "type": "file",
+            "path": ["CopyPaste.ttf"]
+        }
+    },
+    "cow.g": {
+        "cow.g": {
+            "type": "file",
+            "path": ["cow.g"]
+        }
+    },
+    "cow.obj": {
+        "cow.obj": {
+            "type": "file",
+            "path": ["cow.obj"]
+        }
+    },
+    "cow.vtp": {
+        "cow.vtp": {
+            "type": "file",
+            "path": ["cow.vtp"]
+        }
+    },
+    "cowHead.vtp": {
+        "cowHead.vtp": {
+            "type": "file",
+            "path": ["cowHead.vtp"]
+        }
+    },
+    "DEC.vtk": {
+        "DEC.vtk": {
+            "type": "file",
+            "path": ["DEC.vtk"]
+        }
+    },
+    "DelimitedData.txt": {
+        "DelimitedData.txt": {
+            "type": "file",
+            "path": ["DelimitedData.txt"]
+        }
+    },
+    "Disc_BiQuadraticQuads_0_0.vtu": {
+        "Disc_BiQuadraticQuads_0_0.vtu": {
+            "type": "file",
+            "path": ["Disc_BiQuadraticQuads_0_0.vtu"]
+        }
+    },
+    "dragon.ply": {
+        "dragon.ply": {
+            "type": "file",
+            "path": ["dragon.ply"]
+        }
+    },
+    "earth.ppm": {
+        "earth.ppm": {
+            "type": "file",
+            "path": ["earth.ppm"]
+        }
+    },
+    "emote.jpg": {
+        "emote.jpg": {
+            "type": "file",
+            "path": ["emote.jpg"]
+        }
+    },
+    "ExportBunny.vtp": {
+        "ExportBunny.vtp": {
+            "type": "file",
+            "path": ["ExportBunny.vtp"]
+        }
+    },
+    "filledContours.vtp": {
+        "filledContours.vtp": {
+            "type": "file",
+            "path": ["filledContours.vtp"]
+        }
+    },
+    "financial.txt": {
+        "financial.txt": {
+            "type": "file",
+            "path": ["financial.txt"]
+        }
+    },
+    "financial.vtk": {
+        "financial.txt": {
+            "type": "file",
+            "path": ["financial.vtk"]
+        }
+    },
+    "fineGrid.e-s002": {
+        "fineGrid.e-s002": {
+            "type": "file",
+            "path": ["fineGrid.e-s002"]
+        }
+    },
+    "fire_ug.vtu": {
+        "fire_ug.vtu": {
+            "type": "file",
+            "path": ["fire_ug.vtu"]
+        }
+    },
+    "footbones.ply": {
+        "footbones.ply": {
+            "type": "file",
+            "path": ["fsu/footbones.ply"]
+        }
+    },
+    "stratocaster.ply": {
+        "stratocaster.ply": {
+            "type": "file",
+            "path": ["fsu/stratocaster.ply"]
+        }
+    },
+    "fran_cut.png": {
+        "fran_cut.png": {
+            "type": "file",
+            "path": ["fran_cut.png"]
+        }
+    },
+    "fran_cut.vtk": {
+        "fran_cut.vtk": {
+            "type": "file",
+            "path": ["fran_cut.vtk"]
+        }
+    },
+    "Frog_mhd.json": {
+        "Frog_mhd.json": {
+            "type": "file",
+            "path": ["Frog_mhd.json"]
+        }
+    },
+    "Frog_vtk.json": {
+        "Frog_vtk.json": {
+            "type": "file",
+            "path": ["Frog_vtk.json"]
+        }
+    },
+    "fsm.gml": {
+        "fsm.gml": {
+            "type": "file",
+            "path": ["fsm.gml"]
+        }
+    },
+    "fullhead15.png": {
+        "fullhead15.png": {
+            "type": "file",
+            "path": ["fullhead15.png"]
+        }
+    },
+    "GE.vtk": {
+        "GE.vtk": {
+            "type": "file",
+            "path": ["GE.vtk"]
+        }
+    },
+    "GM.vtk": {
+        "GM.vtk": {
+            "type": "file",
+            "path": ["GM.vtk"]
+        }
+    },
+    "Gettysburg.txt": {
+        "Gettysburg.txt": {
+            "type": "file",
+            "path": ["Gettysburg.txt"]
+        }
+    },
+    "Gourds.mha": {
+        "Gourds.mha": {
+            "type": "file",
+            "path": ["Gourds.mha"]
+        }
+    },
+    "Gourds.png": {
+        "Gourds.png": {
+            "type": "file",
+            "path": ["Gourds.png"]
+        }
+    },
+    "Gourds.pnm": {
+        "Gourds.pnm": {
+            "type": "file",
+            "path": ["Gourds.pnm"]
+        }
+    },
+    "Gourds2.jpg": {
+        "Gourds2.jpg": {
+            "type": "file",
+            "path": ["Gourds2.jpg"]
+        }
+    },
+    "grasshop.wrl": {
+        "grasshop.wrl": {
+            "type": "file",
+            "path": ["grasshop.wrl"]
+        }
+    },
+    "greatWhite.stl": {
+        "greatWhite.stl": {
+            "type": "file",
+            "path": ["greatWhite.stl"]
+        }
+    },
+    "Grey_Nurse_Shark.stl": {
+        "Grey_Nurse_Shark.stl": {
+            "type": "file",
+            "path": ["thingiverse/Grey_Nurse_Shark.stl"]
+        }
+    },
+    "hello.vtk": {
+        "hello.vtk": {
+            "type": "file",
+            "path": ["hello.vtk"]
+        }
+    },
+    "hexa.vtk": {
+        "hexa.vtk": {
+            "type": "file",
+            "path": ["hexa.vtk"]
+        }
+    },
+    "Hexahedron.vtu": {
+        "Hexahedron.vtu": {
+            "type": "file",
+            "path": ["Hexahedron.vtu"]
+        }
+    },
+    "honolulu.vtk": {
+        "honolulu.vtk": {
+            "type": "file",
+            "path": ["honolulu.vtk"]
+        }
+    },
+    "horse.ply": {
+        "horse.ply": {
+            "type": "file",
+            "path": ["horse.ply"]
+        }
+    },
+    "Human.vtp": {
+        "Human.vtp": {
+            "type": "file",
+            "path": ["Human.vtp"]
+        }
+    },
+    "IBM.vtk": {
+        "IBM.vtk": {
+            "type": "file",
+            "path": ["IBM.vtk"]
+        }
+    },
+    "iflamingo.3ds": {
+        "iflamingo.3ds": {
+            "type": "file",
+            "path": ["iflamingo.3ds"]
+        }
+    },
+    "Infovis-XML-vtkclasses.xml": {
+        "Infovis-XML-vtkclasses.xml": {
+            "type": "file",
+            "path": ["Infovis-XML-vtkclasses.xml"]
+        }
+    },
+    "Infovis-XML-vtklibrary.xml": {
+        "Infovis-XML-vtklibrary.xml": {
+            "type": "file",
+            "path": ["Infovis-XML-vtklibrary.xml"]
+        }
+    },
+    "InterpolatingOnSTL_final.stl": {
+        "InterpolatingOnSTL_final.stl": {
+            "type": "file",
+            "path": ["InterpolatingOnSTL_final.stl"]
+        }
+    },
+    "ironProt.vtk": {
+        "ironProt.vtk": {
+            "type": "file",
+            "path": ["ironProt.vtk"]
+        }
+    },
+    "k.vtk": {
+        "k.vtk": {
+            "type": "file",
+            "path": ["k.vtk"]
+        }
+    },
+    "kitchen.vtk": {
+        "kitchen.vtk": {
+            "type": "file",
+            "path": ["kitchen.vtk"]
+        }
+    },
+    "masonry.bmp": {
+        "masonry.bmp": {
+            "type": "file",
+            "path": ["masonry.bmp"]
+        }
+    },
+    "motor.g": {
+        "motor.g": {
+            "type": "file",
+            "path": ["motor.g"]
+        }
+    },
+    "mug.e": {
+        "mug.e": {
+            "type": "file",
+            "path": ["mug.e"]
+        }
+    },
+    "neghip.slc": {
+        "neghip.slc": {
+            "type": "file",
+            "path": ["neghip.slc"]
+        }
+    },
+    "ObliqueCone.vtp": {
+        "ObliqueCone.vtp": {
+            "type": "file",
+            "path": ["ObliqueCone.vtp"]
+        }
+    },
+    "office.binary.vtk": {
+        "office.binary.vtk": {
+            "type": "file",
+            "path": ["office.binary.vtk"]
+        }
+    },
+    "Ox.jpg": {
+        "Ox.jpg": {
+            "type": "file",
+            "path": ["Ox.jpg"]
+        }
+    },
+    "Particles.raw": {
+        "Particles.raw": {
+            "type": "file",
+            "path": ["Particles.raw"]
+        }
+    },
+    "PerlinNoise.glsl": {
+        "PerlinNoise.glsl": {
+            "type": "file",
+            "path": ["Shaders/PerlinNoise.glsl"]
+        }
+    },
+    "Pileated.jpg": {
+        "Pileated.jpg": {
+            "type": "file",
+            "path": ["Pileated.jpg"]
+        }
+    },
+    "pine_root.tri": {
+        "pine_root.tri": {
+            "type": "file",
+            "path": ["pine_root.tri"]
+        }
+    },
+    "plate.vtk": {
+        "plate.vtk": {
+            "type": "file",
+            "path": ["plate.vtk"]
+        }
+    },
+    "porphyrin.cml": {
+        "porphyrin.cml": {
+            "type": "file",
+            "path": ["porphyrin.cml"]
+        }
+    },
+    "postq.bin": {
+        "postq.bin": {
+            "type": "file",
+            "path": ["postq.bin"]
+        }
+    },
+    "postxyz.bin": {
+        "postxyz.bin": {
+            "type": "file",
+            "path": ["postxyz.bin"]
+        }
+    },
+    "prostate.IMG": {
+        "prostate.IMG": {
+            "type": "file",
+            "path": ["DICOM_Prostate/prostate.IMG"]
+        }
+    },
+    "RectilinearGrid.vtr": {
+        "RectilinearGrid.vtr": {
+            "type": "file",
+            "path": ["RectilinearGrid.vtr"]
+        }
+    },
+    "Ring.vtp": {
+        "Ring.vtp": {
+            "type": "file",
+            "path": ["Ring.vtp"]
+        }
+    },
+    "room_vis.wrl": {
+        "room_vis.wrl": {
+            "type": "file",
+            "path": ["room_vis.wrl"]
+        }
+    },
+    "SainteHelens.dem": {
+        "SainteHelens.dem": {
+            "type": "file",
+            "path": ["SainteHelens.dem"]
+        }
+    },
+    "SampleStructGrid.vtk": {
+        "SampleStructGrid.vtk": {
+            "type": "file",
+            "path": ["SampleStructGrid.vtk"]
+        }
+    },
+    "sextant.wrl": {
+        "sextant.wrl": {
+            "type": "file",
+            "path": ["sextant.wrl"]
+        }
+    },
+    "shark.ply": {
+        "shark.ply": {
+            "type": "file",
+            "path": ["shark.ply"]
+        }
+    },
+    "sparsePoints.txt": {
+        "sparsePoints.txt": {
+            "type": "file",
+            "path": ["sparsePoints.txt"]
+        }
+    },
+    "spiaggia_di_mondello_1k.hdr": {
+        "spiaggia_di_mondello_1k.hdr": {
+            "type": "file",
+            "path": ["Skyboxes/spiaggia_di_mondello_1k.hdr"]
+        }
+    },
+    "spider.ply": {
+        "spider.ply": {
+            "type": "file",
+            "path": ["spider.ply"]
+        }
+    },
+    "star-wars-vader-tie-fighter.obj": {
+        "star-wars-vader-tie-fighter.obj": {
+            "type": "file",
+            "path": ["star-wars-vader-tie-fighter.obj"]
+        }
+    },
+    "stormy.jpg": {
+        "stormy.jpg": {
+            "type": "file",
+            "path": ["stormy.jpg"]
+        }
+    },
+    "StructuredGrid.vts": {
+        "StructuredGrid.vts": {
+            "type": "file",
+            "path": ["StructuredGrid.vts"]
+        }
+    },
+    "StructuredPoints.vtk": {
+        "StructuredPoints.vtk": {
+            "type": "file",
+            "path": ["StructuredPoints.vtk"]
+        }
+    },
+    "t.vtk": {
+        "t.vtk": {
+            "type": "file",
+            "path": ["t.vtk"]
+        }
+    },
+    "teapot.g": {
+        "teapot.g": {
+            "type": "file",
+            "path": ["teapot.g"]
+        }
+    },
+    "teapot.wrl": {
+        "teapot.wrl": {
+            "type": "file",
+            "path": ["teapot.wrl"]
+        }
+    },
+    "TeapotPoints.txt": {
+        "TeapotPoints.txt": {
+            "type": "file",
+            "path": ["TeapotPoints.txt"]
+        }
+    },
+    "tensors.vtk": {
+        "tensors.vtk": {
+            "type": "file",
+            "path": ["tensors.vtk"]
+        }
+    },
+    "TestPattern.png": {
+        "TestPattern.png": {
+            "type": "file",
+            "path": ["TestPattern.png"]
+        }
+    },
+    "tetra.vtu": {
+        "tetra.vtu": {
+            "type": "file",
+            "path": ["tetra.vtu"]
+        }
+    },
+    "texThres2.vtk": {
+        "texThres2.vtk": {
+            "type": "file",
+            "path": ["texThres2.vtk"]
+        }
+    },
+    "Torso.vtp": {
+        "Torso.vtp": {
+            "type": "file",
+            "path": ["Torso.vtp"]
+        }
+    },
+    "treemesh.vtk": {
+        "treemesh.vtk": {
+            "type": "file",
+            "path": ["treemesh.vtk"]
+        }
+    },
+    "Triangles.txt": {
+        "Triangles.txt": {
+            "type": "file",
+            "path": ["Triangles.txt"]
+        }
+    },
+    "trumpet.obj": {
+        "trumpet.obj": {
+            "type": "file",
+            "path": ["trumpet.obj"]
+        }
+    },
+    "uGridEx.vtk": {
+        "uGridEx.vtk": {
+            "type": "file",
+            "path": ["uGridEx.vtk"]
+        }
+    },
+    "UNISIM-II-D.vtu": {
+        "UNISIM-II-D.vtu": {
+            "type": "file",
+            "path": ["UNISIM-II-D.vtu"]
+        }
+    },
+    "v.vtk": {
+        "v.vtk": {
+            "type": "file",
+            "path": ["v.vtk"]
+        }
+    },
+    "vase.vti": {
+        "vase.vti": {
+            "type": "file",
+            "path": ["vase.vti"]
+        }
+    },
+    "vecAnim1.vtk": {
+        "vecAnim1.vtk": {
+            "type": "file",
+            "path": ["VectorAnimation/vecAnim1.vtk"]
+        }
+    },
+    "VTKCellTypes.vtk": {
+        "VTKCellTypes.vtk": {
+            "type": "file",
+            "path": ["VTKCellTypes.vtk"]
+        }
+    },
+    "vtks.pgm": {
+        "vtks.pgm": {
+            "type": "file",
+            "path": ["vtks.pgm"]
+        }
+    },
+    "vw_knee.slc": {
+        "vw_knee.slc": {
+            "type": "file",
+            "path": ["vw_knee.slc"]
+        }
+    },
+    "warping_spheres.vtkhdf": {
+        "warping_spheres.vtkhdf": {
+            "type": "file",
+            "path": ["warping_spheres.vtkhdf"]
+        }
+    },
+    "wintersun.jpg": {
+        "wintersun.jpg": {
+            "type": "file",
+            "path": ["Skyboxes/wintersun.jpg"]
+        }
+    },
+    "Yinyang.jpg": {
+        "Yinyang.jpg": {
+            "type": "file",
+            "path": ["Yinyang.jpg"]
+        }
+    },
+    "Yinyang.png": {
+        "Yinyang.png": {
+            "type": "file",
+            "path": ["Yinyang.png"]
+        }
+    }
+}

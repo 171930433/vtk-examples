@@ -110,6 +110,12 @@ DataStructures, Filters, GeometricObjects, Image, Meshes etc.
 
 ### C++
 
+* If you find relevant to add a WebAssembly preview to your example,
+  [follow this guide](../WASM/4_ContributingWASM).
+  If not, you have to add the name of your example to __REPO_NAME__/src/Admin/exclude_wasm.txt
+  to avoid the website build script from generating a link to an example
+  that doesn't exist.
+
 * Build and test your example (**NOTE:** only for cxx examples)
 
 ``` bash
