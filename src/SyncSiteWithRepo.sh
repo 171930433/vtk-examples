@@ -73,6 +73,7 @@ mkdir -p ${WEB_REPO_DIR}/src/stylesheets
 mkdir -p ${WEB_REPO_DIR}/src/SupplementaryData
 mkdir -p ${WEB_REPO_DIR}/src/Testing/Baseline
 mkdir -p ${WEB_REPO_DIR}/src/VTKBook/Figures
+mkdir -p ${WEB_REPO_DIR}/src/WASM
 
 echo "2) Copy the baseline images and other essential files"
 rsync -zavh index.html ${WEB_REPO_DIR}

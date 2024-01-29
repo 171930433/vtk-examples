@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <style>
+    .loader {
+      margin-right: 5px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #4051b5;
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body style="margin: 0px">
+  <div id="loading" style="margin: 15px;">
+    <div style="display: flex;"><div class="loader"></div>Loading WebAssembly environment. This could take some time. More information:</div>
+    <p><a href="https://emscripten.org/" target="_blank">&bull; Emscripten, a WebAssembly compiler.</a></p>
+    <p><a href="https://hub.docker.com/r/kitware/vtk-wasm" target="_blank">&bull; VTK-WASM Docker image.</a></p>
+    <p><a href="https://docs.vtk.org/en/latest/advanced/build_wasm_emscripten.html" target="_blank">&bull; Instructions to build and install VTK-WASM on your system.</a></p>
+  </div>
+  <div id="display-div" style="display: none; flex-direction: row; width: 100vw; height: 100vh">
+    <canvas id="canvas" style="width: 75vw; height: 100vh;"></canvas>
+    <textarea readonly id="output" rows="8" style="width: 25vw; margin-left: 2px; resize: none; border: none; outline: none; padding: 0"></textarea>
+  </div>
+  <script type='text/javascript'>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('keydown', function(event) {
+        if (event.key == "Q" || event.key == "q" || event.key == "E" || event.key == "e")
+            event.preventDefault();
+    }, true);
+
+    var canvas = document.getElementById('canvas');
+
+    if (window.self !== window.top)
+    {
+        document.getElementById('display-div').style.flexDirection = 'column';
+        var output = document.getElementById('output');
+        output.style.height = '25vh';
+        output.style.width = '100vw';
+        output.style.margin = '0';
+        canvas.style.width = '100vw';
+        canvas.style.height = '75vh';
+    }
+
+    var Module = {
+        'arguments': ['YYY'],
+      'canvas': (function () {
+        canvas.addEventListener(
+          "webglcontextlost",
+          function (e) {
+            console.error('WebGL context lost. You will need to reload the page.');
+            e.preventDefault();
+          },
+          false
+        );
+        return canvas;
+      })(),
+      'print': (function () {
+          var element = document.getElementById('output');
+          if (element) element.value = ''; // clear browser cache
+          return function(text) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            console.log(text);
+            if (element) {
+              element.value += text + "\n";
+              element.scrollTop = element.scrollHeight; // focus on bottom
+            }
+        };
+      })(),
+      'printErr': function (text) {
+        text = Array.prototype.slice.call(arguments).join(' ');
+        console.error(text);
+      },
+      'onRuntimeInitialized': function () {
+        console.log('WASM runtime initialized');
+        var loading = document.getElementById('loading');
+        loading.style.display = 'none';
+        console.log('WASM runtime initialized');
+        document.getElementById('display-div').style.display = 'flex';
+        // focus on the canvas to grab keyboard inputs.
+        canvas.setAttribute('tabindex', '0');
+        // grab focus when the render window region receives mouse clicks.
+        canvas.addEventListener('click', () => canvas.focus());
+      }
+    };
+
+    window.mod = Module;
+  </script>
+  <script type="text/javascript" src="XXX.js"></script>
+</body>
+
+</html>
