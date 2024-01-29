@@ -26,5 +26,6 @@ emcmake cmake -GNinja \
     -DEMSCRIPTEN:Bool=true \
     -DVTK_DIR=$CI_PROJECT_DIR/vtk/build \
     -DDEBUGINFO=NONE \
+    -DOPTIMIZE=SMALLEST \
     -S pregen_examples -B build_examples
 cmake --build build_examples
