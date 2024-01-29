@@ -13,7 +13,7 @@ default:
         expire_in: 1 day
 
 build-vtk:
-    image: $CI_REGISTRY/vtk/vtk-examples:20240119
+    image: $CI_REGISTRY/vtk/vtk-examples:20240129
     stage: prep
     cache:
         key: vtk-cache
@@ -27,7 +27,7 @@ build-vtk:
             - vtk
 
 package-data:
-    image: $CI_REGISTRY/vtk/vtk-examples:20240119
+    image: $CI_REGISTRY/vtk/vtk-examples:20240129
     stage: build
     script:
         - bash .gitlab/ci/scripts/package_data.sh
@@ -36,7 +36,7 @@ package-data:
             - packaged_data/
 
 build-examples:
-    image: $CI_REGISTRY/vtk/vtk-examples:20240119
+    image: $CI_REGISTRY/vtk/vtk-examples:20240129
     stage: build
     script:
         - bash .gitlab/ci/scripts/build_examples.sh
