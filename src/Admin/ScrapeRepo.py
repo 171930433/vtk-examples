@@ -707,8 +707,8 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                         md_file.write('''<button id="screenshot-button" class="wasm-tab" disabled>Screenshot</button><button id="wasm-button" class="wasm-tab">Interactive example</button><hr style="margin-top: 10px; margin-bottom: 10px;"><div id="screenshot-div"><a href="''' + image_url + ' target="_blank">' + '\n')
                         md_file.write(
                             '<img style="border:2px solid beige;float:center" src="' +
-                            image_url + '" width="256" />' + '\n')
-                        md_file.write('</a></div>' + '\n')
+                            image_url + '" width="256" />')
+                        md_file.write('</a></div>')
 
                         # wasmified example
                         md_file.write('''<div id="wasm-div" style="display: none;">
