@@ -7,3 +7,6 @@ You can manipulate the object in the second layer/renderer whilst the objects in
 - Pressing **0** on the keyboard will let you manipulate the objects in
   layer 0.
 - Pressing **1** on the keyboard will let you manipulate the objects in layer 1.
+
+!!! info
+    Also see the [LayeredActors.cxx](../../../Cxx/Rendering/LayeredActors) and [LayeredActors.py](../../../Python/Rendering/LayeredActors) examples, where we have added an extra callback so that the non-active layer objects move in conjunction with the active layer objects.

@@ -874,6 +874,7 @@ This section includes vtkUnstructuredGrid.
 [FlatVersusGouraud](/Cxx/Rendering/FlatVersusGouraud) | Flat and Gouraud shading. Different shading methods can dramatically improve the look of an object represented with polygons. On the top, flat shading uses a constant surface normal across each polygon. On the bottom, Gouraud shading interpolates normals from polygon vertices to give a smoother look.
 [GradientBackground](/Cxx/Rendering/GradientBackground) | Demonstrates the background shading options.
 [HiddenLineRemoval](/Cxx/Rendering/HiddenLineRemoval) | Hidden lines removed.
+[LayeredActors](/Cxx/Rendering/LayeredActors) | Demonstrates the use of two linked renderers. The orientation of objects in the non active layer is linked to those in the active layer.
 [Mace](/Cxx/Rendering/Mace) | An example of multiple inputs and outputs.
 [Model](/Cxx/Rendering/Model) | Illustrative diagram of graphics objects.
 [MotionBlur](/Cxx/Rendering/MotionBlur) | Example of motion blur.
