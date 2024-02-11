@@ -36,7 +36,7 @@ def main():
     ca = vtkActor(mapper=cm)
     ca.RotateX(30)
     ca.RotateY(-45)
-    ca.GetProperty().SetColor(colors.GetColor3d('Tomato'))
+    ca.property.color = colors.GetColor3d('Tomato')
 
     # Note the setting of the background by calling GetColor()
     ren = vtkRenderer(background=colors.GetColor3d('BkgColor'))
@@ -46,11 +46,11 @@ def main():
     ren_win.AddRenderer(ren)
 
     iren = vtkRenderWindowInteractor()
-    iren.render_window=ren_win
+    iren.render_window = ren_win
 
     iren.Initialize()
     ren.ResetCamera()
-    ren.GetActiveCamera().Zoom(1.5)
+    ren.active_camera.Zoom(1.5)
     ren_win.Render()
 
     # Start the event loop.
