@@ -46,7 +46,8 @@ def main():
     # We will then use an append filter because, in that way, we can do the warping, etc.
     # by just using a single pipeline and actor.
     p = (
-            vtkAppendPolyData()(planes)
+            planes
+            >> vtkAppendPolyData()
             >> vtkWarpScalar(use_normal=True, normal=[1.0, 0.0, 0.0], scale_factor=2.5)
             >> vtkPolyDataNormals(feature_angle=60)
     ).update().output
@@ -58,7 +59,7 @@ def main():
     outline = (pl3d_output >> vtkStructuredGridOutlineFilter()).update().output
     outline_mapper = vtkPolyDataMapper(input_data=outline)
     outline_actor = vtkActor(mapper=outline_mapper)
-    outline_actor.GetProperty().SetColor(colors.GetColor3d('Black'))
+    outline_actor.property.color = colors.GetColor3d('Black')
 
     # Create the usual graphics stuff.
     ren = vtkRenderer(background=colors.GetColor3d('Silver'))
@@ -72,14 +73,15 @@ def main():
     iren.render_window = ren_win
 
     # Create an initial view.
-    ren.GetActiveCamera().SetClippingRange(3.95297, 50)
-    ren.GetActiveCamera().SetFocalPoint(8.88908, 0.595038, 29.3342)
-    ren.GetActiveCamera().SetPosition(-12.3332, 31.7479, 41.2387)
-    ren.GetActiveCamera().SetViewUp(0.060772, -0.319905, 0.945498)
+    ren.active_camera.clipping_range = (3.95297, 50)
+    ren.active_camera.focal_point = (8.88908, 0.595038, 29.3342)
+    ren.active_camera.position = (-12.3332, 31.7479, 41.2387)
+    ren.active_camera.view_up = (0.060772, -0.319905, 0.945498)
     iren.Initialize()
 
     # Render the image.
     ren_win.Render()
+
     # Start the event loop.
     iren.Start()
 
