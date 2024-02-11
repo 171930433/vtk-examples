@@ -1,6 +1,6 @@
 # PythonicAPI Examples
 
-These examples use the improved VTK Python interface. Some information about the improved Python interface can be found [here](../PythonicAPI/PythonAPIFeatures/)
+These examples use the improved VTK Python interface. Some information about the improved Python interface can be found [here](../PythonicAPI/Features/)
 
 The examples here are either newly crafted ones or upgraded existing Python examples using the improved VTK Python interface.
 
