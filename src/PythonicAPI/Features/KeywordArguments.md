@@ -7,9 +7,10 @@ cylinder = vtkCylinderSource(resolution=8)
 or
 
 ``` Python
-pl3d = vtkMultiBlockPLOT3DReader(x_y_z_file_name=xyz_fn,
+pl3d = vtkMultiBlockPLOT3DReader(file_name=xyz_fn,
                                 q_file_name=q_fn,
                                 scalar_function_number=100,
                                 vector_function_number=202)
    
 ```
+Note that, in this case `SetFileName`  is an alias for `SetXYZFileName` so you can use `file_name` instead of `x_y_z_file_name`.

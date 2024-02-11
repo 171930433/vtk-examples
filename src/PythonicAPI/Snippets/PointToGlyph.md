@@ -27,7 +27,7 @@ def point_to_glyph(points, scale):
     :return: The actor.
     """
 
-    bounds = points.GetBounds()
+    bounds = points.bounds
     max_len = 0.0
     for i in range(0, 3):
         max_len = max(bounds[i + 1] - bounds[i], max_len)
