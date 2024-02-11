@@ -1,6 +1,6 @@
 # PythonicAPI Examples
 
-These examples use the improved VTK Python interface.
+These examples use the improved VTK Python interface. Some information about the improved Python interface can be found [here](../PythonicAPI/PythonAPIFeatures/)
 
 The examples here are either newly crafted ones or upgraded existing Python examples using the improved VTK Python interface.
 
@@ -32,6 +32,12 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [A hello world example](/PythonicAPI/GeometricObjects/CylinderExample) | Cylinder example from the VTK Textbook and source code. A hello world example.
+
+## Utilities
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[CheckVTKVersion](/PythonicAPI/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
 
 ## Visualization
 
