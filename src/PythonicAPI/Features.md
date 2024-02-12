@@ -12,4 +12,8 @@ Keyword arguments can be specified in the constructor of a VTK Class.
 
 #### [MultipleConnections](/PythonicAPI/Features/MultipleConnections.md)
 
-Multiple connections are alllowed in pipelines.
+Multiple connections are allowed in pipelines.
+
+#### [MultipleOutputs](/PythonicAPI/Features/MultipleOutputs.md)
+
+Multiple outputs from the last filter in a pipeline are returned as a tuple.
