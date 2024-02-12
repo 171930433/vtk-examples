@@ -33,6 +33,12 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | -------------- | ------------- | ------- |
 [A hello world example](/PythonicAPI/GeometricObjects/CylinderExample) | Cylinder example from the VTK Textbook and source code. A hello world example.
 
+#### Clipping
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[SolidClip](/PythonicAPI/Meshes/SolidClip) | Create a "solid" clip. The "ghost" of the part clipped away is also shown.
+
 ## Utilities
 
 | Example Name | Description | Image |
