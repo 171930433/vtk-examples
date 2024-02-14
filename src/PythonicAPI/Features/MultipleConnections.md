@@ -12,7 +12,7 @@ vtk.vtkSphereSource() >> a
 vtk.vtkSphereSource() >> a
 ```
 
-To reset the append filter, you any one of these:
+To reset the append filter, you can use any one of these commands:
 
 ``` Python
 a.RemoveAllInputConnections(0)
@@ -21,4 +21,4 @@ None >> a
 () >> a
 ```
 
-**None** can also be used to clear any inputs, repeatable or not.
+Note: `None >> a` can also be used to clear any inputs on the filter `a`, whether they are multiple connections or not.
