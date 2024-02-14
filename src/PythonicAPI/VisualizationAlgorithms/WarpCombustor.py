@@ -46,19 +46,21 @@ def main():
 
     # We will then use an append filter because, in that way, we can do the warping, etc.
     # by just using a single pipeline and actor.
-    p = (
+    pdn = (
             planes
             >> vtkAppendPolyData()
             >> vtkWarpScalar(use_normal=True, normal=[1.0, 0.0, 0.0], scale_factor=2.5)
             >> vtkPolyDataNormals(feature_angle=60)
-    ).update().output
+    )
 
-    plane_mapper = vtkPolyDataMapper(input_data=p, scalar_range=pl3d_output.scalar_range)
+    # plane_mapper = vtkPolyDataMapper(input_data=p, scalar_range=pl3d_output.scalar_range)
+    plane_mapper = vtkPolyDataMapper(scalar_range=pl3d_output.scalar_range)
+    pdn >> plane_mapper
     plane_actor = vtkActor(mapper=plane_mapper)
 
     # The outline provides context for the data and the planes.
-    outline = (pl3d_output >> vtkStructuredGridOutlineFilter()).update().output
-    outline_mapper = vtkPolyDataMapper(input_data=outline)
+    outline_mapper = vtkPolyDataMapper()
+    pl3d_output >> vtkStructuredGridOutlineFilter() >> outline_mapper
     outline_actor = vtkActor(mapper=outline_mapper)
     outline_actor.property.color = colors.GetColor3d('Black')
 
