@@ -50,3 +50,9 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.
+
+## Annotation
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[TextOrigin](/PythonicAPI/Annotation/TextOrigin) | This example demonstrates the use of vtkVectorText and vtkFollower. vtkVectorText is used to create 3D annotation.
