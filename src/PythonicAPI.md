@@ -27,11 +27,71 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 - [VTK Classes with No Examples](/Coverage/PythonicAPIVTKClassesNotUsed.md), please add examples in your area of expertise!
 
+## Tutorials
+
 ## Hello World
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [A hello world example](/PythonicAPI/GeometricObjects/CylinderExample) | Cylinder example from the VTK Textbook and source code. A hello world example.
+
+## Simple Operations
+
+## Input and Output
+
+### Graph Formats
+
+### 3D File Formats
+
+#### Standard Formats
+
+##### Input
+
+###### Importers
+
+##### Output
+
+#### VTK Formats
+
+##### Input
+
+##### Output
+
+#### Legacy VTK Formats
+
+### Image Format
+
+#### Input
+
+#### Output
+
+## Geometric Objects
+
+### Cells
+
+### Sources
+
+### Non Linear
+
+### Parametric Objects
+
+## Implicit Functions and Iso-surfaces
+
+## Working with 3D Data
+
+### Data Types
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[OverlappingAMR](/Python/CompositeData/OverlappingAMR) | Demonstrates how to create and populate  VTK's Overlapping AMR Grid type with data.
+
+### Data Type Conversions
+
+### Point Cloud Operations
+
+### Working with Meshes
+
+This section includes examples of manipulating meshes.
 
 #### Clipping
 
@@ -39,20 +99,103 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | -------------- | ------------- | ------- |
 [SolidClip](/PythonicAPI/Meshes/SolidClip) | Create a "solid" clip. The "ghost" of the part clipped away is also shown.
 
+### Working with Structured 3D Data
+
+#### vtkImageData
+
+#### vtkExplicitStructuredGrid
+
+#### vtkStructuredGrid
+
+#### vtkStructuredPoints
+
+#### vtkRectilinearGrid
+
+### Working with Unstructured 3D Data
+
+This section includes vtkUnstructuredGrid.
+
+#### vtkUnstructuredGrid
+
+### Registration
+
+### Medical
+
+### Surface reconstruction
+
 ## Utilities
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [CheckVTKVersion](/PythonicAPI/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
 
+### Arrays
+
+### Events
+
+## Math Operations
+
+## Graphs
+
+### Graph Conversions
+
+## Data Structures
+
+### Timing Demonstrations
+
+### KD-Tree
+
+### Oriented Bounding Box (OBB) Tree
+
+### Octree
+
+### Modified BSP Tree
+
+### HyperTreeGrid
+
+## VTK Concepts
+
+## Rendering
+
+## Lighting
+
+## Texture Mapping
+
+## Tutorial
+
+If you are new to VTK then these tutorials will help to get you started.
+
 ## Visualization
+
+See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a brief explanation of the VTK terminology of mappers, actors, etc.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.
+
+## Working with vtkImageData
+
+## Volume Rendering
+
+## User Interaction
+
+## Working with Images
+
+## Image Processing
+
+## Widgets
+
+## Plotting
+
+## Animation
 
 ## Annotation
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [TextOrigin](/PythonicAPI/Annotation/TextOrigin) | This example demonstrates the use of vtkVectorText and vtkFollower. vtkVectorText is used to create 3D annotation.
+
+## InfoVis
+
+## PyQt
+
