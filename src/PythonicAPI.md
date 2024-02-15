@@ -79,11 +79,16 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 ## Working with 3D Data
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
+[MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
+
 ### Data Types
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
-[OverlappingAMR](/Python/CompositeData/OverlappingAMR) | Demonstrates how to create and populate  VTK's Overlapping AMR Grid type with data.
+[OverlappingAMR](/PythonicAPI/CompositeData/OverlappingAMR) | Demonstrates how to create and populate  VTK's Overlapping AMR Grid type with data.
 
 ### Data Type Conversions
 
@@ -198,4 +203,3 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 ## InfoVis
 
 ## PyQt
-
