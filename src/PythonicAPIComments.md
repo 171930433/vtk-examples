@@ -6,8 +6,8 @@ You can initialze the properties of a wrapped VTK class by specifying keyword ar
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[WarpCombustor](/PythonAPI/VisualizationAlgorithms/WarpCombustor) | Note that in the initialization of `?vtkMultiBlockPLOT3DReader?`, `SetFileName` is an alias for `SetXYZFileName` so you can use `file_name` instead of `x_y_z_file_name`.
-[ParametricKuenDemo](/PythonAPI/GeometricObjects/ParametricKuenDemo) | Very useful in regards to the intitialization of `?vtkSliderRepresentation2D?` in `make_slider_widget(...)`.
+[WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Note that in the initialization of `?vtkMultiBlockPLOT3DReader?`, `SetFileName` is an alias for `SetXYZFileName` so you can use `file_name` instead of `x_y_z_file_name`.
+[ParametricKuenDemo](/PythonicAPI/GeometricObjects/ParametricKuenDemo) | Very useful in regards to the intitialization of `?vtkSliderRepresentation2D?` in `make_slider_widget(...)`.
 
 ## Set/Get Properties of a VTK Class
 
@@ -65,7 +65,7 @@ Note: `None >> a` can also be used to clear any inputs on the filter `a`, whethe
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[WarpCombustor](/PythonAPI/VisualizationAlgorithms/WarpCombustor) | Three planes are added to a `?vtkAppendPolyData?`filter.
+[WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Three planes are added to a `?vtkAppendPolyData?`filter.
 
 ## Multiple outputs from a pipeline
 
@@ -73,7 +73,7 @@ A pipeline can produce multiple outputs
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[WarpCombustor](/PythonAPI/Meshes/SolidClip) | The tuple `clipper` contains the clipped output as the first element and clipped away output is the second element.
+[WarpCombustor](/PythonicAPI/Meshes/SolidClip) | The tuple `clipper` contains the clipped output as the first element and clipped away output is the second element.
 
 ## Updating part of a pipeline
 
@@ -81,5 +81,5 @@ Sometimes we need to update part of a pipeline so that output can be used in oth
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[LineOnMesh](/PythonAPI/DataManipulation/LineOnMesh) | One pipeline creates a smoothed dataset. However we need to update `smooth_loop` in the pipeline so that `?vtkCellLocator?` finds cells in order to create the spline.
-[MeshLabelImageColor](/PythonAPI/DataManipulation/MeshLabelImageColor) | We need the smoother error for the scalar range in the mapper. So we create the pipeline and update `smoother` to get the needed scalar range. Of course, all other pipeline elements feeding into `smoother` will be updated also.
+[LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | One pipeline creates a smoothed dataset. However we need to update `smooth_loop` in the pipeline so that `?vtkCellLocator?` finds cells in order to create the spline.
+[MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | We need the smoother error for the scalar range in the mapper. So we create the pipeline and update `smoother` to get the needed scalar range. Of course, all other pipeline elements feeding into `smoother` will be updated also.
