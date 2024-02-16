@@ -1,6 +1,6 @@
 # PythonicAPI Examples
 
-These examples use the improved VTK Python interface. Some information about the improved Python interface can be found [here](../PythonicAPI/Features/)
+These examples use the improved VTK Python interface. Some information about the improved Python interface can be found [here](../PythonicAPIComments/)
 
 The examples here are either newly crafted ones or upgraded existing Python examples using the improved VTK Python interface.
 
@@ -75,6 +75,11 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 ### Parametric Objects
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ParametricKuenDemo](/PythonicAPI/GeometricObjects/ParametricKuenDemo) | Interactively change the parameters for a Kuen Surface.
+
+
 ## Implicit Functions and Iso-surfaces
 
 ## Working with 3D Data
@@ -107,21 +112,21 @@ This section includes examples of manipulating meshes.
 
 ### Working with Structured 3D Data
 
-#### vtkImageData
+#### ?vtkImageData?
 
-#### vtkExplicitStructuredGrid
+#### ?vtkExplicitStructuredGrid?
 
-#### vtkStructuredGrid
+#### ?vtkStructuredGrid?
 
-#### vtkStructuredPoints
+#### ?vtkStructuredPoints?
 
-#### vtkRectilinearGrid
+#### ?vtkRectilinearGrid?
 
 ### Working with Unstructured 3D Data
 
 This section includes vtkUnstructuredGrid.
 
-#### vtkUnstructuredGrid
+#### ?vtkUnstructuredGrid?
 
 ### Registration
 
@@ -179,7 +184,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | -------------- | ------------- | ------- |
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.
 
-## Working with vtkImageData
+## Working with ?vtkImageData?
 
 ## Volume Rendering
 
