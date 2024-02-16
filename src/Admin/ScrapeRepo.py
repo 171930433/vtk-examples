@@ -1533,14 +1533,13 @@ def main():
     # Add thumbnails and language links to each of the language summary pages, Snippets and Book figures
     pages = ['Cxx.md', 'CxxHowTo.md',
              'Python.md', 'PythonHowTo.md',
-             'PythonicAPI.md',
+             'PythonicAPI.md', 'PythonicAPIComments.md',
              'CSharp.md', 'CSharpHowTo.md',
              'Java.md', 'JavaHowTo.md',
              'JavaScript.md',
              'Cxx/Snippets.md',
-             'PythonicAPI/Features.md',
-             'PythonicAPI/Snippets.md',
              'Python/Snippets.md',
+             'PythonicAPI/Snippets.md',
              'Java/Snippets.md',
              'VTKBookFigures.md', 'VTKFileFormats.md']
     for p in pages:
