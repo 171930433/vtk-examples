@@ -487,6 +487,10 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
     if 'HowTo' in from_file:
         lang = re.split('HowTo', from_file)[0]
         has_how_to = True
+    # Similarly for PythonicAPIComments
+    if 'PythonicAPIComments' in from_file:
+        lang = re.split('Comments', from_file)[0]
+        has_how_to = True
     with open(from_path, 'r') as md_file:
         lines = dict()
         line_count = 0
@@ -1525,7 +1529,6 @@ def main():
 
     # Create Snippets and Features directories.
     (doc_path / 'Cxx/Snippets').mkdir(parents=True, exist_ok=True)
-    (doc_path / 'PythonicAPI/Features').mkdir(parents=True, exist_ok=True)
     (doc_path / 'PythonicAPI/Snippets').mkdir(parents=True, exist_ok=True)
     (doc_path / 'Python/Snippets').mkdir(parents=True, exist_ok=True)
     (doc_path / 'Java/Snippets').mkdir(parents=True, exist_ok=True)
@@ -1546,7 +1549,7 @@ def main():
         add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_src_path, test_images_dict, p, p,
                                  vtk_classes, stats)
 
-    snippets = ['Cxx/Snippets', 'PythonicAPI/Features', 'PythonicAPI/Snippets', 'Python/Snippets', 'Java/Snippets']
+    snippets = ['Cxx/Snippets', 'Python/Snippets', 'PythonicAPI/Snippets', 'Java/Snippets']
     for snippet in snippets:
         src = src_path / snippet
         dest = doc_path / snippet
