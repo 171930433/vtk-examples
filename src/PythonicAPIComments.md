@@ -2,7 +2,7 @@
 
 ## Initializing a VTK Class
 
-You can initialze the properties of a wrapped VTK class by specifying keyword arguments in the constructor.
+You can initialize the properties of a wrapped VTK class by specifying keyword arguments in the constructor.
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
@@ -38,7 +38,13 @@ In the case of `GetColor3d()` a `?vtkColor3d?` class is returned not a vector, t
 
 ## Multiple connections in a pipeline
 
-A pipeline can have multiple connections:
+A pipeline can have multiple connections.
+
+``` Python
+    (a, b, c) >> d >> e >> f >> g
+```
+
+E.g.
 
 ``` Python
 [vtk.?vtkSphereSource?(), vtk.?vtkSphereSource?()] >> vtk.?vtkAppendFilter?()
@@ -69,15 +75,30 @@ Note: `None >> a` can also be used to clear any inputs on the filter `a`, whethe
 
 ## Multiple outputs from a pipeline
 
-A pipeline can produce multiple outputs
+A pipeline can produce multiple outputs.
+
+``` Python
+    pipeline_output = (a >> b >> c).update().output
+    p1 = vtkSomeClass(input_data=pipeline_output[0]) >> e >> f
+    p1 = vtkAnotherClass(input_data=pipeline_output[1]) >> g >> h
+```
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[WarpCombustor](/PythonicAPI/Meshes/SolidClip) | The tuple `clipper` contains the clipped output as the first element and clipped away output is the second element.
+[SolidClip](/PythonicAPI/Meshes/SolidClip) | The tuple `clipper` contains the clipped output as the first element and clipped away output is the second element.
 
 ## Updating part of a pipeline
 
 Sometimes we need to update part of a pipeline so that output can be used in other pipelines.
+
+``` Python
+    a >> b >> c >> d
+    c.update() # At this point, a and b will also be updated.
+    # Use some data from c to build a new object, say v.
+    ...
+    # Then:
+    v >> w >> x 
+```
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
