@@ -482,16 +482,17 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
     """
     from_path = src_path / from_file
     to_path = doc_path / to_file
-    # We need to treat [Lang]HowTo.md files, e.g. CxxHowTo.md, in a special way
-    has_how_to = False
+    # We need to treat [Lang]HowTo.md and [Lang]Comments.md files, in a special way.
+    # Essentially we need to make the language link relative to the language src folder.
+    has_relative_lang_link = False
     if 'HowTo' in from_file:
         lang = re.split('HowTo', from_file)[0]
-        has_how_to = True
-    # Similarly for PythonicAPIComments
-    if 'PythonicAPIComments' in from_file:
+        has_relative_lang_link = True
+    # Similarly for [Lang]Comments.md files, e.g. PythonicAPIComments
+    if 'Comments' in from_file:
         lang = re.split('Comments', from_file)[0]
-        has_how_to = True
-    with open(from_path, 'r') as md_file:
+        has_relative_lang_link = True
+    with (open(from_path, 'r') as md_file):
         lines = dict()
         line_count = 0
         x = []
@@ -515,7 +516,7 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
             x = []
         add_image_link(test_images, lines, stats)
         if from_file != 'VTKBookFigures.md':
-            if not has_how_to:
+            if not has_relative_lang_link:
                 for k, v in lines.items():
                     line_changed = False
                     if v[1] != '':
@@ -524,8 +525,8 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
                             v[1] = re.sub(r'][ ]*\([ ]*/', r'](', v[1])
                             v[1] = v[1].replace('.md', '')
                             line_changed = True
-                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[
-                            1] or '/PythonicAPI/' in v[1]:
+                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] \
+                                or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
                             # Make the language link relative, also drop off the language.
                             v[1] = re.sub(r'][ ]*\([ ]*/\w+/', r'](', v[1])
                             line_changed = True
@@ -535,12 +536,13 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
                 for k, v in lines.items():
                     line_changed = False
                     if v[1] != '':
-                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[
-                            1] or '/PythonicAPI/' in v[1]:
+                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] \
+                                or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
                             # Make the language link relative to the src folder.
                             link_head = r'](' + r'../' + lang + r'/'
                             if '.md' in v[1]:
                                 v[1] = v[1].replace('.md', '')
+                            # Then add in the updated language path element.
                             v[1] = re.sub(r'][ ]*\([ ]*/\w+/', link_head, v[1])
                             line_changed = True
                     if line_changed:
@@ -1527,13 +1529,17 @@ def main():
         print(f'{src} is missing.\nPlease run VTKClassesUsedInExamples.py to generate this file.')
         return
 
-    # Create Snippets and Features directories.
+    # Create the Snippets directories.
     (doc_path / 'Cxx/Snippets').mkdir(parents=True, exist_ok=True)
     (doc_path / 'PythonicAPI/Snippets').mkdir(parents=True, exist_ok=True)
     (doc_path / 'Python/Snippets').mkdir(parents=True, exist_ok=True)
     (doc_path / 'Java/Snippets').mkdir(parents=True, exist_ok=True)
 
-    # Add thumbnails and language links to each of the language summary pages, Snippets and Book figures
+    # Add thumbnails and language links to each of the language summary pages.
+    # Note: If there are links in HowTos, and Comments please check
+    #       add_thumbnails_and_links(...) to ensure that
+    #       [Lang]HowTo.md and [Lang]Comments.md files are treated in a special way.
+    #       Essentially we need to make the language link relative to the language src folder.
     pages = ['Cxx.md', 'CxxHowTo.md',
              'Python.md', 'PythonHowTo.md',
              'PythonicAPI.md', 'PythonicAPIComments.md',
