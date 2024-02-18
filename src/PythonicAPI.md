@@ -79,7 +79,6 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | -------------- | ------------- | ------- |
 [ParametricKuenDemo](/PythonicAPI/GeometricObjects/ParametricKuenDemo) | Interactively change the parameters for a Kuen Surface.
 
-
 ## Implicit Functions and Iso-surfaces
 
 ## Working with 3D Data
@@ -124,7 +123,7 @@ This section includes examples of manipulating meshes.
 
 ### Working with Unstructured 3D Data
 
-This section includes vtkUnstructuredGrid.
+This section includes ?vtkUnstructuredGrid?.
 
 #### ?vtkUnstructuredGrid?
 
@@ -182,6 +181,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.
 
 ## Working with ?vtkImageData?
