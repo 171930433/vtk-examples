@@ -148,6 +148,10 @@ This section includes ?vtkUnstructuredGrid?.
 
 ## Graphs
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[SideBySideGraphs](/PythonicAPI/Graphs/SideBySideGraphs) | Display two graphs side by side.
+
 ### Graph Conversions
 
 ## Data Structures
