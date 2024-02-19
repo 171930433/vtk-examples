@@ -86,6 +86,7 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [ConnectivityFilter](/PythonicAPI/Filtering/ConnectivityFilter) | Color any dataset type based on connectivity.
+[CurvaturesAdjustEdges](/PythonicAPI/PolyData/CurvaturesAdjustEdges) | Get the Gaussian and Mean curvatures of a surface with adjustments for edge effects.
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
 
