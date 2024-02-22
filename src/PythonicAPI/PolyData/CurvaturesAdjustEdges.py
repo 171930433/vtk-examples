@@ -57,7 +57,14 @@ from vtkmodules.vtkRenderingCore import (
     vtkRenderWindowInteractor,
     vtkRenderer,
     vtkTextMapper,
+    vtkTextProperty,
+    vtkTextActor,
     vtkTextProperty
+
+)
+from vtkmodules.vtkInteractionWidgets import (
+    vtkTextRepresentation,
+    vtkTextWidget
 )
 
 
@@ -147,16 +154,23 @@ def main(argv):
     xmaxs = [0.5, 1]
     ymins = [0, 0]
     ymaxs = [1.0, 1.0]
+    # Define viewport ranges [x_min, y_min, x_max, y_max]
+    viewports = {0: [0.0, 0.0, 0.5, 1.0],
+                 1: [0.5, 0.0, 1.0, 1.0],
+                 }
 
     camera = None
+    cam_orient_manipulator = None
 
     has_cow = False
     if vtk_version_ok(9, 0, 20210718):
         cam_orient_manipulator = vtkCameraOrientationWidget()
         has_cow = True
 
-    curvature_types = ['Gauss_Curvature', 'Mean_Curvature']
-    for idx, curvature_name in enumerate(curvature_types):
+    # Build the renderers and add them to the render window.
+    renderers = list()
+    curvature_types = {0: 'Gauss_Curvature', 1: 'Mean_Curvature'}
+    for idx, curvature_name in curvature_types.items():
 
         curvature_title = curvature_name.replace('_', '\n')
 
@@ -185,29 +199,63 @@ def main(argv):
                                        )
         scalar_bar.SetBarRatio(scalar_bar.GetBarRatio() * 0.5)
 
-        text_mapper = vtkTextMapper(input=curvature_title, text_property=text_property)
-        text_actor = vtkActor2D(mapper=text_mapper, position=(250, 16))
+        # text_mapper = vtkTextMapper(input=curvature_title, text_property=text_property)
+        # text_actor = vtkActor2D(mapper=text_mapper, position=(250, 16))
 
-        renderer = vtkRenderer(background=colors.GetColor3d('ParaViewBkg'))
-        renderer.AddActor(actor)
-        renderer.AddActor(text_actor)
-        renderer.AddActor(scalar_bar)
+        renderers.append(vtkRenderer(background=colors.GetColor3d('ParaViewBkg')))
+        renderers[idx].AddActor(actor)
+        # renderers[idx].AddActor(text_actor)
+        # renderers[idx].AddActor(scalar_bar)
 
-        ren_win.AddRenderer(renderer)
+        ren_win.AddRenderer(renderers[idx])
 
         if idx == 0:
             if has_cow:
-                cam_orient_manipulator.SetParentRenderer(renderer)
-            camera = renderer.GetActiveCamera()
+                cam_orient_manipulator.SetParentRenderer(renderers[idx])
+            camera = renderers[idx].GetActiveCamera()
             camera.Elevation(60)
         else:
-            renderer.SetActiveCamera(camera)
-        renderer.SetViewport(xmins[idx], ymins[idx], xmaxs[idx], ymaxs[idx])
-        renderer.ResetCamera()
+            renderers[idx].SetActiveCamera(camera)
+        renderers[idx].SetViewport(xmins[idx], ymins[idx], xmaxs[idx], ymaxs[idx])
+        renderers[idx].ResetCamera()
+
+    # Create the TextActors.
+    text_actors = list()
+    text_representations = list()
+    text_widgets = list()
+    text_scale_mode = {'none': 0, 'prop': 1, 'viewport': 2}
+    text_positions = {0: {'p': [0.35, 0.05, 0], 'p2': [0.27, 0.15,0]},
+                 1: {'p': [0.37, 0.05,0], 'p2': [0.27, 0.15,0]},
+                 2: {'p': [0.3, 0.05,0], 'p2': [0.31, 0.15,0]}
+                 }
+    text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
+                                    font_size=24)
+    text = {0: 'Gauss_Curvature', 1: 'Mean_Curvature'}
+    for k, v in curvature_types.items():
+
+        curvature_title = curvature_name.replace('_', '\n')
+        text_actors.append(
+            vtkTextActor(input=v, text_scale_mode=text_scale_mode['none'], text_property=text_property))
+
+        # Create the text representation. Used for positioning the text_actor.
+        text_representations.append(vtkTextRepresentation(enforce_normalized_viewport_bounds=True))
+        text_representations[k].GetPositionCoordinate().value = text_positions[k]['p']
+        text_representations[k].GetPosition2Coordinate().value = text_positions[k]['p2']
+
+        # Create the TextWidget
+        text_widgets.append(vtkTextWidget(representation=text_representations[k], text_actor=text_actors[k]))
+        text_widgets[k].SetDefaultRenderer(renderers[k])
+        text_widgets[k].SetInteractor(iren)
+        text_widgets[k].GetTextActor()
+        text_widgets[k].SelectableOff()
+
 
     if has_cow:
         # Enable the widget.
         cam_orient_manipulator.On()
+
+    for k in text.keys():
+        text_widgets[k].On()
 
     ren_win.Render()
     iren.Start()
