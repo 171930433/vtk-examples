@@ -723,10 +723,14 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
 
                         # wasmified example
                         md_file.write('''<div id="wasm-div" style="display: none;">
-                                      <button id="reload-wasm-button" class="wasm-button" style="display: inline;">Reload example</button>
-                                      <button id="open-wasm-button" class="wasm-button" style="display: inline;">Open in new tab</button>''')
-                        md_file.write(
-                            '<iframe id="frame" src="about:blank" style="width: 80vw; height: 80vh; border: medium;"></iframe></div>\n')
+                                      <div style="display: flex; margin-bottom: 10px">
+                                      <button id="reload-wasm-button" class="wasm-button">Reload example</button>
+                                      <button id="open-wasm-button" class="wasm-button">Open in new tab</button>
+                                      <input id="checkbox" type="checkbox" checked="False">
+                                      <label for="checkbox" style="align-self: center;">Show logs</label>
+                                      <a style="margin-left: auto;" href="https://examples.vtk.org/site/WASM/1_WASM"><button class="wasm-button">Documentation</button></a>
+                                      </div>''')
+                        md_file.write('<iframe id="frame" src="about:blank" style="width: 80vw; height: 80vh; border: medium;"></iframe></div>\n')
                         md_file.write('''<script>
                                       var btn_screenshot = document.getElementById("screenshot-button");
                                       var btn_wasm = document.getElementById("wasm-button");
@@ -762,6 +766,10 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                         btn_screenshot.disabled = true;
                                         btn_wasm.disabled = false;
                                       } 
+                                      const checkbox = document.getElementById('checkbox')
+                                      checkbox.addEventListener('change', (event) => {
+                                        frame.contentWindow.postMessage("ToggleOutput", "https://vtk.org")
+                                      })
                         </script>\n''')
                         md_file.write('<hr>\n')
                         md_file.write('\n')
