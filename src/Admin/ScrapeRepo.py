@@ -755,7 +755,6 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                         btn_screenshot.disabled = true;
                                         btn_wasm.disabled = false;
                                       } 
-                                      const checkbox = document.getElementById('checkbox')
                                       checkbox.addEventListener('change', (event) => {
                                         frame.contentWindow.postMessage("ToggleOutput", "https://vtk.org")
                                       })
