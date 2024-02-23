@@ -46,25 +46,24 @@ from vtkmodules.vtkFiltersSources import (
 # noinspection PyUnresolvedReferences
 from vtkmodules.vtkIOXML import vtkXMLPolyDataWriter
 from vtkmodules.vtkInteractionStyle import vtkInteractorStyleTrackballCamera
-from vtkmodules.vtkInteractionWidgets import vtkCameraOrientationWidget
+from vtkmodules.vtkInteractionWidgets import (
+    vtkCameraOrientationWidget,
+    vtkScalarBarRepresentation,
+    vtkScalarBarWidget,
+    vtkTextRepresentation,
+    vtkTextWidget
+)
 from vtkmodules.vtkRenderingAnnotation import vtkScalarBarActor
 from vtkmodules.vtkRenderingCore import (
     vtkActor,
-    vtkActor2D,
     vtkColorTransferFunction,
     vtkPolyDataMapper,
     vtkRenderWindow,
     vtkRenderWindowInteractor,
     vtkRenderer,
-    vtkTextMapper,
-    vtkTextProperty,
     vtkTextActor,
     vtkTextProperty
 
-)
-from vtkmodules.vtkInteractionWidgets import (
-    vtkTextRepresentation,
-    vtkTextWidget
 )
 
 
@@ -142,18 +141,9 @@ def main(argv):
     style = vtkInteractorStyleTrackballCamera()
     iren.SetInteractorStyle(style)
 
-    # Create a common text property.
-    justification = {'left': 0, 'centered': 1, 'right': 2}
-    text_property = vtkTextProperty(font_size=24, justification=justification['centered'])
-
     lut = get_diverging_lut()
     # lut = get_diverging_lut1()
 
-    # Define viewport ranges
-    xmins = [0, 0.5]
-    xmaxs = [0.5, 1]
-    ymins = [0, 0]
-    ymaxs = [1.0, 1.0]
     # Define viewport ranges [x_min, y_min, x_max, y_max]
     viewports = {0: [0.0, 0.0, 0.5, 1.0],
                  1: [0.5, 0.0, 1.0, 1.0],
@@ -169,75 +159,83 @@ def main(argv):
 
     # Build the renderers and add them to the render window.
     renderers = list()
+    scalar_bar_representations = list()
+    scalar_bar_widgets = list()
     curvature_types = {0: 'Gauss_Curvature', 1: 'Mean_Curvature'}
-    for idx, curvature_name in curvature_types.items():
+    scalar_bar_positions = {0: {'p': [0.85, 0.1, 0], 'p2': [0.13, 0.6, 0]},
+                            1: {'p': [0.85, 0.1, 0], 'p2': [0.13, 0.6, 0]},
+                            }
+    title_text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
+                                          font_size=14)
 
-        curvature_title = curvature_name.replace('_', '\n')
+    for k, v in curvature_types.items():
+        curvature_title = v.replace('_', '\n')
 
-        source.point_data.SetActiveScalars(curvature_name)
-        scalar_range = source.point_data.GetScalars(curvature_name).GetRange()
+        source.point_data.SetActiveScalars(v)
+        scalar_range = source.point_data.GetScalars(v).GetRange()
 
         bands = get_bands(scalar_range, 10)
         freq = get_frequencies(bands, source)
         bands, freq = adjust_ranges(bands, freq)
-        print(curvature_name)
+        print(v.replace('_', ' '))
         print_bands_frequencies(bands, freq)
 
         mapper = vtkPolyDataMapper(scalar_range=scalar_range, lookup_table=lut)
         mapper.SetScalarModeToUsePointFieldData()
-        mapper.SelectColorArray(curvature_name)
+        mapper.SelectColorArray(v)
         source >> mapper
 
         actor = vtkActor(mapper=mapper)
 
-        # Create a scalar bar
-        scalar_bar = vtkScalarBarActor(lookup_table=mapper.GetLookupTable(), title=curvature_title,
-                                       unconstrained_font_size=True, number_of_labels=min(5, len(freq)),
-                                       maximum_width_in_pixels=window_width // 8,
-                                       maximum_height_in_pixels=window_height // 3,
-                                       position=(0.85, 0.1)
-                                       )
-        scalar_bar.SetBarRatio(scalar_bar.GetBarRatio() * 0.5)
-
-        # text_mapper = vtkTextMapper(input=curvature_title, text_property=text_property)
-        # text_actor = vtkActor2D(mapper=text_mapper, position=(250, 16))
-
         renderers.append(vtkRenderer(background=colors.GetColor3d('ParaViewBkg')))
-        renderers[idx].AddActor(actor)
-        # renderers[idx].AddActor(text_actor)
-        # renderers[idx].AddActor(scalar_bar)
+        renderers[k].AddActor(actor)
 
-        ren_win.AddRenderer(renderers[idx])
+        # Create a scalar bar.
+        scalar_bar = vtkScalarBarActor(lookup_table=mapper.GetLookupTable(), title=curvature_title + '\n',
+                                       unconstrained_font_size=True, number_of_labels=min(5, len(freq)),
+                                       title_text_property=title_text_property
+                                       )
 
-        if idx == 0:
+        # Create the scalar bar representation. Used for positioning the scalar bar actor.
+        scalar_bar_representations.append(vtkScalarBarRepresentation(enforce_normalized_viewport_bounds=True))
+        scalar_bar_representations[k].GetPositionCoordinate().value = scalar_bar_positions[k]['p']
+        scalar_bar_representations[k].GetPosition2Coordinate().value = scalar_bar_positions[k]['p2']
+
+        # Create the scalar_bar_widget.
+        scalar_bar_widgets.append(
+            vtkScalarBarWidget(representation=scalar_bar_representations[k], scalar_bar_actor=scalar_bar))
+        scalar_bar_widgets[k].SetDefaultRenderer(renderers[k])
+        scalar_bar_widgets[k].SetInteractor(iren)
+
+        ren_win.AddRenderer(renderers[k])
+
+        if k == 0:
             if has_cow:
-                cam_orient_manipulator.SetParentRenderer(renderers[idx])
-            camera = renderers[idx].GetActiveCamera()
+                cam_orient_manipulator.SetParentRenderer(renderers[k])
+            camera = renderers[k].GetActiveCamera()
             camera.Elevation(60)
         else:
-            renderers[idx].SetActiveCamera(camera)
-        renderers[idx].SetViewport(xmins[idx], ymins[idx], xmaxs[idx], ymaxs[idx])
-        renderers[idx].ResetCamera()
+            renderers[k].SetActiveCamera(camera)
+
+        renderers[k].SetViewport(*viewports[k])
+        renderers[k].ResetCamera()
 
     # Create the TextActors.
     text_actors = list()
     text_representations = list()
     text_widgets = list()
     text_scale_mode = {'none': 0, 'prop': 1, 'viewport': 2}
-    text_positions = {0: {'p': [0.35, 0.05, 0], 'p2': [0.27, 0.15,0]},
-                 1: {'p': [0.37, 0.05,0], 'p2': [0.27, 0.15,0]},
-                 2: {'p': [0.3, 0.05,0], 'p2': [0.31, 0.15,0]}
-                 }
+    text_positions = {0: {'p': [0.35, 0.01, 0], 'p2': [0.27, 0.10, 0]},
+                      1: {'p': [0.37, 0.01, 0], 'p2': [0.27, 0.10, 0]},
+                      }
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
                                     font_size=24)
-    text = {0: 'Gauss_Curvature', 1: 'Mean_Curvature'}
     for k, v in curvature_types.items():
-
-        curvature_title = curvature_name.replace('_', '\n')
+        curvature_title = v.replace('_', '\n')
         text_actors.append(
-            vtkTextActor(input=v, text_scale_mode=text_scale_mode['none'], text_property=text_property))
+            vtkTextActor(input=curvature_title, text_scale_mode=text_scale_mode['none'], text_property=text_property))
 
-        # Create the text representation. Used for positioning the text_actor.
+        # Create the text representation. Used for positioning the text actor.
         text_representations.append(vtkTextRepresentation(enforce_normalized_viewport_bounds=True))
         text_representations[k].GetPositionCoordinate().value = text_positions[k]['p']
         text_representations[k].GetPosition2Coordinate().value = text_positions[k]['p2']
@@ -249,13 +247,13 @@ def main(argv):
         text_widgets[k].GetTextActor()
         text_widgets[k].SelectableOff()
 
-
+    # Enable the widgets.
     if has_cow:
-        # Enable the widget.
         cam_orient_manipulator.On()
 
-    for k in text.keys():
+    for k in curvature_types.keys():
         text_widgets[k].On()
+        scalar_bar_widgets[k].On()
 
     ren_win.Render()
     iren.Start()
@@ -387,7 +385,6 @@ def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):
     #  Set small values to zero.
     if epsilon != 0.0:
         curvatures = np.where(abs(curvatures) < epsilon, 0, curvatures)
-        # Curvatures is now an ndarray
         curv = numpy_support.numpy_to_vtk(num_array=curvatures.ravel(),
                                           deep=True,
                                           array_type=VTK_DOUBLE)
@@ -426,7 +423,6 @@ def constrain_curvatures(source, curvature_name, lower_bound=0.0, upper_bound=0.
     # Set upper and lower bounds.
     curvatures = np.where(curvatures < bounds[0], bounds[0], curvatures)
     curvatures = np.where(curvatures > bounds[1], bounds[1], curvatures)
-    # Curvatures is now an ndarray
     curv = numpy_support.numpy_to_vtk(num_array=curvatures.ravel(),
                                       deep=True,
                                       array_type=VTK_DOUBLE)

@@ -126,17 +126,17 @@ def main():
     # Create a mapper and actor for the initial dataset.
     mapper = vtkPolyDataMapper()
     clean_poly_data >> mapper
-    actor = vtkActor(mapper=mapper)
+    actor = vtkActor(mapper=mapper, position=(0, 8, 0))
 
     # Create a mapper and actor for smoothed dataset (vtkLoopSubdivisionFilter).
     mapper = vtkPolyDataMapper()
     clean_poly_data >> smooth_loop >> mapper
-    actor_loop = vtkActor(mapper=mapper)
+    actor_loop = vtkActor(mapper=mapper, position=(0, 8, 0))
 
     # Create a mapper and actor for smoothed dataset (vtkButterflySubdivisionFilter).
     mapper = vtkPolyDataMapper()
     clean_poly_data >> smooth_butterfly >> mapper
-    actor_butterfly = vtkActor(mapper=mapper)
+    actor_butterfly = vtkActor(mapper=mapper, position=(0, 8, 0))
 
     render_window = vtkRenderWindow(size=(900, 300))
     render_window_interactor = vtkRenderWindowInteractor()
@@ -166,12 +166,12 @@ def main():
         if k == 0:
             camera = renderers[k].GetActiveCamera()
             camera.Elevation(-45)
-            camera.Zoom(2.5)
         else:
             renderers[k].SetActiveCamera(camera)
 
         renderers[k].SetViewport(*viewports[k])
         renderers[k].ResetCamera()
+        camera.Zoom(1.2)
 
         render_window.AddRenderer(renderers[k])
 
@@ -182,15 +182,15 @@ def main():
     text_scale_mode = {'none': 0, 'prop': 1, 'viewport': 2}
     text_property = vtkTextProperty(color=nc.GetColor3d('DarkSlateGray'), bold=True, italic=True, shadow=True,
                                     font_size=24)
-    text_positions = {0: {'p': [0.35, 0.05, 0], 'p2': [0.20, 0.15,0]},
-                 1: {'p': [0.37, 0.05,0], 'p2': [0.27, 0.15,0]},
-                 2: {'p': [0.3, 0.05,0], 'p2': [0.31, 0.15,0]}
-                 }
+    text_positions = {0: {'p': [0.35, 0.01, 0], 'p2': [0.20, 0.15, 0]},
+                      1: {'p': [0.37, 0.01, 0], 'p2': [0.27, 0.15, 0]},
+                      2: {'p': [0.3, 0.01, 0], 'p2': [0.31, 0.15, 0]}
+                      }
     for k, v in text.items():
         text_actors.append(
             vtkTextActor(input=v, text_scale_mode=text_scale_mode['none'], text_property=text_property))
 
-        # Create the text representation. Used for positioning the text_actor.
+        # Create the text representation. Used for positioning the text actor.
         text_representations.append(vtkTextRepresentation(enforce_normalized_viewport_bounds=True))
         text_representations[k].GetPositionCoordinate().value = text_positions[k]['p']
         text_representations[k].GetPosition2Coordinate().value = text_positions[k]['p2']
