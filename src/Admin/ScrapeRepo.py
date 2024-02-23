@@ -715,7 +715,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                       <div style="display: flex; margin-bottom: 10px">
                                       <button id="reload-wasm-button" class="wasm-button">Reload example</button>
                                       <button id="open-wasm-button" class="wasm-button">Open in new tab</button>
-                                      <input id="checkbox" type="checkbox" checked="False">
+                                      <input id="checkbox" type="checkbox">
                                       <label for="checkbox" style="align-self: center;">Show logs</label>
                                       <a style="margin-left: auto;" href="https://examples.vtk.org/site/WASM/1_WASM"><button class="wasm-button">Documentation</button></a>
                                       </div>''')
