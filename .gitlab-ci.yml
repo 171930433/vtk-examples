@@ -18,13 +18,14 @@ build-vtk:
     cache:
         key: vtk-cache
         paths:
-            - vtk
+            - vtk_build
         policy: pull-push
     script:
         - bash .gitlab/ci/scripts/build_vtk.sh
     artifacts:
         paths: 
-            - vtk
+            - vtk_build/vtk
+            - vtk_build/install
 
 package-data:
     image: $CI_REGISTRY/vtk/vtk-examples:20240129
