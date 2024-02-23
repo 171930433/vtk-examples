@@ -1,7 +1,8 @@
 stages:
     - prep
-    - build
-    - deploy
+    - build-assets
+    - deploy-assets
+    - build-website
 
 default:
     image: ubuntu:22.04
@@ -29,7 +30,7 @@ build-vtk:
 
 package-data:
     image: $CI_REGISTRY/vtk/vtk-examples:20240129
-    stage: build
+    stage: build-assets
     script:
         - bash .gitlab/ci/scripts/package_data.sh
     artifacts:
@@ -38,35 +39,21 @@ package-data:
 
 build-examples:
     image: $CI_REGISTRY/vtk/vtk-examples:20240129
-    stage: build
+    stage: build-assets
+    dependencies:
+        - build-vtk
     script:
         - bash .gitlab/ci/scripts/build_examples.sh
     artifacts:
         paths:
             - build_examples/
 
-
-build-gh-pages:
-    rules:
-        - if: '$CI_COMMIT_REF_NAME == "master"'
-    stage: build
-    before_script:
-        - bash .gitlab/ci/scripts/before_build_gh-pages.sh
-    script:
-        - eval $(ssh-agent -s)
-        - ssh-add $GH_KEY
-        - bash .gitlab/ci/scripts/build_gh-pages.sh
-    environment:
-        name: deploy-gh-pages
-        url: https://github.com/Kitware/vtk-examples
-
-
 deploy-examples:
     rules:
         - if: '$CI_COMMIT_REF_NAME == "master"'
     needs:
         - build-examples
-    stage: deploy
+    stage: deploy-assets
     dependencies:
         - build-examples
     before_script:
@@ -84,7 +71,7 @@ deploy-data:
         - if: '$CI_COMMIT_REF_NAME == "master"'
     needs:
         - package-data
-    stage: deploy
+    stage: deploy-assets
     dependencies:
         - package-data
     before_script:
@@ -96,3 +83,23 @@ deploy-data:
     environment:
         name: deploy-examples
         url: https://web.kitware.com
+
+build-gh-pages:
+    rules:
+        - if: '$CI_COMMIT_REF_NAME == "master"'
+    stage: build-website
+    needs:
+        - deploy-examples
+        - deploy-data
+        - build-vtk
+    dependencies:
+        - build-vtk
+    before_script:
+        - bash .gitlab/ci/scripts/before_build_gh-pages.sh
+    script:
+        - eval $(ssh-agent -s)
+        - ssh-add $GH_KEY
+        - bash .gitlab/ci/scripts/build_gh-pages.sh
+    environment:
+        name: deploy-gh-pages
+        url: https://github.com/Kitware/vtk-examples
