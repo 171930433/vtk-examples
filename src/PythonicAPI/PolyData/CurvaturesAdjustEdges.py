@@ -507,7 +507,6 @@ def get_bour():
 
 def get_cube():
     surface = vtkCubeSource()
-    print(surface)
 
     # Triangulate.
     triangulation = vtkTriangleFilter()
