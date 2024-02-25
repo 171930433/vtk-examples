@@ -91,7 +91,6 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
 
-
 ### Data Types
 
 | Example Name | Description | Image |
@@ -173,6 +172,12 @@ This section includes ?vtkUnstructuredGrid?.
 ## VTK Concepts
 
 ## Rendering
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
+[PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
+[PBR_Skybox_Anisotropy](/PythonicAPI/Rendering/PBR_Skybox_Anisotropy) | Demonstrates physically based rendering, a skybox, image based lighting, and anisotropic texturing.
 
 ## Lighting
 
