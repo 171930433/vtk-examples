@@ -9,7 +9,7 @@ git checkout gh-pages
 popd
 OLDHOME=${HOME}
 HOME=${PWD}
-src/SyncSiteWithRepo.sh https://gitlab.kitware.com/vtk/vtk-examples https://examples.vtk.org/site/ https://github.com/Kitware/vtk-examples /pages vtk
+src/SyncSiteWithRepo.sh https://gitlab.kitware.com/vtk/vtk-examples https://examples.vtk.org/site/ https://github.com/Kitware/vtk-examples /pages vtk_build/vtk
 HOME=${OLDHOME}
 pushd /pages
 git add .

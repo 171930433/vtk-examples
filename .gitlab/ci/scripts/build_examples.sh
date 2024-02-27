@@ -16,7 +16,7 @@ for topic in src/Cxx/*/; do
                 for addon_file in ${topic}/${name}.!(md); do
                     cp ${addon_file} ${target_path}
                 done
-                python3 .gitlab/GenerateHtmlCMake.py ${f} ${target_path} vtk
+                python3 .gitlab/GenerateHtmlCMake.py ${f} ${target_path} vtk_build/vtk
             fi
         done
     fi
@@ -24,7 +24,7 @@ done
 python3 .gitlab/GenerateSuperCMake.py
 emcmake cmake -GNinja \
     -DEMSCRIPTEN:Bool=true \
-    -DVTK_DIR=$CI_PROJECT_DIR/vtk/build \
+    -DVTK_DIR=$CI_PROJECT_DIR/vtk_build/install/lib/cmake/vtk-9.3 \
     -DDEBUGINFO=NONE \
     -DOPTIMIZE=SMALLEST \
     -S pregen_examples -B build_examples
