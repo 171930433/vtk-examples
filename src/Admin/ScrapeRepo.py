@@ -726,7 +726,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                       <div style="display: flex; margin-bottom: 10px">
                                       <button id="reload-wasm-button" class="wasm-button">Reload example</button>
                                       <button id="open-wasm-button" class="wasm-button">Open in new tab</button>
-                                      <input id="checkbox" type="checkbox" checked="False">
+                                      <input id="checkbox" type="checkbox">
                                       <label for="checkbox" style="align-self: center;">Show logs</label>
                                       <a style="margin-left: auto;" href="https://examples.vtk.org/site/WASM/1_WASM"><button class="wasm-button">Documentation</button></a>
                                       </div>''')
@@ -736,6 +736,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                       var btn_wasm = document.getElementById("wasm-button");
                                       var btn_reload = document.getElementById("reload-wasm-button");
                                       var btn_open = document.getElementById("open-wasm-button");
+                                      var checkbox = document.getElementById("checkbox");
                                       var frame = document.getElementById("frame");
                                       var wasm = document.getElementById("wasm-div");
                                       var img = document.getElementById("screenshot-div");
@@ -745,6 +746,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                           frame.src = "about:blank";
                                           btn_screenshot.disabled = true;
                                           btn_wasm.disabled = false;
+                                          checkbox.checked = false;
                                         }
                                       btn_wasm.onclick = function () {
                                           img.style.display = "none";
@@ -756,6 +758,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                       }
                                       btn_reload.onclick = function() {
                                           frame.src = frame.src;
+                                          checkbox.checked = false;
                                       }
                                       btn_open.onclick = function(){
                                         window.open(\'https://vtk.org/files/examples/'''
@@ -765,8 +768,8 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                         frame.src = "about:blank";
                                         btn_screenshot.disabled = true;
                                         btn_wasm.disabled = false;
+                                        checkbox.checked = false;
                                       } 
-                                      const checkbox = document.getElementById('checkbox')
                                       checkbox.addEventListener('change', (event) => {
                                         frame.contentWindow.postMessage("ToggleOutput", "https://vtk.org")
                                       })

@@ -1,8 +1,8 @@
-﻿# Trame Examples
+# Trame Examples
 
-[Trame](https://kitware.github.io/trame/docs/index.html) is a web framework that weaves together open source components into customized visual analytics easily. It uses the VTK and ParaView platforms as its core, **trame** provides complete control of 3D visualizations and data movements.
+[Trame](https://kitware.github.io/trame/) is a web framework that weaves together open source components into customized visual analytics easily. It uses the VTK and ParaView platforms as its core, **trame** provides complete control of 3D visualizations and data movements.
 
-To familiarize yourself, this [tutorial](https://kitware.github.io/trame/docs/tutorial.html), will teach you
+To familiarize yourself, this [tutorial](https://kitware.github.io/trame/guide/tutorial/), will teach you
 
 - how to setup virtual environments in Python for **trame**
 - how to run an application
