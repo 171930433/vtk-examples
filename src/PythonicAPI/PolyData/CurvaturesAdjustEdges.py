@@ -244,7 +244,6 @@ def main(argv):
         text_widgets.append(vtkTextWidget(representation=text_representations[k], text_actor=text_actors[k]))
         text_widgets[k].SetDefaultRenderer(renderers[k])
         text_widgets[k].SetInteractor(iren)
-        text_widgets[k].GetTextActor()
         text_widgets[k].SelectableOff()
 
     # Enable the widgets.

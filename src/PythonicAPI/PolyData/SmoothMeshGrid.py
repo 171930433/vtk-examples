@@ -199,7 +199,6 @@ def main():
         text_widgets.append(vtkTextWidget(representation=text_representations[k], text_actor=text_actors[k]))
         text_widgets[k].SetDefaultRenderer(renderers[k])
         text_widgets[k].SetInteractor(render_window_interactor)
-        text_widgets[k].GetTextActor()
         text_widgets[k].SelectableOff()
 
     render_window.Render()
