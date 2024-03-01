@@ -75,17 +75,17 @@ Note: `None >> a` can also be used to clear any inputs on the filter `a`, whethe
 
 ## Multiple outputs from a pipeline
 
-A pipeline can produce multiple outputs.
+A pipeline can produce multiple outputs. Here, p is a tuple of ?vtkDataObject?s, for example: `p: tuple(?vtkDataObject?, ..., ?vtkDataObject?)`. Subsequent pipelines can access the individual elements of the tuple.
 
 ``` Python
-    pipeline_output = (a >> b >> c).update().output
-    p1 = vtkSomeClass(input_data=pipeline_output[0]) >> e >> f
-    p1 = vtkAnotherClass(input_data=pipeline_output[1]) >> g >> h
+    p = (a >> b >> c).update().output
+    p1 = vtkSomeClass(input_data=p[0]) >> e >> f
+    p1 = vtkAnotherClass(input_data=p[1]) >> g >> h
 ```
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[SolidClip](/PythonicAPI/Meshes/SolidClip) | The tuple `clipper` contains the clipped output as the first element and clipped away output is the second element.
+[SolidClip](/PythonicAPI/Meshes/SolidClip) | The tuple `clipper` contains the clipped output as the first element and clipped away output as the second element.
 
 ## Updating part of a pipeline
 
