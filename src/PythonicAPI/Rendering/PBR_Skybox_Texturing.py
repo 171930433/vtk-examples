@@ -510,7 +510,6 @@ def read_cubemap(cubemap):
     for i in range(0, len(flipped_images)):
         cube_map.SetInputConnection(i, flipped_images[i].GetOutputPort())
 
-    # flipped_images >> cube_map
     return cube_map
 
 
