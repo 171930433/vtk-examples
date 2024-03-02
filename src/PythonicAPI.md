@@ -82,6 +82,7 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[ParametricObjectsDemo](/PythonicAPI/GeometricObjects/ParametricObjectsDemo) | Demonstrates the Parametric classes added by Andrew Maclean and additional classes added by Tim Meehan. The parametric spline is also included. Options are provided to display single objects, add backface, add normals and print out an image.
 [ParametricKuenDemo](/PythonicAPI/GeometricObjects/ParametricKuenDemo) | Interactively change the parameters for a Kuen Surface.
 
 ## Implicit Functions and Iso-surfaces
