@@ -69,6 +69,7 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[GeometricObjectsDemo](/PythonicAPI/GeometricObjects/GeometricObjectsDemo) |
 [SourceObjectsDemo](/PythonicAPI/GeometricObjects/SourceObjectsDemo) | Examples of source objects that procedurally generate polygonal models.  These nine images represent just some of the capability of VTK. From upper left in reading order: sphere, cone, cylinder, cube, plane, text, random point cloud, disk (with or without hole), and line source. Other polygonal source objects are available; check subclasses of vtkPolyDataAlgorithm.
 
 ### Cells
