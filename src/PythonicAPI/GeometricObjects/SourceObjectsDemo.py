@@ -69,10 +69,28 @@ def main():
     text_property = vtkTextProperty(color=colors.GetColor3d('LightGoldenrodYellow'), bold=True, italic=True,
                                     shadow=True,
                                     font_size=16, justification=justification['centered'])
-    text_position = {'p': [0.3, 0.01, 0], 'p2': [0.4, 0.2, 0]}
+
+    # Position text according to its length and centered in the viewport.
+    name_len_min = 0
+    name_len_max = 0
+    for i in range(0, len(source_objects)):
+        sz = len(source_objects[i].class_name)
+        if i == 0:
+            name_len_min = name_len_max = sz
+        else:
+            name_len_min = min(name_len_min, sz)
+            name_len_max = max(name_len_max, sz)
+    text_positions = list()
+    for i in range(0, len(source_objects)):
+        sz = len(source_objects[i].class_name)
+        delta_sz = 0.7 * sz / name_len_max
+        x0 = 0.5 - delta_sz / 2.0
+        x1 = delta_sz
+        # print(f'{i}: {x0:3.2f}, {x1:3.2f} len: {x0 + x1:3.2f}')
+        text_positions.append(
+            {'p': [x0, 0.01, 0], 'p2': [x1, 0.2, 0]})
     back_property = vtkProperty(color=colors.GetColor3d('Tomato'))
 
-    renderers = list()
     mappers = list()
     actors = list()
     text_representations = list()
@@ -87,47 +105,44 @@ def main():
             x1 = float(col + 1) / grid_dimensions
             y1 = float(grid_dimensions - row) / grid_dimensions
 
-            renderers.append(vtkRenderer(background=colors.GetColor3d('BkgColor'), viewport=(x0, y0, x1, y1)))
+            renderer = vtkRenderer(background=colors.GetColor3d('BkgColor'), viewport=(x0, y0, x1, y1))
 
-            # We need a renderer even if there is no source object.
-            if index > (len(source_objects) - 1):
-                render_window.AddRenderer(renderers[index])
-                continue
+            # Add the corresponding actor and label for this grid cell, if they exist.
+            if index < len(source_objects):
+                # Create the mappers and actors for each object.
+                mappers.append(vtkPolyDataMapper())
+                source_objects[index] >> mappers[index]
 
-            # Create the mappers and actors for each object.
-            mappers.append(vtkPolyDataMapper())
-            source_objects[index] >> mappers[index]
+                actors.append(vtkActor(mapper=mappers[index]))
+                actors[index].property.color = colors.GetColor3d('PeachPuff')
+                actors[index].backface_property = back_property
 
-            actors.append(vtkActor(mapper=mappers[index]))
-            actors[index].property.color = colors.GetColor3d('PeachPuff')
-            actors[index].backface_property = back_property
+                renderer.AddActor(actors[index])
 
-            renderers[index].AddActor(actors[index])
+                # Create the text actor and representation.
+                text_actors.append(
+                    vtkTextActor(input=source_objects[index].class_name, text_scale_mode=text_scale_mode['none'],
+                                 text_property=text_property))
 
-            # Create the text actor and representation.
-            text_actors.append(
-                vtkTextActor(input=source_objects[index].class_name, text_scale_mode=text_scale_mode['none'],
-                             text_property=text_property))
+                # Create the text representation. Used for positioning the text actor.
+                text_representations.append(vtkTextRepresentation(enforce_normalized_viewport_bounds=True))
+                text_representations[index].GetPositionCoordinate().value = text_positions[index]['p']
+                text_representations[index].GetPosition2Coordinate().value = text_positions[index]['p2']
 
-            # Create the text representation. Used for positioning the text actor.
-            text_representations.append(vtkTextRepresentation(enforce_normalized_viewport_bounds=True))
-            text_representations[index].GetPositionCoordinate().value = text_position['p']
-            text_representations[index].GetPosition2Coordinate().value = text_position['p2']
+                # Create the text widget, setting the default renderer and interactor.
+                text_widgets.append(
+                    vtkTextWidget(representation=text_representations[index], text_actor=text_actors[index]))
+                text_widgets[index].SetDefaultRenderer(renderer)
+                text_widgets[index].SetInteractor(interactor)
+                text_widgets[index].SelectableOff()
 
-            # Create the text widget, setting the default renderer and interactor.
-            text_widgets.append(
-                vtkTextWidget(representation=text_representations[index], text_actor=text_actors[index]))
-            text_widgets[index].SetDefaultRenderer(renderers[index])
-            text_widgets[index].SetInteractor(interactor)
-            text_widgets[index].SelectableOff()
+                renderer.ResetCamera()
+                renderer.active_camera.Azimuth(30)
+                renderer.active_camera.Elevation(30)
+                renderer.GetActiveCamera().Zoom(0.8)
+                renderer.ResetCameraClippingRange()
 
-            renderers[index].ResetCamera()
-            renderers[index].active_camera.Azimuth(30)
-            renderers[index].active_camera.Elevation(30)
-            renderers[index].GetActiveCamera().Zoom(0.8)
-            renderers[index].ResetCameraClippingRange()
-
-            render_window.AddRenderer(renderers[index])
+            render_window.AddRenderer(renderer)
 
     render_window.Render()
 
