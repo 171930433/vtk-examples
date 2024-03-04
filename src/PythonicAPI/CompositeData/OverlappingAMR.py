@@ -24,7 +24,7 @@ from vtkmodules.vtkRenderingCore import (
 )
 
 
-def MakeScalars(dims, origin, spacing):
+def make_scalars(dims, origin, spacing):
     """
 
     :param dims: The dimensions.
@@ -70,7 +70,7 @@ def main():
     ug = list()
     for i in range(0, 3):
         ug.append(vtkUniformGrid(origin=origin[i], spacing=spacing[i], dimensions=dims))
-        ug[i].point_data.SetScalars(MakeScalars(dims, origin[i], spacing[i]))
+        ug[i].point_data.SetScalars(make_scalars(dims, origin[i], spacing[i]))
         box.append(vtkAMRBox())
     # Fill the dataset.
     amr.SetAMRBox(0, 0, box[0])
@@ -90,11 +90,11 @@ def main():
     actor1.GetProperty().SetColor(colors.GetColor3d('Yellow'))
 
     # Create an iso-surface - at 10.
-    cf = vtkContourFilter(number_of_contours=1, value=(0, 10.0))
-    geomFilter = vtkCompositeDataGeometryFilter()
+    cf = vtkContourFilter(contour_values=[10.0])
+    geom_filter = vtkCompositeDataGeometryFilter()
     # Associate the geometry with a mapper and the mapper to an actor.
     mapper2 = vtkPolyDataMapper()
-    amr >> cf >> geomFilter >> mapper2
+    amr >> cf >> geom_filter >> mapper2
     actor2 = vtkActor(mapper=mapper2)
 
     # Create the render window, renderer, and interactor.
