@@ -200,7 +200,7 @@ def main():
                 actor = vtkActor(mapper=mapper)
                 actor.property.color = colors.GetColor3d("NavajoWhite")
                 if back_face:
-                    actor.SetBackfaceProperty(back_property)
+                    actor.backface_property = back_property
 
                 renderer.AddActor(actor)
 
