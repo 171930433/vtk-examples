@@ -31,14 +31,19 @@ def main():
         f'Cylinder properties:\n   height: {cylinder.height}, radius: {cylinder.radius},'
         f' center: {cylinder.center} resolution: {cylinder.resolution} capping: {cylinder.capping == 1}')
 
-    cm = vtkPolyDataMapper(input_connection=cylinder.output_port)
-
+    # We can do this by directly mapping the input connection to the output port.
+    # cm = vtkPolyDataMapper(input_connection=cylinder.output_port)
+    # Or make a pipeline ...
+    cm = vtkPolyDataMapper()
     ca = vtkActor(mapper=cm)
+    # Our pipeline, linking the source to the mapper.
+    cylinder >> cm
+
     ca.RotateX(30)
     ca.RotateY(-45)
     ca.property.color = colors.GetColor3d('Tomato')
 
-    # Note the setting of the background by calling GetColor()
+    # Note the setting of the background by calling GetColor3D()
     ren = vtkRenderer(background=colors.GetColor3d('BkgColor'))
     ren.AddActor(ca)
 
