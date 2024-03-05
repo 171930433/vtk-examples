@@ -104,3 +104,22 @@ Sometimes we need to update part of a pipeline so that output can be used in oth
 | -------------- | ---------------------- | ------- |
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | One pipeline creates a smoothed dataset. However we need to update `smooth_loop` in the pipeline so that `?vtkCellLocator?` finds cells in order to create the spline.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | We need the smoother error for the scalar range in the mapper. So we create the pipeline and update `smoother` to get the needed scalar range. Of course, all other pipeline elements feeding into `smoother` will be updated also.
+
+## Reusing a pipeline
+
+Pipelines can be reused.
+
+``` Python
+    # The pipeline to reuse.
+    p = (a >> b >> c)
+    # Sources for the pipeline.
+    s1 = d
+    s2 = e
+    # Use the pipeline in a functional way.
+    p1 = p(s1())
+    p2 = p(ss())
+```
+
+| Example Name | Comments | Image |
+| -------------- | ---------------------- | ------- |
+[PipelineReuse](/PythonicAPI/GeometricObjects/PipelineReuse) | Here we use the pipeline in a functional way. This allows us to reuse the pipeline, here, p(cone()) returns a data object so any changes to the pipeline afterward would not be automatically propagated to the rendering pipeline. Finally, we use an append filter to combine the cone and cylinder.
