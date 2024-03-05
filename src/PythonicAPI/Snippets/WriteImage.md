@@ -6,7 +6,7 @@ To use the snippet, click the *Copy to clipboard* at the upper right of the code
 
 ### Implementation
 
-```python
+``` Python
 
 from pathlib import Path
 
@@ -62,17 +62,19 @@ def write_image(file_name, ren_win, rgba=True):
             wtif.update()
 
         if ext == '.bmp':
-            writer = vtkBMPWriter(file_name=path, input_connection=wtif.output_port)
+            writer = vtkBMPWriter(file_name=path)
         elif ext == '.jpg':
-            writer = vtkJPEGWriter(file_name=path, input_connection=wtif.output_port)
+            writer = vtkJPEGWriter(file_name=path)
         elif ext == '.pnm':
-            writer = vtkPNMWriter(file_name=path, input_connection=wtif.output_port)
+            writer = vtkPNMWriter(file_name=path)
         elif ext == '.ps':
-            writer = vtkPostScriptWriter(file_name=path, input_connection=wtif.output_port)
+            writer = vtkPostScriptWriter(file_name=path)
         elif ext == '.tiff':
-            writer = vtkTIFFWriter(file_name=path, input_connection=wtif.output_port)
+            writer = vtkTIFFWriter(file_name=path)
         else:
-            writer = vtkPNGWriter(file_name=path, input_connection=wtif.output_port)
+            writer = vtkPNGWriter(file_name=path)
+            
+        wtif >> writer
         writer.Write()
     else:
         raise RuntimeError('Need a filename.')
@@ -81,7 +83,7 @@ def write_image(file_name, ren_win, rgba=True):
 
 ### Usage
 
-```python
+``` Python
 
   write_image(file_name, ren_win, rgba=False)
 

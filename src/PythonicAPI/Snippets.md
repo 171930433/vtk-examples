@@ -4,26 +4,30 @@ Snippets are chunks of code that can be cut (*snipped*) and pasted into examples
 
 ### Available snippets
 
-#### [CameraPosition](/Python/Snippets/CameraPosition.md)
+#### [CameraPosition](/PythonicAPI/Snippets/CameraPosition.md)
 
 Output the camera position while moving the image.
 
-#### [CheckVTKVersion](/Python/Snippets/CheckVTKVersion.md)
+#### [CheckVTKVersion](/PythonicAPI/Snippets/CheckVTKVersion.md)
 
 Check the VTK version returning `True` if the requested VTK version is >= the current version.
 
-#### [PointToGlyph](/Python/Snippets/PointToGlyph.md)
+#### [PointToGlyph](/PythonicAPI/Snippets/PointToGlyph.md)
 
 Represent points as glyphs.
 
-#### [GetProgramParameters](/Python/Snippets/GetProgramParameters.md)
+#### [GetProgramParameters](/PythonicAPI/Snippets/GetProgramParameters.md)
 
 Get the program parameters.
 
-#### [ReadPolyData](/Python/Snippets/ReadPolyData.md)
+#### [ReadPolyData](/PythonicAPI/Snippets/ReadPolyData.md)
 
 Uses the appropriate vtkPolyData reader to read any vtkPolyData file.
 
-#### [WriteImage](/Python/Snippets/WriteImage.md)
+#### [ScreenShot](/PythonicAPI/Snippets/ScreenshotCallback.md)
 
-Take a screen shot from the render window and write it to a file. The file extension selects the writer to use.
+Take a screenshot from the render window by pressing a key on the keyboard, the default key is "k". The file extension selects the writer to use.
+
+#### [WriteImage](/PythonicAPI/Snippets/WriteImage.md)
+
+Take a screenshot from the render window and write it to a file. The file extension selects the writer to use.
