@@ -8,7 +8,7 @@ To use the snippet, click the *Copy to clipboard* at the upper right of the code
 
 ### Implementation
 
-``` python
+``` Python
 
 def get_program_parameters():
     import argparse
@@ -27,7 +27,7 @@ def get_program_parameters():
 
 ### Typical usage
 
-``` python
+``` Python
 
 file_name, figure = get_program_parameters()
 

@@ -6,7 +6,7 @@ To use the snippet, click the *Copy to clipboard* at the upper right of the code
 
 ### Implementation
 
-``` python
+``` Python
 
 # from pathlib import Path
 # 

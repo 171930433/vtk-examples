@@ -8,7 +8,7 @@ To use the snippet, click the *Copy to clipboard* at the upper right of the code
 
 ### Implementation
 
-``` python
+``` Python
 
 from vtkmodules.vtkCommonCore import (
     VTK_VERSION_NUMBER,
@@ -44,7 +44,7 @@ def vtk_version_ok(major, minor, build):
 
 ### Typical usage
 
-``` python
+``` Python
 
     if vtk_version_ok(*ver):
         try:

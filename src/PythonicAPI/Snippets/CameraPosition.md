@@ -29,7 +29,7 @@ def camera_modified_callback(caller, event):
 
 ### Usage
 
-```python
+``` Python
     ren_win.Render()
     ren.active_camera.AddObserver('ModifiedEvent', camera_modified_callback)
 ```
