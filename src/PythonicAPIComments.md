@@ -117,9 +117,41 @@ Pipelines can be reused.
     s2 = e
     # Use the pipeline in a functional way.
     p1 = p(s1())
-    p2 = p(ss())
+    p2 = p(s2())
 ```
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
 [PipelineReuse](/PythonicAPI/GeometricObjects/PipelineReuse) | Here we use the pipeline in a functional way. This allows us to reuse the pipeline, here, p(cone()) returns a data object so any changes to the pipeline afterward would not be automatically propagated to the rendering pipeline. Finally, we use an append filter to combine the cone and cylinder.
+
+## How to handle #defines
+
+This example is relatively complex in that a single source feeds into two functions `generate_gaussian_curvatures(...)` and `generate_mean_curvatures(...)` returning actors, scalar ranges of curvatures and elevation along with the lookup tables. Additionally a text widget and scalar bar widgets are positioned into two viewports.
+
+We initialize nearly all properties of a wrapped VTK class by specifying keyword arguments in the constructor. There are no issues if the properties are True or False or an existing variable or an enum (which is wrapped in Python) e.g.:
+
+``` Python
+color_series = ?vtkColorSeries?(color_scheme=?vtkColorSeries?.BREWER_QUALITATIVE_SET3)
+```
+
+However, a lot of Set/Gets in the VTK classes use values defined as `#define VTK_SOME_CONSTANT x`, these are not wrapped. In order to get around this we can use a data class in Python 3.7 or later.
+
+``` Python
+# -----------------------------------------------------------------------------
+# These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
+# The class name consists of the VTK class name (without the leading vtk)
+# appended to the relevant Set/Get Macro name.
+# Note: To find these constants, use the link to the header in the
+#       documentation for the class.
+# ------------------------------------------------------------------------------
+@dataclass(frozen=True)
+class BandedPolyDataContourFilterScalarMode:
+    VTK_SCALAR_MODE_INDEX: int = 0
+    VTK_SCALAR_MODE_VALUE: int = 1
+```
+
+The real advantage of this approach is that the defined VTK constants are used instead of meaningless integers or other values.
+
+| Example Name | Comments | Image |
+| -------------- | ---------------------- | ------- |
+[CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Using immutable data classes for constants.  Demonstrating positioning of title and scalar bar widgets into multiple viewports.

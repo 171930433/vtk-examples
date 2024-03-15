@@ -1,10 +1,13 @@
 ### Description
 
-In this example we are coloring the surface by partitioning the gaussian curvature into bands and using arrows to display the normals on the surface.
+In this example we are coloring the surface by partitioning the Gaussian and Mean curvatures into bands with arrows colored by elevation to display the normals.
 
 Rather beautiful surfaces are generated.
 
-The banded contour filter and an indexed lookup table are used to generate the curvature bands on the surface. To further enhance the surface, the surface normals are glyphed and colored by elevation using a diverging lookup table.
+- [Gaussian Curvature](https://en.wikipedia.org/wiki/Gaussian_curvature), also [Wolfram MathWorld](https://mathworld.wolfram.com/GaussianCurvature.html)
+- [Mean Curvature](https://en.wikipedia.org/wiki/Mean_curvature), also [Wolfram MathWorld](https://mathworld.wolfram.com/MeanCurvature.html)
+
+The banded contour filter and an indexed/categorical lookup table is used to generate the curvature bands on the surface. To further enhance the surface, the surface normals are glyphed and colored by elevation using an ordinal lookup table.
 
 Note that:
 
@@ -25,6 +28,4 @@ So we need to manually generate custom bands to group the curvatures. The bands 
 
 Feel free to experiment with different color schemes and/or the other sources from the parametric function group or the torus etc.
 
-You will usually need to adjust the parameters for `maskPts`, `arrow` and `glyph` for a nice appearance.
-
-A histogram of the frequencies is also output to the console. This is useful if you want to get an idea of the distribution of the scalars in each band.
+A histogram of the frequencies can be output to the console. This is useful if you want to get an idea of the distribution of the scalars in each band.

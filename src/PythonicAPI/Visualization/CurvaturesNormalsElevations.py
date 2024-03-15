@@ -55,12 +55,13 @@ from vtkmodules.vtkFiltersSources import (
 from vtkmodules.vtkInteractionStyle import vtkInteractorStyleTrackballCamera
 from vtkmodules.vtkInteractionWidgets import (
     vtkCameraOrientationWidget,
+    vtkOrientationMarkerWidget,
     vtkScalarBarRepresentation,
     vtkScalarBarWidget,
     vtkTextRepresentation,
     vtkTextWidget
 )
-from vtkmodules.vtkRenderingAnnotation import vtkScalarBarActor
+from vtkmodules.vtkRenderingAnnotation import vtkAxesActor, vtkScalarBarActor
 from vtkmodules.vtkRenderingCore import (
     vtkActor,
     vtkColorTransferFunction,
@@ -75,13 +76,16 @@ from vtkmodules.vtkRenderingCore import (
 
 def get_program_parameters():
     import argparse
-    description = 'Demonstrates Gaussian and Mean curvature on a surface.'
+    description = 'Demonstrates Gaussian and Mean curvatures on a surface, along with normals colored by elevation.'
     epilogue = '''
+    For example: "Random Hills" -f
+                 Will display the curvatures along with normals on the surface colored by elevation.
     '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('-s', '--surface_name', default='random hills',
-                        help='The name of the surface.')
+    # parser.add_argument('-s', '--surface_name', default='random hills',
+    #                     help='The name of the surface.')
+    parser.add_argument('surface_name', default='random hills', help='The name of the surface.')
     parser.add_argument('-f', '--frequency_table', action='store_true', help='Display the frequency table.')
 
     args = parser.parse_args()
@@ -91,13 +95,11 @@ def get_program_parameters():
 def main(argv):
     surface_name, frequency_table = get_program_parameters()
 
-    # ------------------------------------------------------------
-    # Create the surface, lookup tables, contour filter etc.
-    # ------------------------------------------------------------
     available_surfaces = ['hills', 'parametric torus', 'plane', 'random hills', 'sphere', 'torus']
-    needs_adjusting = ['hills', 'parametric torus', 'plane', 'random hills', 'torus']
+    # Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
+    needs_adjusting = ['hills', 'parametric torus', 'plane', 'random hills']
 
-    surface_name = surface_name.lower()
+    surface_name = ' '.join(surface_name.lower().replace('_', ' ').split())
     if surface_name not in available_surfaces:
         print('Nonexistent surface:', surface_name)
         print('Available surfaces are:')
@@ -109,20 +111,20 @@ def main(argv):
             if i < len(asl) - 1:
                 s += ','
             print(f'   {s}')
+        print('If a name has spaces in it, delineate the name with quotes e.g. "random hills"')
         return
 
     Surface = namedtuple('Surface', 'name source')
     surface = Surface(surface_name, get_source(surface_name, available_surfaces))
 
+    # --------------------------------------------------------------------------------------
+    # Get the actors, scalar range of curvatures and elevation along with the lookup tables.
+    # --------------------------------------------------------------------------------------
     # Use an ordered dictionary as we want the keys in a specific order.
     curvatures = OrderedDict()
     curvatures['Gauss_Curvature'] = generate_gaussian_curvatures(surface, needs_adjusting,
                                                                  frequency_table=frequency_table)
     curvatures['Mean_Curvature'] = generate_mean_curvatures(surface, needs_adjusting, frequency_table=frequency_table)
-
-    # ------------------------------------------------------------
-    # Create the mappers and actors, adding them to curvatures.
-    # ------------------------------------------------------------
 
     colors = vtkNamedColors()
 
@@ -138,11 +140,9 @@ def main(argv):
     window_width = 800 * 2
     window_height = 800
 
-    # ------------------------------------------------------------
-    # Create the RenderWindow, Renderer and Interactor
-    # ------------------------------------------------------------
-    # For the Orientation Marker and Elevation scale.
-    # ren = vtkRenderer(background=colors.GetColor3d('ParaViewBkg'))
+    # --------------------------------------------------
+    # Create the RenderWindow, Renderers and Interactor.
+    # --------------------------------------------------
     ren_win = vtkRenderWindow(size=(window_width, window_height), window_name='CurvatureBandsWithGlyphs')
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
@@ -159,9 +159,8 @@ def main(argv):
     text_positions = get_title_positions(available_surfaces, justification='left')
 
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
-                                    font_size=18)
-    text_scale_mode = {'none': 0, 'prop': 1, 'viewport': 2}
-    text_actor = vtkTextActor(input=surface_name.title(), text_scale_mode=text_scale_mode['none'],
+                                    font_size=16)
+    text_actor = vtkTextActor(input=surface_name.title(), text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                               text_property=text_property)
     # Create the text representation. Used for positioning the text actor.
     text_representation = vtkTextRepresentation(enforce_normalized_viewport_bounds=True)
@@ -202,26 +201,27 @@ def main(argv):
         glyph_actor = vtkActor(mapper=glyph_mapper)
         v['glyph'] >> glyph_mapper
 
-        # # This LUT puts the lowest value at the top of the scalar bar.
+        # This LUT puts the lowest value at the top of the scalar bar.
         scalar_bar_properties.lut = curvatures[k]['lut']
-        # # Use this LUT if you want the highest value at the top.
-        # # scalar_bar_properties.lut = curvatures[k]['lutr']
+        # Use this LUT if you want the highest value at the top.
+        # scalar_bar_properties.lut = curvatures[k]['lutr']
         scalar_bar_properties.orientation = False
         scalar_bar_properties.title_text = k.replace('_', '\n')
         if surface_name == 'plane':
             scalar_bar_properties.number_of_labels = 1
-        contour_widgets[k] = make_scalar_bar_widget(scalar_bar_properties, iren)
+        contour_widgets[k] = make_scalar_bar_widget(scalar_bar_properties, text_property, iren)
 
-        # # Now for the elevation, it is the same for both surfaces.
-        # # This LUT puts the lowest value at the top of the scalar bar.
-        # # scalar_bar_properties.lut = curvatures[k]['lutr']
-        # # Use this LUT if you want the highest value at the top.
+        # Now for the elevation, it is the same for both surface actors.
+        # This LUT puts the lowest value at the top of the scalar bar.
+        # scalar_bar_properties.lut = curvatures[k]['lutr']
+        # Use this LUT if you want the highest value at the top.
         scalar_bar_properties.lut = curvatures[k]['lut1']
         scalar_bar_properties.orientation = True
         scalar_bar_properties.title_text = 'Elevation'
+        scalar_bar_properties.number_of_labels = 13
         if surface_name == 'plane':
             scalar_bar_properties.number_of_labels = 1
-        elevation_widgets[k] = make_scalar_bar_widget(scalar_bar_properties, iren)
+        elevation_widgets[k] = make_scalar_bar_widget(scalar_bar_properties, text_property, iren)
 
         renderer = vtkRenderer(background=colors.GetColor3d('ParaViewBkg'))
         if first:
@@ -248,21 +248,33 @@ def main(argv):
     text_widget.On()
 
     if vtk_version_ok(9, 0, 20210718):
-        cam_orient_manipulator = vtkCameraOrientationWidget()
-        cam_orient_manipulator.SetParentRenderer(renderers[0])
+        cam_orient_manipulator = vtkCameraOrientationWidget(parent_renderer=renderers[0])
         # Enable the widget.
         cam_orient_manipulator.On()
+    else:
+        rgb = [0.0] * 4
+        colors.GetColor("Carrot", rgb)
+        rgb = tuple(rgb[:3])
+        widget = vtkOrientationMarkerWidget(orientation_marker=vtkAxesActor(),
+                                            interactor=iren, default_renderer=renderers[1],
+                                            outline_color=rgb, viewport=(0.7, 0.8, 0.9, 1.0), zoom=1.5)
+        widget.EnabledOn()
+        widget.InteractiveOn()
 
     camera = None
     for i in range(0, len(renderers)):
         if i == 0:
             camera = renderers[0].active_camera
             camera.Elevation(60)
+            # This moves the window center slightly to ensure that
+            # the whole surface is not obscured by the scalar bars.
+            camera.window_center = (0.0, -0.15)
         else:
             renderers[i].active_camera = camera
         renderers[i].ResetCamera()
 
-    renderers[0].active_camera.Zoom(0.9)
+    if surface_name == 'plane':
+        renderers[0].active_camera.Zoom(0.8)
     ren_win.Render()
 
     iren.Start()
@@ -300,15 +312,10 @@ def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):
 
     def point_neighbourhood(pt_id):
         """
-        Find the ids of the neighbours of pt_id.
+        Extract the topological neighbors for point.
 
         :param pt_id: The point id.
         :return: The neighbour ids.
-        """
-        """
-        Extract the topological neighbors for point pId. In two steps:
-        1) source.GetPointCells(pt_id, cell_ids)
-        2) source.GetCellPoints(cell_id, cell_point_ids) for all cell_id in cell_ids
         """
         cell_ids = vtkIdList()
         source.GetPointCells(pt_id, cell_ids)
@@ -325,9 +332,9 @@ def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):
         """
         Compute the distance between two points given their ids.
 
-        :param pt_id_a:
-        :param pt_id_b:
-        :return:
+        :param pt_id_a: First point.
+        :param pt_id_b: Second point.
+        :return: The distance.
         """
         pt_a = np.array(source.GetPoint(pt_id_a))
         pt_b = np.array(source.GetPoint(pt_id_b))
@@ -433,13 +440,15 @@ def constrain_curvatures(source, curvature_name, lower_bound=0.0, upper_bound=0.
 
 
 def get_source(source, available_surfaces):
+    """
+
+    :param source: The name of the source.
+    :param available_surfaces: The surfaces
+    :return:
+    """
     surface = source.lower()
     if surface not in available_surfaces:
         return None
-    elif surface == 'boy':
-        return get_boy()
-    elif surface == 'figure-8 klein':
-        return get_figure_8_klein()
     elif surface == 'hills':
         return get_hills()
     elif surface == 'parametric torus':
@@ -456,8 +465,12 @@ def get_source(source, available_surfaces):
 
 
 def get_hills():
-    # Create four hills on a plane.
-    # This will have regions of negative, zero and positive Gsaussian curvatures.
+    """
+    Create four hills on a plane.
+    This will have regions of negative, zero and positive Gaussian curvatures.
+
+    :return:
+    """
 
     x_res = 50
     y_res = 50
@@ -523,10 +536,6 @@ def get_hills():
 
 
 def get_parametric_hills():
-    """
-    Make a parametric hills surface as the source.
-    :return: vtkPolyData with normal and scalar data.
-    """
     fn = vtkParametricRandomHills(random_seed=1, number_of_hills=30)
     fn.AllowRandomGenerationOn()
 
@@ -547,11 +556,6 @@ def get_parametric_hills():
 
 
 def get_parametric_torus():
-    """
-    Make a parametric torus as the source.
-    :return: vtkPolyData with normal and scalar data.
-    """
-
     fn = vtkParametricTorus(ring_radius=5, cross_section_radius=2)
 
     source = vtkParametricFunctionSource(parametric_function=fn, u_resolution=51, v_resolution=51,
@@ -570,11 +574,6 @@ def get_parametric_torus():
 
 
 def get_plane():
-    """
-    Make a plane as the source.
-    :return: vtkPolyData with normal and scalar data.
-    """
-
     source = vtkPlaneSource(origin=(-10.0, -10.0, 0.0), point1=(10.0, -10.0, 0.0), point2=(-10.0, 10.0, 0.0),
                             x_resolution=5, y_resolution=5)
     src = source.update().output
@@ -610,10 +609,6 @@ def get_sphere():
 
 
 def get_torus():
-    """
-    Make a torus as the source.
-    :return: vtkPolyData with normal and scalar data.
-    """
     source = vtkSuperquadricSource(center=(0.0, 0.0, 0.0), scale=(1.0, 1.0, 1.0), phi_resolution=64,
                                    theta_resolution=64, theta_roundness=1, thickness=0.5, size=10, toroidal=True)
     src = source.update().output
@@ -633,31 +628,16 @@ def get_torus():
     return src >> tri >> cleaner >> elev_filter
 
 
-def get_color_series():
-    color_series = vtkColorSeries()
-    # Select a color scheme.
-    # color_series_enum = color_series.BREWER_DIVERGING_BROWN_BLUE_GREEN_9
-    # color_series_enum = color_series.BREWER_DIVERGING_SPECTRAL_10
-    # color_series_enum = color_series.BREWER_DIVERGING_SPECTRAL_3
-    # color_series_enum = color_series.BREWER_DIVERGING_PURPLE_ORANGE_9
-    # color_series_enum = color_series.BREWER_SEQUENTIAL_BLUE_PURPLE_9
-    # color_series_enum = color_series.BREWER_SEQUENTIAL_BLUE_GREEN_9
-    color_series_enum = color_series.BREWER_QUALITATIVE_SET3
-    # color_series_enum = color_series.CITRUS
-    color_series.SetColorScheme(color_series_enum)
-    return color_series
-
-
 def get_categorical_lut():
     """
     Make a lookup table using vtkColorSeries.
     :return: An indexed (categorical) lookup table.
     """
-    color_series = get_color_series()
+    color_series = vtkColorSeries(color_scheme=vtkColorSeries.BREWER_QUALITATIVE_SET3)
     # Make the lookup table.
     lut = vtkLookupTable()
     color_series.BuildLookupTable(lut, color_series.CATEGORICAL)
-    lut.SetNanColor(0, 0, 0, 1)
+    lut.nan_color = (0, 1, 0, 1)
     return lut
 
 
@@ -666,11 +646,11 @@ def get_ordinal_lut():
     Make a lookup table using vtkColorSeries.
     :return: An ordinal (not indexed) lookup table.
     """
-    color_series = get_color_series()
+    color_series = vtkColorSeries(color_scheme=vtkColorSeries.BREWER_DIVERGING_BROWN_BLUE_GREEN_11)
     # Make the lookup table.
     lut = vtkLookupTable()
     color_series.BuildLookupTable(lut, color_series.ORDINAL)
-    lut.SetNanColor(0, 0, 0, 1)
+    lut.nan_color = (0, 1, 0, 1)
     return lut
 
 
@@ -684,7 +664,7 @@ def get_diverging_lut():
      blue to brown:    0.217, 0.525, 0.910 0.865, 0.865, 0.865 0.677, 0.492, 0.093
      green to red:     0.085, 0.532, 0.201 0.865, 0.865, 0.865 0.758, 0.214, 0.233
 
-    :return:
+    :return: The lookup table.
     """
     ctf = vtkColorTransferFunction()
     ctf.SetColorSpaceToDiverging()
@@ -729,25 +709,24 @@ def reverse_lut(lut):
     return lutr
 
 
-def get_glyphs(surface, arrow_scale=None, reverse_normals=False):
+def get_glyphs(surface, arrow_scale=None, scale_factor=None, reverse_normals=False):
     """
+    Glyph the surface.
 
     :param surface: The surface to glyph.
     :param arrow_scale: Scaling for the arrows, default is [1, 1, 1].
+    :param scale_factor: The scaling factor for the arrow, default is 1.0.
     :param reverse_normals: If True the normals on the surface are reversed.
     :return: The glyph filter.
     """
-    if arrow_scale is None:
-        arrow_scale = [1, 1, 1]
     name = surface.name
     source = surface.source
 
-    # The length of the normal arrow glyphs.
-    scale_factor = 1.0
-    if name == 'hills':
-        scale_factor = 0.5
-    elif name == 'sphere':
-        scale_factor = 2.0
+    if arrow_scale is None:
+        arrow_scale = [1, 1, 1]
+    # The length of the arrow glyph.
+    if scale_factor is None:
+        scale_factor = 1.0
 
     # Choose a random subset of points.
     if name == 'plane':
@@ -756,9 +735,8 @@ def get_glyphs(surface, arrow_scale=None, reverse_normals=False):
         mask_pts = vtkMaskPoints(on_ratio=5, random_mode=True)
 
     # Sometimes the contouring algorithm can create a volume whose gradient
-    # vector and ordering of polygon (using the right hand rule) are
+    # vector and ordering of the polygon (using the right hand rule) are
     # inconsistent. vtkReverseSense cures this problem.
-
     if reverse_normals:
         reverse = vtkReverseSense(reverse_cells=True, reverse_normals=True)
         source >> reverse >> mask_pts
@@ -790,7 +768,8 @@ def get_glyphs(surface, arrow_scale=None, reverse_normals=False):
 
 def get_bands(d_r, number_of_bands, precision=2, nearest_integer=False):
     """
-    Divide a range into bands
+    Divide a range into bands.
+
     :param: d_r - [min, max] the range that is to be covered by the bands.
     :param: number_of_bands - The number of bands, a positive integer.
     :param: precision - The decimal precision of the bounds.
@@ -886,6 +865,7 @@ def adjust_ranges(bands, freq):
     """
     The bands and frequencies are adjusted so that the first and last
      frequencies in the range are non-zero.
+
     :param bands: The bands dictionary.
     :param freq: The frequency dictionary.
     :return: Adjusted bands and frequencies.
@@ -948,34 +928,45 @@ def print_bands_frequencies(curvature, bands, freq, precision=2):
 
 
 def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False):
+    """
+    Generate the actors for the surface.
+
+    :param surface: The surface.
+    :param needs_adjusting: Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
+    :param frequency_table: True if a frequency table is to be displayed.
+    :return: Return the actors, scalar ranges of curvatures and elevation along with the lookup tables.
+    """
     name = surface.name
     source = surface.source
     curvature = 'Gauss_Curvature'
 
     curvature_types = CurvaturesCurvatureType()
     curvatures = vtkCurvatures(curvature_type=curvature_types.VTK_CURVATURE_GAUSS)
-    curvatures_output = (source >> curvatures).update().output
+    p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
-        adjust_edge_curvatures(curvatures_output, curvature)
+        adjust_edge_curvatures(p, curvature)
     if name == 'plane':
-        constrain_curvatures(curvatures_output, curvature, 0.0, 0.0)
+        constrain_curvatures(p, curvature, 0.0, 0.0)
     if name == 'sphere':
         # Gaussian curvature is 1/r^2
         radius = 10
         gauss_curvature = 1.0 / radius ** 2
-        constrain_curvatures(curvatures_output, curvature, gauss_curvature, gauss_curvature)
+        constrain_curvatures(p, curvature, gauss_curvature, gauss_curvature)
 
-    curvatures_output.GetPointData().SetActiveScalars(curvature)
-    scalar_range_curvatures = curvatures_output.GetPointData().GetScalars(curvature).range
-    scalar_range_elevation = curvatures_output.GetPointData().GetScalars('Elevation').range
+    p.GetPointData().SetActiveScalars(curvature)
+    scalar_range_curvatures = curvatures.update().output.GetPointData().GetScalars(curvature).range
+    scalar_range_elevation = p.GetPointData().GetScalars('Elevation').range
 
     lut = get_categorical_lut()
     lut.SetTableRange(scalar_range_curvatures)
     number_of_bands = lut.GetNumberOfTableValues()
-    bands = get_bands(scalar_range_curvatures, number_of_bands=number_of_bands, precision=2, nearest_integer=False)
-    lut1 = get_diverging_lut()
+    bands = get_bands(scalar_range_curvatures, number_of_bands=number_of_bands, precision=10, nearest_integer=False)
+
+    # lut1 = get_diverging_lut()
+    lut1 = get_ordinal_lut()
     lut1.SetTableRange(scalar_range_elevation)
+
     if name == 'random hills':
         # These are my custom bands.
         # Generated by first running:
@@ -1011,11 +1002,10 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
         # Adjust the number of table values
         lut.SetNumberOfTableValues(len(bands))
 
+    freq = get_frequencies(bands, p)
+    bands, freq = adjust_ranges(bands, freq)
     if frequency_table:
-        # Let's do a frequency table.
-        # The number of scalars in each band.
-        freq = get_frequencies(bands, curvatures_output)
-        bands, freq = adjust_ranges(bands, freq)
+        # Let's do a frequency table with the number of scalars in each band.
         print_bands_frequencies(curvature, bands, freq)
 
     lut.SetTableRange(scalar_range_curvatures)
@@ -1039,65 +1029,76 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
     # Create the contour bands.
     # We will use an indexed lookup table.
     bcf_scalar_mode = BandedPolyDataContourFilterScalarMode()
-    bcf = vtkBandedPolyDataContourFilter(scalar_mode=bcf_scalar_mode.VTK_SCALAR_MODE_INDEX, generate_contour_edges=True)
-    curvatures >> bcf
+    bcf = vtkBandedPolyDataContourFilter(input_data=p,
+                                         scalar_mode=bcf_scalar_mode.VTK_SCALAR_MODE_INDEX,
+                                         generate_contour_edges=True)
+
     # Use either the minimum or maximum value for each band.
     for k in bands:
         bcf.SetValue(k, bands[k][2])
 
     # Generate the glyphs on the original surface.
     arrow_scale = [2, 1, 1]
-    if name == 'boy':
-        arrow_scale = [0.2, 0.1, 0.1]
-    if name == 'figure-8 klein':
-        arrow_scale = [0.6, 0.3, 0.3]
+    scale_factor = 1.0
     if name == 'plane':
         arrow_scale = [5, 2, 2]
+    if name == 'hills':
+        scale_factor = 0.5
+    if name == 'sphere':
+        scale_factor = 2.0
 
-    glyph = get_glyphs(surface, arrow_scale=arrow_scale, reverse_normals=False)
+    glyph = get_glyphs(surface, arrow_scale=arrow_scale, scale_factor=scale_factor, reverse_normals=False)
 
     return {'bcf': bcf, 'glyph': glyph, 'scalar_range_curvatures': scalar_range_curvatures,
             'scalar_range_elevation': scalar_range_elevation, 'lut': lut, 'lut1': lut1, 'lutr': lutr}
 
 
 def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
+    """
+    Generate the actors for the surface.
+
+    :param surface: The surface.
+    :param needs_adjusting: Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
+    :param frequency_table: True if a frequency table is to be displayed.
+    :return: Return the actors, scalar ranges of curvatures and elevation along with the lookup tables.
+    """
     name = surface.name
     source = surface.source
     curvature = 'Mean_Curvature'
 
     curvature_types = CurvaturesCurvatureType()
     curvatures = vtkCurvatures(curvature_type=curvature_types.VTK_CURVATURE_MEAN)
-    curvatures_output = (source >> curvatures).update().output
+    p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
-        adjust_edge_curvatures(curvatures_output, curvature)
+        adjust_edge_curvatures(p, curvature)
     if name == 'plane':
-        constrain_curvatures(curvatures_output, curvature, 0.0, 0.0)
+        constrain_curvatures(p, curvature, 0.0, 0.0)
     if name == 'sphere':
         # Mean curvature is 1/r
         radius = 10
         mean_curvature = 1.0 / radius
-        constrain_curvatures(curvatures_output, curvature, mean_curvature, mean_curvature)
+        constrain_curvatures(p, curvature, mean_curvature, mean_curvature)
 
-    curvatures_output.GetPointData().SetActiveScalars(curvature)
-    scalar_range_curvatures = curvatures_output.GetPointData().GetScalars(curvature).range
-    scalar_range_elevation = curvatures_output.GetPointData().GetScalars('Elevation').range
+    p.GetPointData().SetActiveScalars(curvature)
+    scalar_range_curvatures = p.GetPointData().GetScalars(curvature).range
+    scalar_range_elevation = p.GetPointData().GetScalars('Elevation').range
 
     lut = get_categorical_lut()
     lut.SetTableRange(scalar_range_curvatures)
     number_of_bands = lut.GetNumberOfTableValues()
-    bands = get_bands(scalar_range_curvatures, number_of_bands, 10)
+    bands = get_bands(scalar_range_curvatures, number_of_bands=number_of_bands, precision=10, nearest_integer=False)
 
-    lut1 = get_diverging_lut()
+    # lut1 = get_diverging_lut()
+    lut1 = get_ordinal_lut()
     lut1.SetTableRange(scalar_range_elevation)
 
     # If any bands need adjusting, we would do it here.
 
+    freq = get_frequencies(bands, p)
+    bands, freq = adjust_ranges(bands, freq)
     if frequency_table:
-        # Let's do a frequency table.
-        # The number of scalars in each band.
-        freq = get_frequencies(bands, curvatures_output)
-        bands, freq = adjust_ranges(bands, freq)
+        # Let's do a frequency table with the number of scalars in each band.
         print_bands_frequencies(curvature, bands, freq)
 
     lut.SetTableRange(scalar_range_curvatures)
@@ -1121,58 +1122,60 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
     # Create the contour bands.
     # We will use an indexed lookup table.
     bcf_scalar_mode = BandedPolyDataContourFilterScalarMode()
-    bcf = vtkBandedPolyDataContourFilter(scalar_mode=bcf_scalar_mode.VTK_SCALAR_MODE_INDEX, generate_contour_edges=True)
-    curvatures >> bcf
+    bcf = vtkBandedPolyDataContourFilter(input_data=p,
+                                         scalar_mode=bcf_scalar_mode.VTK_SCALAR_MODE_INDEX,
+                                         generate_contour_edges=True)
+
     # Use either the minimum or maximum value for each band.
     for k in bands:
         bcf.SetValue(k, bands[k][2])
 
     # Generate the glyphs on the original surface.
     arrow_scale = (2, 1, 1)
-    if name == 'boy':
-        arrow_scale = [0.2, 0.1, 0.1]
-    if name == 'figure-8 klein':
-        arrow_scale = [0.6, 0.3, 0.3]
+    scale_factor = 1.0
     if name == 'plane':
         arrow_scale = (5, 2, 2)
+    if name == 'hills':
+        scale_factor = 0.5
+    if name == 'sphere':
+        scale_factor = 2.0
 
-    glyph = get_glyphs(surface, arrow_scale=arrow_scale, reverse_normals=False)
+    glyph = get_glyphs(surface, arrow_scale=arrow_scale, scale_factor=scale_factor, reverse_normals=False)
 
     return {'bcf': bcf, 'glyph': glyph, 'scalar_range_curvatures': scalar_range_curvatures,
             'scalar_range_elevation': scalar_range_elevation, 'lut': lut, 'lut1': lut1, 'lutr': lutr}
 
 
 class ScalarBarProperties:
+    """
+    The properties needed for scalar bars.
+    """
     named_colors = vtkNamedColors()
 
     lut = None
-    colors = {
-        'title_color': 'AliceBlue', 'label_color': 'AliceBlue', 'annotation_color': 'AliceBlue'
-    }
     # These are in pixels
     maximum_dimensions = {'width': 100, 'height': 260}
     title_text = '',
-    title_text_property = vtkTextProperty(color=named_colors.GetColor3d('AliceBlue'), bold=True, italic=True,
-                                          shadow=True,
-                                          font_size=14)
     number_of_labels: int = 5
     # Orientation vertical=True, horizontal=False
     orientation: bool = True
     # Horizontal and vertical positioning
-    position_h = {'point1': (0.85, 0.1), 'point2': (0.1, 0.6)}
-    position_v = {'point1': (0.10, 0.1), 'point2': (0.7, 0.1)}
+    position_v = {'point1': (0.85, 0.1), 'point2': (0.1, 0.7)}
+    position_h = {'point1': (0.10, 0.1), 'point2': (0.7, 0.1)}
 
 
-def make_scalar_bar_widget(scalar_bar_properties, interactor):
+def make_scalar_bar_widget(scalar_bar_properties, text_property, interactor):
     """
     Make a scalar bar widget.
-    :param scalar_bar_properties: lookup table, colors, title name, maximum dimensions in pixels and position.
+
+    :param scalar_bar_properties: The lookup table, title name, maximum dimensions in pixels and position.
+    :param text_property: The properties for the title.
     :param interactor: The vtkInteractor.
     :return: The scalar bar widget.
     """
     sb_actor = vtkScalarBarActor(lookup_table=scalar_bar_properties.lut, title=scalar_bar_properties.title_text,
                                  unconstrained_font_size=True, number_of_labels=scalar_bar_properties.number_of_labels,
-                                 title_text_property=scalar_bar_properties.title_text_property
+                                 title_text_property=text_property
                                  )
 
     sb_rep = vtkScalarBarRepresentation(enforce_normalized_viewport_bounds=True,
@@ -1182,11 +1185,11 @@ def make_scalar_bar_widget(scalar_bar_properties, interactor):
     sb_rep.position_coordinate.SetCoordinateSystemToNormalizedViewport()
     sb_rep.position2_coordinate.SetCoordinateSystemToNormalizedViewport()
     if scalar_bar_properties.orientation:
-        sb_rep.position_coordinate.value = scalar_bar_properties.position_h['point1']
-        sb_rep.position2_coordinate.value = scalar_bar_properties.position_h['point2']
-    else:
         sb_rep.position_coordinate.value = scalar_bar_properties.position_v['point1']
         sb_rep.position2_coordinate.value = scalar_bar_properties.position_v['point2']
+    else:
+        sb_rep.position_coordinate.value = scalar_bar_properties.position_h['point1']
+        sb_rep.position2_coordinate.value = scalar_bar_properties.position_h['point2']
 
     widget = vtkScalarBarWidget(representation=sb_rep, scalar_bar_actor=sb_actor)
     widget.SetInteractor(interactor)
@@ -1196,9 +1199,16 @@ def make_scalar_bar_widget(scalar_bar_properties, interactor):
 
 
 def get_title_positions(available_surfaces, justification='center'):
+    """
+    Get positioning information for the names of the surfaces.
+
+    :param available_surfaces: The surfaces
+    :param justification: left, center or right
+    :return: A list of positioning information.
+    """
     # Position the source name according to its length and justification in the viewport.
-    y0 = 0.9
-    dy = 0.09
+    y0 = 0.89
+    dy = 0.1
     # The gap between the left or right edge of the screen and the text.
     dx = 0.01
     # The size of the maximum length of the text in screen units.
@@ -1245,6 +1255,7 @@ def get_title_positions(available_surfaces, justification='center'):
                 delta_sz -= dx
                 x0 = dx
 
+        # For debugging!
         # print(
         #     f'{k:16s}: (x0, y0) = ({x0:3.2f}, {y0:3.2f}), (x1, y1) = ({x0 + delta_sz:3.2f}, {y0 + dy:3.2f})'
         #     f', width={delta_sz:3.2f}')
@@ -1253,9 +1264,13 @@ def get_title_positions(available_surfaces, justification='center'):
     return text_positions
 
 
-# These handle the "#define xx=yy" in the VTK C++ code.
-# The class name consists of the VTK class name (without the leading VTK)
+# -----------------------------------------------------------------------------
+# These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
+# The class name consists of the VTK class name (without the leading vtk)
 # appended to the relevant Set/Get Macro name.
+# Note: To find these constants, use the link to the header in the
+#       documentation for the class.
+# ------------------------------------------------------------------------------
 @dataclass(frozen=True)
 class BandedPolyDataContourFilterScalarMode:
     VTK_SCALAR_MODE_INDEX: int = 0
@@ -1268,6 +1283,36 @@ class CurvaturesCurvatureType:
     VTK_CURVATURE_MEAN: int = 1
     VTK_CURVATURE_MAXIMUM: int = 2
     VTK_CURVATURE_MINIMUM: int = 3
+
+
+@dataclass(frozen=True)
+class Glyph3DScaleMode:
+    VTK_SCALE_BY_SCALAR: int = 0
+    VTK_SCALE_BY_VECTOR: int = 1
+    VTK_SCALE_BY_VECTORCOMPONENTS: int = 2
+    VTK_DATA_SCALING_OFF: int = 3
+
+
+@dataclass(frozen=True)
+class Glyph3DColorMode:
+    VTK_COLOR_BY_SCALE: int = 0
+    VTK_COLOR_BY_SCALAR: int = 1
+    VTK_COLOR_BY_VECTOR: int = 2
+
+
+@dataclass(frozen=True)
+class Glyph3DVectorMode:
+    VTK_USE_VECTOR: int = 0
+    VTK_USE_NORMAL: int = 1
+    VTK_VECTOR_ROTATION_OFF: int = 2
+    VTK_FOLLOW_CAMERA_DIRECTION: int = 3
+
+
+@dataclass(frozen=True)
+class Glyph3DIndexMode:
+    VTK_INDEXING_OFF: int = 0
+    VTK_INDEXING_BY_SCALAR: int = 1
+    VTK_INDEXING_BY_VECTOR: int = 2
 
 
 @dataclass(frozen=True)
@@ -1294,31 +1339,7 @@ class MapperColorMode:
     VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
 
 
-@dataclass(frozen=True)
-class Glyph3DScaleMode:
-    VTK_SCALE_BY_SCALAR: int = 0
-    VTK_SCALE_BY_VECTOR: int = 1
-    VTK_SCALE_BY_VECTORCOMPONENTS: int = 2
-    VTK_DATA_SCALING_OFF: int = 3
-
-
-class Glyph3DColorMode:
-    VTK_COLOR_BY_SCALE: int = 0
-    VTK_COLOR_BY_SCALAR: int = 1
-    VTK_COLOR_BY_VECTOR: int = 2
-
-
-class Glyph3DVectorMode:
-    VTK_USE_VECTOR: int = 0
-    VTK_USE_NORMAL: int = 1
-    VTK_VECTOR_ROTATION_OFF: int = 2
-    VTK_FOLLOW_CAMERA_DIRECTION: int = 3
-
-
-class Glyph3DIndexMode:
-    VTK_INDEXING_OFF: int = 0
-    VTK_INDEXING_BY_SCALAR: int = 1
-    VTK_INDEXING_BY_VECTOR: int = 2
+# -----------------------------------------------------------------------
 
 
 if __name__ == '__main__':
