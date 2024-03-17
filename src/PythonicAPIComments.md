@@ -134,7 +134,7 @@ We initialize nearly all properties of a wrapped VTK class by specifying keyword
 color_series = ?vtkColorSeries?(color_scheme=?vtkColorSeries?.BREWER_QUALITATIVE_SET3)
 ```
 
-However, a lot of Set/Gets in the VTK classes use values defined as `#define VTK_SOME_CONSTANT x`, these are not wrapped. In order to get around this we can use a data class in Python 3.7 or later.
+However, a lot of Set/Get functions in the VTK classes use values defined as `#define VTK_SOME_CONSTANT x`, these are not wrapped. In order to get around this we can use a data class in Python 3.7 or later.
 
 ``` Python
 # -----------------------------------------------------------------------------

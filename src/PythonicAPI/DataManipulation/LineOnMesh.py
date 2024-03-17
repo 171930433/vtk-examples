@@ -44,8 +44,7 @@ def main():
     topography = np.random.randint(0, 5, (size, size))
 
     # Define points, triangles and colors
-    colors = vtkUnsignedCharArray()
-    colors.SetNumberOfComponents(3)
+    colors = vtkUnsignedCharArray(number_of_components=3)
     points = vtkPoints()
     triangles = vtkCellArray()
 
@@ -97,12 +96,9 @@ def main():
             colors.InsertNextTypedTuple(r)
 
     # Create a polydata object.
-    triangle_poly_data = vtkPolyData()
-
-    # Add the geometry and topology to the polydata.
-    triangle_poly_data.SetPoints(points)
-    triangle_poly_data.GetPointData().SetScalars(colors)
-    triangle_poly_data.SetPolys(triangles)
+    # Adding the geometry and topology to the polydata.
+    triangle_poly_data = vtkPolyData(points=points, polys=triangles)
+    triangle_poly_data.point_data.SetScalars(colors)
 
     # Clean the polydata so that the edges are shared!
     clean_poly_data = vtkCleanPolyData()

@@ -166,26 +166,21 @@ def main(argv):
     text_representation = vtkTextRepresentation(enforce_normalized_viewport_bounds=True)
     text_representation.GetPositionCoordinate().value = text_positions[surface.name]['p']
     text_representation.GetPosition2Coordinate().value = text_positions[surface.name]['p2']
-    text_widget = vtkTextWidget(representation=text_representation, text_actor=text_actor)
-    text_widget.SelectableOff()
-    text_widget.SetInteractor(iren)
-
-    mapper_scalar_mode = MapperScalarMode()
-    mapper_resolve_coincident_topology = MapperResolveCoincidentTopology()
-    mapper_color_mode = MapperColorMode()
+    text_widget = vtkTextWidget(representation=text_representation, text_actor=text_actor, interactor=iren,
+                                selectable=False)
 
     first = True
     for k, v in curvatures.items():
         src_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_curvatures'],
                                        lookup_table=v['lut'],
-                                       scalar_mode=mapper_scalar_mode.VTK_SCALAR_MODE_USE_CELL_DATA)
+                                       scalar_mode=MapperScalarMode().VTK_SCALAR_MODE_USE_CELL_DATA)
 
         src_actor = vtkActor(mapper=src_mapper)
         v['bcf'] >> src_mapper
 
         # Create contour edges
         edge_mapper = vtkPolyDataMapper(
-            resolve_coincident_topology=mapper_resolve_coincident_topology.VTK_RESOLVE_POLYGON_OFFSET)
+            resolve_coincident_topology=MapperResolveCoincidentTopology().VTK_RESOLVE_POLYGON_OFFSET)
 
         edge_actor = vtkActor(mapper=edge_mapper)
         edge_actor.property.color = colors.GetColor3d('Black')
@@ -193,9 +188,9 @@ def main(argv):
 
         glyph_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_elevation'],
                                          lookup_table=v['lut1'],
-                                         scalar_mode=mapper_scalar_mode.VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
+                                         scalar_mode=MapperScalarMode().VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
                                          scalar_visibility=True,
-                                         color_mode=mapper_color_mode.VTK_COLOR_MODE_MAP_SCALARS)
+                                         color_mode=MapperColorMode().VTK_COLOR_MODE_MAP_SCALARS)
         glyph_mapper.SelectColorArray('Elevation')
 
         glyph_actor = vtkActor(mapper=glyph_mapper)
@@ -257,9 +252,8 @@ def main(argv):
         rgb = tuple(rgb[:3])
         widget = vtkOrientationMarkerWidget(orientation_marker=vtkAxesActor(),
                                             interactor=iren, default_renderer=renderers[1],
-                                            outline_color=rgb, viewport=(0.7, 0.8, 0.9, 1.0), zoom=1.5)
-        widget.EnabledOn()
-        widget.InteractiveOn()
+                                            outline_color=rgb, viewport=(0.7, 0.8, 0.9, 1.0), zoom=1.5, enabled=True,
+                                            interactive=True)
 
     camera = None
     for i in range(0, len(renderers)):
@@ -752,14 +746,10 @@ def get_glyphs(surface, arrow_scale=None, scale_factor=None, reverse_normals=Fal
 
     p = (arrow >> transform_filter).update().output
 
-    scale_mode = Glyph3DScaleMode()
-    color_mode = Glyph3DColorMode()
-    vector_mode = Glyph3DVectorMode()
-    # index_mode = Glyph3DIndexMode()
     glyph = vtkGlyph3D(source_data=p, scale_factor=scale_factor,
-                       vector_mode=vector_mode.VTK_USE_NORMAL,
-                       color_mode=color_mode.VTK_COLOR_BY_VECTOR,
-                       scale_mode=scale_mode.VTK_SCALE_BY_VECTOR
+                       vector_mode=Glyph3DVectorMode().VTK_USE_NORMAL,
+                       color_mode=Glyph3DColorMode().VTK_COLOR_BY_VECTOR,
+                       scale_mode=Glyph3DScaleMode().VTK_SCALE_BY_VECTOR
                        )
     glyph.OrientOn()
 
@@ -940,8 +930,7 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
     source = surface.source
     curvature = 'Gauss_Curvature'
 
-    curvature_types = CurvaturesCurvatureType()
-    curvatures = vtkCurvatures(curvature_type=curvature_types.VTK_CURVATURE_GAUSS)
+    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_GAUSS)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
@@ -1028,9 +1017,8 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
 
     # Create the contour bands.
     # We will use an indexed lookup table.
-    bcf_scalar_mode = BandedPolyDataContourFilterScalarMode()
     bcf = vtkBandedPolyDataContourFilter(input_data=p,
-                                         scalar_mode=bcf_scalar_mode.VTK_SCALAR_MODE_INDEX,
+                                         scalar_mode=BandedPolyDataContourFilterScalarMode().VTK_SCALAR_MODE_INDEX,
                                          generate_contour_edges=True)
 
     # Use either the minimum or maximum value for each band.
@@ -1066,8 +1054,7 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
     source = surface.source
     curvature = 'Mean_Curvature'
 
-    curvature_types = CurvaturesCurvatureType()
-    curvatures = vtkCurvatures(curvature_type=curvature_types.VTK_CURVATURE_MEAN)
+    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_MEAN)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
@@ -1121,9 +1108,8 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
 
     # Create the contour bands.
     # We will use an indexed lookup table.
-    bcf_scalar_mode = BandedPolyDataContourFilterScalarMode()
     bcf = vtkBandedPolyDataContourFilter(input_data=p,
-                                         scalar_mode=bcf_scalar_mode.VTK_SCALAR_MODE_INDEX,
+                                         scalar_mode=BandedPolyDataContourFilterScalarMode().VTK_SCALAR_MODE_INDEX,
                                          generate_contour_edges=True)
 
     # Use either the minimum or maximum value for each band.
@@ -1191,9 +1177,7 @@ def make_scalar_bar_widget(scalar_bar_properties, text_property, interactor):
         sb_rep.position_coordinate.value = scalar_bar_properties.position_h['point1']
         sb_rep.position2_coordinate.value = scalar_bar_properties.position_h['point2']
 
-    widget = vtkScalarBarWidget(representation=sb_rep, scalar_bar_actor=sb_actor)
-    widget.SetInteractor(interactor)
-    widget.EnabledOn()
+    widget = vtkScalarBarWidget(representation=sb_rep, scalar_bar_actor=sb_actor, interactor=interactor, enabled=True)
 
     return widget
 

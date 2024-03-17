@@ -349,10 +349,7 @@ def main():
     sw_normal_cb = SliderCallbackNormalScale(actor.GetProperty())
     sw_normal.AddObserver(vtkCommand.InteractionEvent, sw_normal_cb)
 
-    name = Path(sys.argv[0]).stem
-    render_window.SetSize(1000, 625)
     render_window.Render()
-    render_window.SetWindowName(name)
 
     if vtk_version_ok(9, 0, 20210718):
         try:
@@ -363,16 +360,13 @@ def main():
         except AttributeError:
             pass
     else:
-        axes = vtkAxesActor()
-        widget = vtkOrientationMarkerWidget()
-        rgba = [0.0, 0.0, 0.0, 0.0]
-        colors.GetColor("Carrot", rgba)
-        widget.SetOutlineColor(rgba[0], rgba[1], rgba[2])
-        widget.SetOrientationMarker(axes)
-        widget.SetInteractor(interactor)
-        widget.SetViewport(0.0, 0.0, 0.2, 0.2)
-        widget.EnabledOn()
-        widget.InteractiveOn()
+        rgb = [0.0] * 4
+        colors.GetColor("Carrot", rgb)
+        rgb = tuple(rgb[:3])
+        widget = vtkOrientationMarkerWidget(orientation_marker=vtkAxesActor(),
+                                            interactor=interactor, default_renderer=ren2,
+                                            outline_color=rgb, viewport=(0.8, 0.8, 1.0, 1.0),
+                                            enabled=True, interactive=True, zoom=1.5)
 
     print_callback = PrintCallback(interactor, name, 1, False)
     # print_callback = PrintCallback(interactor, name + '.jpg', 1, False)
@@ -603,7 +597,7 @@ def get_boy():
 
     tangents = vtkPolyDataTangents()
 
-    return (source >> tangents).update().output
+    return source >> tangents
 
 
 def get_mobius():
@@ -625,7 +619,7 @@ def get_mobius():
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
+    return source >> tangents >> transform_filter
 
 
 def get_random_hills():
@@ -650,7 +644,7 @@ def get_random_hills():
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
+    return source >> tangents >> transform_filter
 
 
 def get_sphere():
@@ -661,7 +655,7 @@ def get_sphere():
     # Now the tangents.
     tangents = vtkPolyDataTangents()
 
-    return (surface >> tangents).update().output
+    return surface >> tangents
 
 
 def get_clipped_sphere():
@@ -677,7 +671,7 @@ def get_clipped_sphere():
     # Now the tangents.
     tangents = vtkPolyDataTangents()
 
-    return (surface >> clipper >> tangents).update().output
+    return surface >> clipper >> tangents
 
 
 def get_torus():
@@ -697,7 +691,7 @@ def get_torus():
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
+    return source >> tangents >> transform_filter
 
 
 def get_cube():
@@ -710,7 +704,7 @@ def get_cube():
     # Build the tangents.
     tangents = vtkPolyDataTangents()
 
-    return (surface >> triangulation >> subdivide >> tangents).update().output
+    return surface >> triangulation >> subdivide >> tangents
 
 
 def get_clipped_cube():
@@ -734,7 +728,7 @@ def get_clipped_cube():
     # Now the tangents.
     tangents = vtkPolyDataTangents(compute_cell_tangents=True, compute_point_tangents=True)
 
-    return (surface >> triangulation >> subdivide >> clipper >> cleaner >> normals >> tangents).update().output
+    return surface >> triangulation >> subdivide >> clipper >> cleaner >> normals >> tangents
 
 
 def uv_tcoords(u_resolution, v_resolution, pd):
@@ -817,10 +811,8 @@ def make_slider_widget(slider_properties, interactor):
     slider_rep.point2_coordinate.SetCoordinateSystemToNormalizedViewport()
     slider_rep.point2_coordinate.value = slider_properties.position['point2']
 
-    widget = vtkSliderWidget(representation=slider_rep)
-    widget.SetInteractor(interactor)
+    widget = vtkSliderWidget(representation=slider_rep, interactor=interactor, enabled=True)
     widget.SetAnimationModeToAnimate()
-    widget.EnabledOn()
 
     return widget
 

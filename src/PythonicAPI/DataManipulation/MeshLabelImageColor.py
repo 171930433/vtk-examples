@@ -30,6 +30,19 @@ from vtkmodules.vtkRenderingCore import (
 from vtkmodules.vtkRenderingLOD import vtkLODActor
 
 
+def get_program_parameters():
+    import argparse
+    description = 'MeshLabelImageColor.'
+    epilogue = '''
+        Takes a label image in Meta format and meshes a single label of it.
+   '''
+    parser = argparse.ArgumentParser(description=description, epilog=epilogue)
+    parser.add_argument('filename', help='labels.mhd')
+    parser.add_argument('label', nargs='?', const=1, type=int, default=31, help='The label to use e.g 31')
+    args = parser.parse_args()
+    return args.filename, args.label
+
+
 def main():
     # vtkFlyingEdges3D was introduced in VTK >= 8.2
     use_flying_edges = vtk_version_ok(8, 2, 0)
@@ -73,7 +86,7 @@ def main():
     p = reader_volume >> voi >> contour >> smoother >> normals
     smoother.update()
 
-    srange = voi.GetOutput().GetScalarRange()
+    srange = voi.output.GetScalarRange()
     print('Scalar range', srange)
 
     # Find min and max of the smoother error.
@@ -108,19 +121,6 @@ def main():
     # Start the initialization and rendering.
     iren.Initialize()
     iren.Start()
-
-
-def get_program_parameters():
-    import argparse
-    description = 'MeshLabelImageColor.'
-    epilogue = '''
-        Takes a label image in Meta format and meshes a single label of it.
-   '''
-    parser = argparse.ArgumentParser(description=description, epilog=epilogue)
-    parser.add_argument('filename', help='labels.mhd')
-    parser.add_argument('label', nargs='?', const=1, type=int, default=31, help='The label to use e.g 31')
-    args = parser.parse_args()
-    return args.filename, args.label
 
 
 def get_diverging_lut(ct=0):

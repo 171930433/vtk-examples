@@ -112,10 +112,8 @@ def make_slider_widget(slider_dimensions, slider_range_name, slider_position, in
     slider_rep.point2_coordinate.SetCoordinateSystemToNormalizedDisplay()
     slider_rep.point2_coordinate.value = slider_position['point2']
 
-    slider = vtkSliderWidget(representation=slider_rep)
-    slider.SetInteractor(interactor)
+    slider = vtkSliderWidget(representation=slider_rep, interactor=interactor, enabled=True)
     slider.SetAnimationModeToAnimate()
-    slider.EnabledOn()
 
     return slider
 
