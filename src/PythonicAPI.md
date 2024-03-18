@@ -124,6 +124,11 @@ This section includes examples of manipulating meshes.
 
 #### ?vtkExplicitStructuredGrid?
 
+| Example Name | Description | Image |
+| ------------ | ----------- | ----- |
+[CreateESGrid](/PythonicAPI/ExplicitStructuredGrid/CreateESGrid) | Create an explicit structured grid and convert this to an unstructured grid or vice versa.
+[LoadESGrid](/PythonicAPI/ExplicitStructuredGrid/LoadESGrid) | Load a VTU file and convert the dataset to an explicit structured grid.
+
 #### ?vtkStructuredGrid?
 
 #### ?vtkStructuredPoints?
