@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import math
+from collections import namedtuple, OrderedDict
+from dataclasses import dataclass
 
 import numpy as np
 from vtk.util import numpy_support
@@ -48,12 +50,13 @@ from vtkmodules.vtkIOXML import vtkXMLPolyDataWriter
 from vtkmodules.vtkInteractionStyle import vtkInteractorStyleTrackballCamera
 from vtkmodules.vtkInteractionWidgets import (
     vtkCameraOrientationWidget,
+    vtkOrientationMarkerWidget,
     vtkScalarBarRepresentation,
     vtkScalarBarWidget,
     vtkTextRepresentation,
     vtkTextWidget
 )
-from vtkmodules.vtkRenderingAnnotation import vtkScalarBarActor
+from vtkmodules.vtkRenderingAnnotation import vtkAxesActor, vtkScalarBarActor
 from vtkmodules.vtkRenderingCore import (
     vtkActor,
     vtkColorTransferFunction,
@@ -67,73 +70,63 @@ from vtkmodules.vtkRenderingCore import (
 )
 
 
+def get_program_parameters():
+    import argparse
+    description = 'Demonstrates Gaussian and Mean curvatures on a surface.'
+    epilogue = '''
+    For example: "Random Hills" -f
+                 Will display the curvatures along with normals on the surface colored by elevation.
+    '''
+    parser = argparse.ArgumentParser(description=description, epilog=epilogue,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('surface_name', default='random hills', help='The name of the surface.')
+    parser.add_argument('-f', '--frequency_table', action='store_true', help='Display the frequency table.')
+
+    args = parser.parse_args()
+    return args.surface_name, args.frequency_table
+
+
 def main(argv):
-    # desired_surface = 'Bour'
-    # desired_surface = 'Cube'
-    # desired_surface = 'Hills'
-    # desired_surface = 'Enneper'
-    # desired_surface = 'Mobius'
-    desired_surface = 'RandomHills'
-    # desired_surface = 'Sphere'
-    # desired_surface = 'Torus'
-    source = get_source(desired_surface)
-    if not source:
-        print('The surface is not available.')
+    surface_name, frequency_table = get_program_parameters()
+
+    available_surfaces = ['bour', 'cube', 'enneper', 'hills', 'mobius', 'random hills', 'sphere', 'torus']
+    # Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
+    needs_adjusting = ['bour', 'enneper', 'hills', 'random hills', 'torus']
+
+    surface_name = ' '.join(surface_name.lower().replace('_', ' ').split())
+    if surface_name not in available_surfaces:
+        print('Nonexistent surface:', surface_name)
+        print('Available surfaces are:')
+        asl = sorted(available_surfaces)
+        asl = [asl[i].title() for i in range(0, len(asl))]
+        asl = [asl[i:i + 5] for i in range(0, len(asl), 5)]
+        for i in range(0, len(asl)):
+            s = ', '.join(asl[i])
+            if i < len(asl) - 1:
+                s += ','
+            print(f'   {s}')
+        print('If a name has spaces in it, delineate the name with quotes e.g. "random hills"')
         return
 
-    curvature_name = 'Gauss_Curvature'
-    curvature_type = 0  # Gaussian
-    gc = (source >> vtkCurvatures(curvature_type=curvature_type)).update().output
-    if desired_surface in ['Bour', 'Enneper', 'Hills', 'RandomHills', 'Torus']:
-        adjust_edge_curvatures(gc, 'Gauss_Curvature')
-    if desired_surface == 'Bour':
-        # Gaussian curvature is -1/(r(r+1)^4))
-        constrain_curvatures(gc, curvature_name, -0.0625, -0.0625)
-    if desired_surface == 'Enneper':
-        # Gaussian curvature is -4/(1 + r^2)^4
-        constrain_curvatures(gc, curvature_name, -0.25, -0.25)
-    if desired_surface == 'Cube':
-        constrain_curvatures(gc, curvature_name, 0.0, 0.0)
-    if desired_surface == 'Mobius':
-        constrain_curvatures(gc, curvature_name, 0.0, 0.0)
-    if desired_surface == 'Sphere':
-        # Gaussian curvature is 1/r^2
-        constrain_curvatures(gc, curvature_name, 4.0, 4.0)
-    source.point_data.AddArray(
-        gc.point_data.GetAbstractArray(curvature_name))
+    Surface = namedtuple('Surface', 'name source')
+    surface = Surface(surface_name, get_source(surface_name, available_surfaces))
 
-    curvature_name = 'Mean_Curvature'
-    curvature_type = 1  # Mean
-    mc = (source >> vtkCurvatures(curvature_type=curvature_type)).update().output
-    if desired_surface in ['Bour', 'Enneper', 'Hills', 'RandomHills', 'Torus']:
-        adjust_edge_curvatures(mc, curvature_name)
-    if desired_surface == 'Bour':
-        # Mean curvature is 0
-        constrain_curvatures(mc, curvature_name, 0.0, 0.0)
-    if desired_surface == 'Enneper':
-        # Mean curvature is 0
-        constrain_curvatures(mc, curvature_name, 0.0, 0.0)
-    if desired_surface == 'Mobius':
-        constrain_curvatures(mc, curvature_name, -0.6, 0.6)
-    if desired_surface == 'Sphere':
-        # Mean curvature is 1/r
-        constrain_curvatures(mc, curvature_name, 2.0, 2.0)
-    source.point_data.AddArray(
-        mc.point_data.GetAbstractArray(curvature_name))
-
-    # Uncomment the following lines if you want to write out the polydata.
-    # writer = vtkXMLPolyDataWriter(file_name='Source.vtp')
-    # writer.SetDataModeToBinary()
-    # source >> writer
-    # writer.Write()
+    # --------------------------------------------------------------------------------------
+    # Get the filters, scalar range of curvatures and the lookup tables.
+    # --------------------------------------------------------------------------------------
+    # Use an ordered dictionary as we want the keys in a specific order.
+    curvatures = OrderedDict()
+    curvatures['Gauss_Curvature'] = generate_gaussian_curvatures(surface, needs_adjusting,
+                                                                 frequency_table=frequency_table)
+    curvatures['Mean_Curvature'] = generate_mean_curvatures(surface, needs_adjusting, frequency_table=frequency_table)
 
     # Let's visualise what we have done.
 
     colors = vtkNamedColors()
     colors.SetColor("ParaViewBkg", [82, 87, 110, 255])
 
-    window_width = 1024
-    window_height = 512
+    window_height = 800
+    window_width = 2 * window_height
 
     ren_win = vtkRenderWindow(size=(window_width, window_height), window_name='CurvaturesAdjustEdges')
     iren = vtkRenderWindowInteractor()
@@ -141,120 +134,93 @@ def main(argv):
     style = vtkInteractorStyleTrackballCamera()
     iren.SetInteractorStyle(style)
 
-    lut = get_diverging_lut()
-    # lut = get_diverging_lut1()
-
     # Define viewport ranges [x_min, y_min, x_max, y_max]
-    viewports = {0: [0.0, 0.0, 0.5, 1.0],
-                 1: [0.5, 0.0, 1.0, 1.0],
-                 }
-
-    camera = None
-    cam_orient_manipulator = None
-
-    has_cow = False
-    if vtk_version_ok(9, 0, 20210718):
-        cam_orient_manipulator = vtkCameraOrientationWidget()
-        has_cow = True
+    viewports = dict()
+    viewports['Gauss_Curvature'] = [0.0, 0.0, 0.5, 1.0]
+    viewports['Mean_Curvature'] = [0.5, 0.0, 1.0, 1.0]
 
     # Build the renderers and add them to the render window.
     renderers = list()
-    scalar_bar_representations = list()
-    scalar_bar_widgets = list()
-    curvature_types = {0: 'Gauss_Curvature', 1: 'Mean_Curvature'}
-    scalar_bar_positions = {0: {'p': [0.85, 0.1, 0], 'p2': [0.13, 0.6, 0]},
-                            1: {'p': [0.85, 0.1, 0], 'p2': [0.13, 0.6, 0]},
-                            }
-    title_text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
-                                          font_size=14)
+    # Set up the scalar bar properties.
+    scalar_bar_properties = ScalarBarProperties()
+    scalar_bar_widgets = dict()
 
-    for k, v in curvature_types.items():
-        curvature_title = v.replace('_', '\n')
+    # Position the source name according to its length and centered in the viewport.
+    text_positions = get_title_positions(available_surfaces, justification='left')
 
-        source.point_data.SetActiveScalars(v)
-        scalar_range = source.point_data.GetScalars(v).GetRange()
-
-        bands = get_bands(scalar_range, 10)
-        freq = get_frequencies(bands, source)
-        bands, freq = adjust_ranges(bands, freq)
-        print(v.replace('_', ' '))
-        print_bands_frequencies(bands, freq)
-
-        mapper = vtkPolyDataMapper(scalar_range=scalar_range, lookup_table=lut)
-        mapper.SetScalarModeToUsePointFieldData()
-        mapper.SelectColorArray(v)
-        source >> mapper
-
-        actor = vtkActor(mapper=mapper)
-
-        renderers.append(vtkRenderer(background=colors.GetColor3d('ParaViewBkg')))
-        renderers[k].AddActor(actor)
-
-        # Create a scalar bar.
-        scalar_bar = vtkScalarBarActor(lookup_table=mapper.GetLookupTable(), title=curvature_title + '\n',
-                                       unconstrained_font_size=True, number_of_labels=min(5, len(freq)),
-                                       title_text_property=title_text_property
-                                       )
-
-        # Create the scalar bar representation. Used for positioning the scalar bar actor.
-        scalar_bar_representations.append(vtkScalarBarRepresentation(enforce_normalized_viewport_bounds=True))
-        scalar_bar_representations[k].GetPositionCoordinate().value = scalar_bar_positions[k]['p']
-        scalar_bar_representations[k].GetPosition2Coordinate().value = scalar_bar_positions[k]['p2']
-
-        # Create the scalar_bar_widget.
-        scalar_bar_widgets.append(
-            vtkScalarBarWidget(representation=scalar_bar_representations[k], scalar_bar_actor=scalar_bar))
-        scalar_bar_widgets[k].SetDefaultRenderer(renderers[k])
-        scalar_bar_widgets[k].SetInteractor(iren)
-
-        ren_win.AddRenderer(renderers[k])
-
-        if k == 0:
-            if has_cow:
-                cam_orient_manipulator.SetParentRenderer(renderers[k])
-            camera = renderers[k].GetActiveCamera()
-            camera.Elevation(60)
-        else:
-            renderers[k].SetActiveCamera(camera)
-
-        renderers[k].SetViewport(*viewports[k])
-        renderers[k].ResetCamera()
-
-    # Create the TextActors.
-    text_actors = list()
-    text_representations = list()
-    text_widgets = list()
-    text_scale_mode = {'none': 0, 'prop': 1, 'viewport': 2}
-    text_positions = {0: {'p': [0.35, 0.01, 0], 'p2': [0.27, 0.10, 0]},
-                      1: {'p': [0.37, 0.01, 0], 'p2': [0.27, 0.10, 0]},
-                      }
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
-                                    font_size=24)
-    for k, v in curvature_types.items():
-        curvature_title = v.replace('_', '\n')
-        text_actors.append(
-            vtkTextActor(input=curvature_title, text_scale_mode=text_scale_mode['none'], text_property=text_property))
+                                    font_size=16)
+    text_actor = vtkTextActor(input=surface_name.title(), text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
+                              text_property=text_property)
+    # Create the text representation. Used for positioning the text actor.
+    text_representation = vtkTextRepresentation(enforce_normalized_viewport_bounds=True)
+    text_representation.GetPositionCoordinate().value = text_positions[surface.name]['p']
+    text_representation.GetPosition2Coordinate().value = text_positions[surface.name]['p2']
+    text_widget = vtkTextWidget(representation=text_representation, text_actor=text_actor, interactor=iren,
+                                selectable=False)
 
-        # Create the text representation. Used for positioning the text actor.
-        text_representations.append(vtkTextRepresentation(enforce_normalized_viewport_bounds=True))
-        text_representations[k].GetPositionCoordinate().value = text_positions[k]['p']
-        text_representations[k].GetPosition2Coordinate().value = text_positions[k]['p2']
+    first = True
+    for k, v in curvatures.items():
+        src_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_curvatures'],
+                                       lookup_table=v['lut'],
+                                       scalar_mode=MapperScalarMode().VTK_SCALAR_MODE_DEFAULT)
 
-        # Create the TextWidget
-        text_widgets.append(vtkTextWidget(representation=text_representations[k], text_actor=text_actors[k]))
-        text_widgets[k].SetDefaultRenderer(renderers[k])
-        text_widgets[k].SetInteractor(iren)
-        text_widgets[k].SelectableOff()
+        src_actor = vtkActor(mapper=src_mapper)
+        v['surface'] >> src_mapper
+
+        scalar_bar_properties.lut = curvatures[k]['lut']
+        scalar_bar_properties.orientation = True
+        scalar_bar_properties.title_text = k.replace('_', '\n')
+        scalar_bar_properties.number_of_labels = v['scalar_bar_labels']
+        scalar_bar_widgets[k] = make_scalar_bar_widget(scalar_bar_properties, text_property, iren)
+
+        renderer = vtkRenderer(background=colors.GetColor3d('ParaViewBkg'))
+        if first:
+            text_widget.SetDefaultRenderer(renderer)
+            first = False
+        renderer.SetViewport(*viewports[k])
+        renderer.AddActor(src_actor)
+        scalar_bar_widgets[k].SetDefaultRenderer(renderer)
+
+        renderers.append(renderer)
+
+    for renderer in renderers:
+        ren_win.AddRenderer(renderer)
 
     # Enable the widgets.
-    if has_cow:
+    if vtk_version_ok(9, 0, 20210718):
+        cam_orient_manipulator = vtkCameraOrientationWidget(parent_renderer=renderers[0])
+        # Enable the widget.
         cam_orient_manipulator.On()
+    else:
+        rgb = [0.0] * 4
+        colors.GetColor("Carrot", rgb)
+        rgb = tuple(rgb[:3])
+        widget = vtkOrientationMarkerWidget(orientation_marker=vtkAxesActor(),
+                                            interactor=iren, default_renderer=renderers[1],
+                                            outline_color=rgb, viewport=(0.7, 0.8, 0.9, 1.0), zoom=1.5, enabled=True,
+                                            interactive=True)
 
-    for k in curvature_types.keys():
-        text_widgets[k].On()
+    for k in curvatures.keys():
+        # text_widgets[k].On()
         scalar_bar_widgets[k].On()
+    text_widget.On()
 
+    camera = None
+    for i in range(0, len(renderers)):
+        if i == 0:
+            camera = renderers[0].active_camera
+            camera.Elevation(60)
+            # This moves the window center slightly to ensure that
+            # the whole surface is not obscured by the scalar bars.
+            # camera.window_center = (0.0, -0.15)
+        else:
+            renderers[i].active_camera = camera
+        renderers[i].ResetCamera()
+
+    renderers[0].active_camera.Zoom(0.95)
     ren_win.Render()
+
     iren.Start()
 
 
@@ -284,14 +250,133 @@ def vtk_version_ok(major, minor, build):
         return False
 
 
+def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False):
+    """
+    Generate the Gaussian curvatures on the surface.
+
+    :param surface: The surface.
+    :param needs_adjusting: Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
+    :param frequency_table: True if a frequency table is to be displayed.
+    :return: Return the surface, the scalar ranges of the curvatures along with the lookup tables.
+    """
+    name = surface.name
+    source = surface.source
+    curvature = 'Gauss_Curvature'
+
+    scalar_bar_labels = 5
+
+    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_GAUSS)
+    p = (source >> curvatures).update().output
+
+    if name in needs_adjusting:
+        adjust_edge_curvatures(p, curvature)
+
+    if name == 'bour':
+        # Gaussian curvature is -1/(r(r+1)^4)
+        r = 1
+        gauss_curvature = -1 / (r * (r + 1) ** 4)
+        constrain_curvatures(p, curvature, gauss_curvature, gauss_curvature)
+        scalar_bar_labels = 1
+    if name == 'enneper':
+        # Gaussian curvature is -4/(1 + r^2)^4
+        r = 1
+        gauss_curvature = -4 / ((1 + r ** 2) ** 4)
+        constrain_curvatures(p, curvature, gauss_curvature, gauss_curvature)
+        scalar_bar_labels = 1
+    if name == 'cube':
+        constrain_curvatures(p, curvature, 0.0, 0.0)
+        scalar_bar_labels = 1
+    if name == 'mobius':
+        constrain_curvatures(p, curvature, 0.0, 0.0)
+        scalar_bar_labels = 1
+    if name == 'sphere':
+        # Gaussian curvature is 1/r^2
+        r = 10
+        gauss_curvature = 1.0 / r ** 2
+        constrain_curvatures(p, curvature, gauss_curvature, gauss_curvature)
+        scalar_bar_labels = 1
+
+    p.GetPointData().SetActiveScalars(curvature)
+    scalar_range_curvatures = curvatures.update().output.GetPointData().GetScalars(curvature).range
+
+    bands = get_bands(scalar_range_curvatures, scalar_bar_labels)
+    freq = get_frequencies(bands, p)
+    bands, freq = adjust_ranges(bands, freq)
+    if frequency_table:
+        # Let's do a frequency table with the number of scalars in each band.
+        print_bands_frequencies(curvature, bands, freq)
+
+    lut = get_diverging_lut()
+    lut.SetTableRange(scalar_range_curvatures)
+
+    return {'surface': p, 'scalar_range_curvatures': scalar_range_curvatures, 'scalar_bar_labels': scalar_bar_labels,
+            'lut': lut}
+
+
+def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
+    """
+    Generate the mean curvatures on the surface.
+
+    :param surface: The surface.
+    :param needs_adjusting: Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
+    :param frequency_table: True if a frequency table is to be displayed.
+    :return: Return the surface, the scalar ranges of the curvatures along with the lookup tables.
+    """
+    name = surface.name
+    source = surface.source
+    curvature = 'Mean_Curvature'
+
+    scalar_bar_labels = 5
+
+    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_MEAN)
+    p = (source >> curvatures).update().output
+
+    if name in needs_adjusting:
+        adjust_edge_curvatures(p, curvature)
+
+    if name == 'bour':
+        # Mean curvature is 0
+        constrain_curvatures(p, curvature, 0, 0)
+        scalar_bar_labels = 1
+    if name == 'enneper':
+        # Mean curvature is 0
+        constrain_curvatures(p, curvature, 0, 0)
+        scalar_bar_labels = 1
+    if name == 'cube':
+        constrain_curvatures(p, curvature, 0.0, 0.0)
+        scalar_bar_labels = 1
+    if name == 'mobius':
+        constrain_curvatures(p, curvature, -0.6, 0.6)
+    if name == 'sphere':
+        # Mean curvature is 1/r
+        r = 10
+        mean_curvature = 1.0 / r
+        constrain_curvatures(p, curvature, mean_curvature, mean_curvature)
+        scalar_bar_labels = 1
+
+    p.GetPointData().SetActiveScalars(curvature)
+    scalar_range_curvatures = curvatures.update().output.GetPointData().GetScalars(curvature).range
+
+    bands = get_bands(scalar_range_curvatures, scalar_bar_labels)
+    freq = get_frequencies(bands, p)
+    bands, freq = adjust_ranges(bands, freq)
+    if frequency_table:
+        # Let's do a frequency table with the number of scalars in each band.
+        print_bands_frequencies(curvature, bands, freq)
+
+    lut = get_diverging_lut1()
+    lut.SetTableRange(scalar_range_curvatures)
+
+    return {'surface': p, 'scalar_range_curvatures': scalar_range_curvatures, 'scalar_bar_labels': scalar_bar_labels,
+            'lut': lut}
+
+
 def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):
     """
     This function adjusts curvatures along the edges of the surface by replacing
      the value with the average value of the curvatures of points in the neighborhood.
 
-    Remember to update the vtkCurvatures object before calling this.
-
-    :param source: A vtkPolyData object corresponding to the vtkCurvatures object.
+    :param source: The vtkCurvatures object.
     :param curvature_name: The name of the curvature, 'Gauss_Curvature' or 'Mean_Curvature'.
     :param epsilon: Absolute curvature values less than this will be set to zero.
     :return:
@@ -299,15 +384,10 @@ def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):
 
     def point_neighbourhood(pt_id):
         """
-        Find the ids of the neighbours of pt_id.
+        Extract the topological neighbors for point.
 
         :param pt_id: The point id.
         :return: The neighbour ids.
-        """
-        """
-        Extract the topological neighbors for point pId. In two steps:
-        1) source.GetPointCells(pt_id, cell_ids)
-        2) source.GetCellPoints(cell_id, cell_point_ids) for all cell_id in cell_ids
         """
         cell_ids = vtkIdList()
         source.GetPointCells(pt_id, cell_ids)
@@ -324,9 +404,9 @@ def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):
         """
         Compute the distance between two points given their ids.
 
-        :param pt_id_a:
-        :param pt_id_b:
-        :return:
+        :param pt_id_a: First point.
+        :param pt_id_b: Second point.
+        :return: The distance.
         """
         pt_a = np.array(source.GetPoint(pt_id_a))
         pt_b = np.array(source.GetPoint(pt_id_b))
@@ -348,9 +428,9 @@ def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):
 
     (source >> id_filter >> edges).update()
 
-    edge_array = edges.GetOutput().GetPointData().GetArray(array_name)
+    edge_array = edges.output.GetPointData().GetArray(array_name)
     boundary_ids = []
-    for i in range(edges.GetOutput().GetNumberOfPoints()):
+    for i in range(edges.output.GetNumberOfPoints()):
         boundary_ids.append(edge_array.GetValue(i))
     # Remove duplicate Ids.
     p_ids_set = set(boundary_ids)
@@ -484,6 +564,35 @@ def get_diverging_lut1():
     return lut
 
 
+def get_source(source, available_surfaces):
+    """
+
+    :param source: The name of the source.
+    :param available_surfaces: The surfaces
+    :return:
+    """
+    surface = source.lower()
+    if surface not in available_surfaces:
+        return None
+    elif surface == 'bour':
+        return get_bour()
+    elif surface == 'cube':
+        return get_cube()
+    elif surface == 'enneper':
+        return get_enneper()
+    elif surface == 'hills':
+        return get_hills()
+    elif surface == 'mobius':
+        return get_mobius()
+    elif surface == 'random hills':
+        return get_random_hills()
+    elif surface == 'sphere':
+        return get_sphere()
+    elif surface == 'torus':
+        return get_torus()
+    return None
+
+
 def get_bour():
     surface = vtkParametricBour()
 
@@ -497,11 +606,11 @@ def get_bour():
     tangents = vtkPolyDataTangents()
 
     transform = vtkTransform()
-    transform.RotateX(0.0)
+    transform.RotateX(-90.0)
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
+    return source >> tangents >> transform_filter
 
 
 def get_cube():
@@ -514,7 +623,7 @@ def get_cube():
     # Build the tangents.
     tangents = vtkPolyDataTangents()
 
-    return (surface >> triangulation >> subdivide >> tangents).update().output
+    return surface >> triangulation >> subdivide >> tangents
 
 
 def get_hills():
@@ -584,12 +693,12 @@ def get_hills():
     tangents = vtkPolyDataTangents()
 
     transform = vtkTransform()
-    transform.RotateX(-90)
+    transform.RotateX(-90.0)
 
     transform_filter = vtkTransformPolyDataFilter()
     transform_filter.SetTransform(transform)
 
-    return (polydata >> normals >> tangents >> transform_filter).update().output
+    return polydata >> normals >> tangents >> transform_filter
 
 
 def get_enneper():
@@ -605,11 +714,11 @@ def get_enneper():
     tangents = vtkPolyDataTangents()
 
     transform = vtkTransform()
-    transform.RotateX(0.0)
+    transform.RotateX(-90.0)
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
+    return source >> tangents >> transform_filter
 
 
 def get_mobius():
@@ -631,7 +740,7 @@ def get_mobius():
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
+    return source >> tangents >> transform_filter
 
 
 def get_random_hills():
@@ -656,7 +765,7 @@ def get_random_hills():
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
+    return source >> tangents >> transform_filter
 
 
 def get_sphere():
@@ -667,7 +776,7 @@ def get_sphere():
     # Now the tangents.
     tangents = vtkPolyDataTangents()
 
-    return (surface >> tangents).update().output
+    return surface >> tangents
 
 
 def get_torus():
@@ -687,31 +796,7 @@ def get_torus():
 
     transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
-    return (source >> tangents >> transform_filter).update().output
-
-
-def get_source(source):
-    surface = source.lower()
-    available_surfaces = ['bour', 'cube', 'enneper', 'hills', 'mobius', 'randomhills', 'sphere', 'torus']
-    if surface not in available_surfaces:
-        return None
-    elif surface == 'bour':
-        return get_bour()
-    elif surface == 'cube':
-        return get_cube()
-    elif surface == 'enneper':
-        return get_enneper()
-    elif surface == 'hills':
-        return get_hills()
-    elif surface == 'mobius':
-        return get_mobius()
-    elif surface == 'randomhills':
-        return get_random_hills()
-    elif surface == 'sphere':
-        return get_sphere()
-    elif surface == 'torus':
-        return get_torus()
-    return None
+    return source >> tangents >> transform_filter
 
 
 def get_frequencies(bands, src):
@@ -809,7 +894,7 @@ def get_bands(d_r, number_of_bands, precision=2, nearest_integer=False):
     return bands
 
 
-def print_bands_frequencies(bands, freq, precision=2):
+def print_bands_frequencies(curvature, bands, freq, precision=2):
     prec = abs(precision)
     if prec > 14:
         prec = 14
@@ -817,7 +902,7 @@ def print_bands_frequencies(bands, freq, precision=2):
     if len(bands) != len(freq):
         print('Bands and Frequencies must be the same size.')
         return
-    s = f'Bands & Frequencies:\n'
+    s = f'Bands & Frequencies:\n{" ".join(curvature.lower().replace("_", " ").split()).title()}\n'
     total = 0
     width = prec + 6
     for k, v in bands.items():
@@ -832,6 +917,147 @@ def print_bands_frequencies(bands, freq, precision=2):
     width = 3 * width + 13
     s += f'{"Total":{width}s}{total:8d}\n'
     print(s)
+
+
+class ScalarBarProperties:
+    """
+    The properties needed for scalar bars.
+    """
+    named_colors = vtkNamedColors()
+
+    lut = None
+    # These are in pixels
+    maximum_dimensions = {'width': 100, 'height': 260}
+    title_text = '',
+    number_of_labels: int = 5
+    # Orientation vertical=True, horizontal=False
+    orientation: bool = True
+    # Horizontal and vertical positioning
+    position_v = {'point1': (0.85, 0.1), 'point2': (0.1, 0.7)}
+    position_h = {'point1': (0.10, 0.1), 'point2': (0.7, 0.1)}
+
+
+def make_scalar_bar_widget(scalar_bar_properties, text_property, interactor):
+    """
+    Make a scalar bar widget.
+
+    :param scalar_bar_properties: The lookup table, title name, maximum dimensions in pixels and position.
+    :param text_property: The properties for the title.
+    :param interactor: The vtkInteractor.
+    :return: The scalar bar widget.
+    """
+    sb_actor = vtkScalarBarActor(lookup_table=scalar_bar_properties.lut, title=scalar_bar_properties.title_text,
+                                 unconstrained_font_size=True, number_of_labels=scalar_bar_properties.number_of_labels,
+                                 title_text_property=text_property
+                                 )
+
+    sb_rep = vtkScalarBarRepresentation(enforce_normalized_viewport_bounds=True,
+                                        orientation=scalar_bar_properties.orientation)
+
+    # Set the position
+    sb_rep.position_coordinate.SetCoordinateSystemToNormalizedViewport()
+    sb_rep.position2_coordinate.SetCoordinateSystemToNormalizedViewport()
+    if scalar_bar_properties.orientation:
+        sb_rep.position_coordinate.value = scalar_bar_properties.position_v['point1']
+        sb_rep.position2_coordinate.value = scalar_bar_properties.position_v['point2']
+    else:
+        sb_rep.position_coordinate.value = scalar_bar_properties.position_h['point1']
+        sb_rep.position2_coordinate.value = scalar_bar_properties.position_h['point2']
+
+    widget = vtkScalarBarWidget(representation=sb_rep, scalar_bar_actor=sb_actor, interactor=interactor, enabled=True)
+
+    return widget
+
+
+def get_title_positions(available_surfaces, justification='center'):
+    """
+    Get positioning information for the names of the surfaces.
+
+    :param available_surfaces: The surfaces
+    :param justification: left, center or right
+    :return: A list of positioning information.
+    """
+    # Position the source name according to its length and justification in the viewport.
+    y0 = 0.89
+    dy = 0.1
+    # The gap between the left or right edge of the screen and the text.
+    dx = 0.01
+    # The size of the maximum length of the text in screen units.
+    x_scale = 0.5
+
+    name_len_min = 0
+    name_len_max = 0
+    first = True
+    for k in available_surfaces:
+        sz = len(k)
+        if first:
+            name_len_min = name_len_max = sz
+            first = False
+        else:
+            name_len_min = min(name_len_min, sz)
+            name_len_max = max(name_len_max, sz)
+    text_positions = dict()
+    for k in available_surfaces:
+        sz = len(k)
+        delta_sz = x_scale * sz / name_len_max
+        if delta_sz <= 2.0 * dx:
+            dx = 0.01
+            delta_sz -= 0.02
+        else:
+            delta_sz -= 2.0 * dx
+
+        if justification.lower() in ['center', 'centre']:
+            x0 = 0.5 - delta_sz / 2.0
+        elif justification.lower() == 'right':
+            x0 = 1.0 - delta_sz
+            if dx < x0:
+                x0 -= dx
+            else:
+                x0 = dx
+            if x0 + delta_sz >= 1:
+                delta_sz -= dx
+                x0 -= dx
+        else:
+            # Default is left justification.
+            x0 = dx
+            if x0 + dx >= 1.0:
+                x0 = dx - x0
+            if x0 + delta_sz >= 1:
+                delta_sz -= dx
+                x0 = dx
+
+        # For debugging!
+        # print(
+        #     f'{k:16s}: (x0, y0) = ({x0:3.2f}, {y0:3.2f}), (x1, y1) = ({x0 + delta_sz:3.2f}, {y0 + dy:3.2f})'
+        #     f', width={delta_sz:3.2f}')
+        text_positions[k] = {'p': [x0, y0, 0], 'p2': [delta_sz, dy, 0]}
+
+    return text_positions
+
+
+# -----------------------------------------------------------------------------
+# These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
+# The class name consists of the VTK class name (without the leading vtk)
+# appended to the relevant Set/Get Macro name.
+# Note: To find these constants, use the link to the header in the
+#       documentation for the class.
+# ------------------------------------------------------------------------------
+@dataclass(frozen=True)
+class CurvaturesCurvatureType:
+    VTK_CURVATURE_GAUSS: int = 0
+    VTK_CURVATURE_MEAN: int = 1
+    VTK_CURVATURE_MAXIMUM: int = 2
+    VTK_CURVATURE_MINIMUM: int = 3
+
+
+@dataclass(frozen=True)
+class MapperScalarMode:
+    VTK_SCALAR_MODE_DEFAULT: int = 0
+    VTK_SCALAR_MODE_USE_POINT_DATA: int = 1
+    VTK_SCALAR_MODE_USE_CELL_DATA: int = 2
+    VTK_SCALAR_MODE_USE_POINT_FIELD_DATA: int = 3
+    VTK_SCALAR_MODE_USE_CELL_FIELD_DATA: int = 4
+    VTK_SCALAR_MODE_USE_FIELD_DATA: int = 5
 
 
 if __name__ == '__main__':

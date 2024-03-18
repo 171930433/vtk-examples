@@ -83,8 +83,6 @@ def get_program_parameters():
     '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    # parser.add_argument('-s', '--surface_name', default='random hills',
-    #                     help='The name of the surface.')
     parser.add_argument('surface_name', default='random hills', help='The name of the surface.')
     parser.add_argument('-f', '--frequency_table', action='store_true', help='Display the frequency table.')
 
@@ -118,7 +116,7 @@ def main(argv):
     surface = Surface(surface_name, get_source(surface_name, available_surfaces))
 
     # --------------------------------------------------------------------------------------
-    # Get the actors, scalar range of curvatures and elevation along with the lookup tables.
+    # Get the filters, scalar range of curvatures and elevation along with the lookup tables.
     # --------------------------------------------------------------------------------------
     # Use an ordered dictionary as we want the keys in a specific order.
     curvatures = OrderedDict()
@@ -137,8 +135,8 @@ def main(argv):
     viewports['Gauss_Curvature'] = [0.0, 0.0, 0.5, 1.0]
     viewports['Mean_Curvature'] = [0.5, 0.0, 1.0, 1.0]
 
-    window_width = 800 * 2
     window_height = 800
+    window_width = 2 * window_height
 
     # --------------------------------------------------
     # Create the RenderWindow, Renderers and Interactor.
@@ -202,8 +200,6 @@ def main(argv):
         # scalar_bar_properties.lut = curvatures[k]['lutr']
         scalar_bar_properties.orientation = False
         scalar_bar_properties.title_text = k.replace('_', '\n')
-        if surface_name == 'plane':
-            scalar_bar_properties.number_of_labels = 1
         contour_widgets[k] = make_scalar_bar_widget(scalar_bar_properties, text_property, iren)
 
         # Now for the elevation, it is the same for both surface actors.
@@ -900,7 +896,7 @@ def print_bands_frequencies(curvature, bands, freq, precision=2):
     if len(bands) != len(freq):
         print('Bands and Frequencies must be the same size.')
         return
-    s = f'{curvature}\nBands & Frequencies:\n'
+    s = f'Bands & Frequencies:\n{" ".join(curvature.lower().replace("_", " ").split()).title()}\n'
     total = 0
     width = prec + 6
     for k, v in bands.items():
@@ -919,12 +915,12 @@ def print_bands_frequencies(curvature, bands, freq, precision=2):
 
 def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False):
     """
-    Generate the actors for the surface.
+    Generate the filters for the surface.
 
     :param surface: The surface.
     :param needs_adjusting: Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
     :param frequency_table: True if a frequency table is to be displayed.
-    :return: Return the actors, scalar ranges of curvatures and elevation along with the lookup tables.
+    :return: Return the filters, scalar ranges of curvatures and elevation along with the lookup tables.
     """
     name = surface.name
     source = surface.source
@@ -1038,17 +1034,18 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
     glyph = get_glyphs(surface, arrow_scale=arrow_scale, scale_factor=scale_factor, reverse_normals=False)
 
     return {'bcf': bcf, 'glyph': glyph, 'scalar_range_curvatures': scalar_range_curvatures,
-            'scalar_range_elevation': scalar_range_elevation, 'lut': lut, 'lut1': lut1, 'lutr': lutr}
+            'scalar_range_elevation': scalar_range_elevation, 'lut': lut,
+            'lut1': lut1, 'lutr': lutr}
 
 
 def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
     """
-    Generate the actors for the surface.
+    Generate the filters for the surface.
 
     :param surface: The surface.
     :param needs_adjusting: Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
     :param frequency_table: True if a frequency table is to be displayed.
-    :return: Return the actors, scalar ranges of curvatures and elevation along with the lookup tables.
+    :return: Return the filters, scalar ranges of curvatures and elevation along with the lookup tables.
     """
     name = surface.name
     source = surface.source
@@ -1129,7 +1126,8 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
     glyph = get_glyphs(surface, arrow_scale=arrow_scale, scale_factor=scale_factor, reverse_normals=False)
 
     return {'bcf': bcf, 'glyph': glyph, 'scalar_range_curvatures': scalar_range_curvatures,
-            'scalar_range_elevation': scalar_range_elevation, 'lut': lut, 'lut1': lut1, 'lutr': lutr}
+            'scalar_range_elevation': scalar_range_elevation, 'lut': lut,
+            'lut1': lut1, 'lutr': lutr}
 
 
 class ScalarBarProperties:

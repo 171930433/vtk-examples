@@ -126,7 +126,7 @@ Pipelines can be reused.
 
 ## How to handle #defines
 
-This example is relatively complex in that a single source feeds into two functions `generate_gaussian_curvatures(...)` and `generate_mean_curvatures(...)` returning actors, scalar ranges of curvatures and elevation along with the lookup tables. Additionally a text widget and scalar bar widgets are positioned into two viewports.
+This example is relatively complex in that a single source feeds into two functions `generate_gaussian_curvatures(...)` and `generate_mean_curvatures(...)` returning filters, scalar ranges of curvatures and elevation along with the lookup tables. Additionally a text widget and scalar bar widgets are positioned into two viewports.
 
 We initialize nearly all properties of a wrapped VTK class by specifying keyword arguments in the constructor. There are no issues if the properties are True or False or an existing variable or an enum (which is wrapped in Python) e.g.:
 
