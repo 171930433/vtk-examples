@@ -122,6 +122,11 @@ This section includes examples of manipulating meshes.
 
 #### ?vtkImageData?
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ImageWeightedSum](/PythonicAPI/ImageData/ImageWeightedSum) | Add two or more images.
+
+
 #### ?vtkExplicitStructuredGrid?
 
 | Example Name | Description | Image |
@@ -214,6 +219,10 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.
 
 ## Working with ?vtkImageData?
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ImageNormalize](/PythonicAPI/ImageData/ImageNormalize) | Normalize an image.
 
 ## Volume Rendering
 
