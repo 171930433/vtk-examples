@@ -181,6 +181,10 @@ This section includes ?vtkUnstructuredGrid?.
 
 ### HyperTreeGrid
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[HyperTreeGridSource](/PythonicAPI/HyperTreeGrid/HyperTreeGridSource) | Create a vtkHyperTreeGrid.
+
 ## VTK Concepts
 
 ## Rendering
