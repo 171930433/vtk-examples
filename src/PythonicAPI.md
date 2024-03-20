@@ -232,6 +232,13 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 ## Image Processing
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[Attenuation](/PythonicAPI/ImageProcessing/Attenuation) | This MRI image illustrates attenuation that can occur due to sensor position.  The artifact is removed by dividing by the attenuation profile determined manually.
+[EnhanceEdges](/PythonicAPI/ImageProcessing/EnhanceEdges) | High-pass filters can extract and enhance edges in an image. Subtraction of the Laplacian (middle) from the original image (left) results in edge enhancement or a sharpening operation (right).
+[GaussianSmooth](/PythonicAPI/ImageProcessing/GaussianSmooth) | Low-pass filters can be implemented as convolution with a Gaussian kernel.
+[VTKSpectrum](/PythonicAPI/ImageProcessing/VTKSpectrum) | The discrete Fourier transform changes an image from the spatial domain into the frequency domain, where each pixel represents a sinusoidal function. This figure shows an image and its power spectrum displayed using a logarithmic transfer function.
+
 ## Widgets
 
 ## Plotting

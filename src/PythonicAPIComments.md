@@ -124,6 +124,14 @@ Pipelines can be reused.
 | -------------- | ---------------------- | ------- |
 [PipelineReuse](/PythonicAPI/GeometricObjects/PipelineReuse) | Here we use the pipeline in a functional way. This allows us to reuse the pipeline, here, p(cone()) returns a data object so any changes to the pipeline afterward would not be automatically propagated to the rendering pipeline. Finally, we use an append filter to combine the cone and cylinder.
 
+## Grouping pipelines
+
+Grpuping the pipelines into code blocks may improve the readability of the code.
+
+| Example Name | Comments | Image |
+| -------------- | ---------------------- | ------- |
+[EnhanceEdges](/PythonicAPI/ImageProcessing/EnhanceEdges) | The pipelines are grouped into a single code block. This may make understanding the code easier.
+
 ## How to handle #defines
 
 This example is relatively complex in that a single source feeds into two functions `generate_gaussian_curvatures(...)` and `generate_mean_curvatures(...)` returning filters, scalar ranges of curvatures and elevation along with the lookup tables. Additionally a text widget and scalar bar widgets are positioned into two viewports.
