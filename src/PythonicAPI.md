@@ -230,6 +230,10 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 ## Working with Images
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[BackgroundImage](/PythonicAPI/Images/BackgroundImage) | Display an image as the "background" of a scene, and render a superquadric in front of it.
+
 ## Image Processing
 
 | Example Name | Description | Image |
