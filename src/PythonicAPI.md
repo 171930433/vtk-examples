@@ -88,6 +88,14 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 ## Implicit Functions and Iso-surfaces
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[BooleanOperationImplicitFunctions](/PythonicAPI/ImplicitFunctions/BooleanOperationImplicitFunctions) | Demonstrate booleans of two different implicit functions
+[ImplicitQuadric](/PythonicAPI/ImplicitFunctions/ImplicitQuadric) | Create an ellipsoid using an implicit quadric
+[ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
+[ImplicitSphere1](/PythonicAPI/ImplicitFunctions/ImplicitSphere1) | Demonstrate sampling of a sphere implicit function
+[SampleFunction](/PythonicAPI/ImplicitFunctions/SampleFunction) | Sample and visualize an implicit function.
+
 ## Working with 3D Data
 
 | Example Name | Description | Image |
