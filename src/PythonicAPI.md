@@ -47,6 +47,11 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 ##### Input
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ReadAllPolyDataTypesDemo](/PythonicAPI/IO/ReadAllPolyDataTypesDemo) | Read all VTK polydata file types.
+[ReadExodusData](/PythonicAPI/IO/ReadExodusData) | A simple script for reading and viewing ExodusII data interactively.
+
 ###### Importers
 
 ##### Output
@@ -59,9 +64,17 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 #### Legacy VTK Formats
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ReadLegacyUnstructuredGrid](/PythonicAPI/IO/ReadLegacyUnstructuredGrid) | Read an unstructured grid that contains 11 linear cells.
+
 ### Image Format
 
 #### Input
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[HDRReader](/PythonicAPI/IO/HDRReader) | Read a high-dynamic-range imaging file.
 
 #### Output
 

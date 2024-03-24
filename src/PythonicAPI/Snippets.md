@@ -12,6 +12,10 @@ Output the camera position while moving the image.
 
 Check the VTK version returning `True` if the requested VTK version is >= the current version.
 
+#### [DrawViewportBorder](/PythonicAPI/Snippets/DrawViewportBorder.md)
+
+Draw a border around a renderer's viewport.
+
 #### [PointToGlyph](/PythonicAPI/Snippets/PointToGlyph.md)
 
 Represent points as glyphs.

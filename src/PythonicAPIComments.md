@@ -163,3 +163,19 @@ The real advantage of this approach is that the defined VTK constants are used i
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Using immutable data classes for constants.  Demonstrating positioning of title and scalar bar widgets into multiple viewports.
+
+## Python functions and pipelines
+
+A Python function returning a VTK object can be used as the first element of a pipeline. 
+
+- If the function returns `None`, then the pipeline will never be implemented.
+
+``` Python
+            read_poly_data(pth) >> mapper
+```
+
+Try this example with a `.csv` file to see what happens.
+
+| Example Name | Comments | Image |
+| -------------- | ---------------------- | ------- |
+[ReadAllPolyDataTypesDemo](/PythonicAPI/IO/ReadAllPolyDataTypesDemo) | `read_poly_data(pth)` returns polydata that is fed directly into the mapper.
