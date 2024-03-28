@@ -217,6 +217,7 @@ This section includes ?vtkUnstructuredGrid?.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[GradientBackground](/PythonicAPI/Rendering/GradientBackground) | Demonstrates the background shading options.
 [PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
 [PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
 [PBR_Skybox_Anisotropy](/PythonicAPI/Rendering/PBR_Skybox_Anisotropy) | Demonstrates physically based rendering, a skybox, image based lighting, and anisotropic texturing.

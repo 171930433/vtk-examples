@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
-import math
+# Based on:
+#  https://gitlab.kitware.com/vtk/vtk/-/blob/master/Rendering/Core/Testing/Cxx/TestGradientBackground.cxx?ref_type=heads
+# See:
+#  [New in VTK 9.3: Radial Gradient Background](https://www.kitware.com/new-in-vtk-9-3-radial-gradient-background/)
+
 from collections import namedtuple
 from dataclasses import dataclass
 from pathlib import Path
 
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
+# noinspection PyUnresolvedReferences
+import vtkmodules.vtkRenderingFreeType
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
@@ -17,6 +23,7 @@ from vtkmodules.vtkCommonDataModel import (
     vtkPolyLine
 )
 from vtkmodules.vtkFiltersCore import vtkAppendPolyData
+from vtkmodules.vtkFiltersSources import vtkConeSource
 from vtkmodules.vtkIOGeometry import (
     vtkBYUReader,
     vtkOBJReader,
@@ -36,66 +43,92 @@ from vtkmodules.vtkRenderingCore import (
     vtkCoordinate,
     vtkPolyDataMapper,
     vtkPolyDataMapper2D,
-    vtkRenderer,
     vtkRenderWindow,
     vtkRenderWindowInteractor,
+    vtkRenderer,
     vtkTextActor,
     vtkTextProperty,
+    vtkViewport
 )
 
 
-def get_program_parameters():
+def get_program_parameters(argv):
     import argparse
-    description = 'Read and display the PolyData types.'
+    description = 'Demonstrates the background shading options.'
     epilogue = '''
-You can specify individual files as follows:
-../../../src/Testing/Data -f "teapot.g"  "cowHead.vtp"  "horse.ply"
     '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('path', help='The path to read the polydata files from.')
-    parser.add_argument('-f', '--file_names', nargs='+', help='The files to use.',
-                        action='append', default=None)
+    parser.add_argument('file_name', default=None,
+                        help='An optional file name, e.g. star-wars-vader-tie-fighter.obj.')
     args = parser.parse_args()
-    return args.path, args.file_names
+    return args.file_name
 
 
-def main():
+def main(fn):
+    if fn:
+        fp = Path(fn)
+        if not fp.is_file():
+            print(f'The path: {fp} does not exist.')
+            return
+    else:
+        fp = None
+
+    pd = read_poly_data(fp)
+    if not pd:
+        # Default to a cone if the path is empty.
+        source = vtkConeSource(resolution=25, direction=(0, 1, 0), height=1)
+        pd = source.update().output
+
     colors = vtkNamedColors()
 
-    fp, files = get_program_parameters()
-    if not files:
-        files = ['teapot.g', 'cowHead.vtp', 'horse.ply', 'trumpet.obj', '42400-IDGH.stl', 'v.vtk']
-    else:
-        # Flatten the list of lists.
-        files = [val for sublist in files for val in sublist]
-    if len(files) > 6:
-        print('No more than six file names can be specified.')
-        return
+    mapper = vtkPolyDataMapper()
+    pd >> mapper
 
-    path = Path(fp)
-    if not path.is_dir():
-        print(f'{path} must exist and be a folder.')
-        return
+    actor = vtkActor(mapper=mapper)
+    actor.property.color = colors.GetColor3d('Honeydew')
+    actor.property.specular = 0.3
+    actor.property.specular_power = 60.0
 
-    # Create one text property for all.
-    text_property = vtkTextProperty(color=colors.GetColor3d('LightGoldenrodYellow'), bold=True, italic=True,
-                                    shadow=True,
-                                    font_size=16, justification=TextPropertyJustification.VTK_TEXT_CENTERED,
+    # Here we select and name the colors.
+    # Feel free to change colors.
+    bottom_color = colors.GetColor3d('Gold')
+    top_color = colors.GetColor3d('OrangeRed')
+    left_color = colors.GetColor3d('Gold')
+    right_color = colors.GetColor3d('OrangeRed')
+    center_color = colors.GetColor3d('Gold')
+    side_color = colors.GetColor3d('OrangeRed')
+    corner_color = colors.GetColor3d('OrangeRed')
+
+    # For each gradient specify the mode.
+    modes = [
+        vtkViewport.GradientModes.VTK_GRADIENT_RADIAL_VIEWPORT_FARTHEST_SIDE,
+        vtkViewport.GradientModes.VTK_GRADIENT_RADIAL_VIEWPORT_FARTHEST_CORNER,
+        vtkViewport.GradientModes.VTK_GRADIENT_VERTICAL,
+        vtkViewport.GradientModes.VTK_GRADIENT_HORIZONTAL,
+    ]
+
+    viewport_titles = (
+        'Radial Farthest Side',
+        'Radial Farthest Corner',
+        'Vertical',
+        'Horizontal',
+    )
+    text_positions = get_text_positions(viewport_titles, justification='center')
+
+    text_property = vtkTextProperty(color=colors.GetColor3d('MidnightBlue'),
+                                    bold=False, italic=False, shadow=False, font_size=12,
+                                    justification=TextPropertyJustification.VTK_TEXT_CENTERED,
                                     vertical_justification=TextPropertyVerticalJustification().VTK_TEXT_CENTERED)
 
-    # Position text according to its length and centered in the viewport.
-    text_positions = get_text_positions(files, justification='center')
-
     # Setup viewports for the renderers.
-    renderer_size = 400
-    x_grid_dimensions = 3
-    y_grid_dimensions = math.ceil(len(files) / x_grid_dimensions)
-    width = renderer_size * x_grid_dimensions
-    height = renderer_size * y_grid_dimensions
+    x_grid_dimensions = 2
+    y_grid_dimensions = 2
+    width = 640
+    height = 480
 
     # Create the renderer viewports.
-    blank = len(files)
+    blank = len(viewport_titles)
     viewports = dict()
     VP_Params = namedtuple('VP_Params', ['viewport', 'border'])
     last_col = False
@@ -126,13 +159,14 @@ def main():
                 border = vpb.TOP_LEFT_BOTTOM
             else:
                 border = vpb.TOP_LEFT
+
             vp_params = VP_Params(viewport, border)
             if index < blank:
-                viewports[files[index]] = vp_params
+                viewports[viewport_titles[index]] = vp_params
             else:
                 viewports[index] = vp_params
 
-    ren_win = vtkRenderWindow(size=(width, height), window_name='ReadAllPolyDataTypesDemo')
+    ren_win = vtkRenderWindow(size=(width, height), window_name='GradientBackground')
 
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
@@ -140,51 +174,62 @@ def main():
     iren.SetInteractorStyle(style)
 
     text_widgets = list()
-    for file in files:
-        pth = path / file
+    for i, viewport_title in enumerate(viewport_titles):
+        # pth = path / file
         # Create a renderer.
-        viewport = viewports[file].viewport
-        border = viewports[file].border
-        renderer = vtkRenderer(background=colors.GetColor3d('SlateGray'), viewport=viewport)
-        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('Yellow'), line_width=4)
-        if pth.is_file():
-            mapper = vtkPolyDataMapper()
-            read_poly_data(pth) >> mapper
-            actor = vtkActor(mapper=mapper)
-            actor.property.diffuse_color = colors.GetColor3d('Light_salmon')
-            actor.property.specular = 0.6
-            actor.property.specular_power = 30
-
-            renderer.AddActor(actor)
-
-            # Create the text actor and representation.
-            text_actor = vtkTextActor(input=file, text_scale_mode=vtkTextActor().TEXT_SCALE_MODE_NONE,
-                                      text_property=text_property)
-
-            # Create the text representation. Used for positioning the text actor.
-            text_representation = vtkTextRepresentation(enforce_normalized_viewport_bounds=True)
-            text_representation.GetPositionCoordinate().value = text_positions[file]['p']
-            text_representation.GetPosition2Coordinate().value = text_positions[file]['p2']
-
-            # Create the text widget, setting the default renderer and interactor.
-            text_widget = vtkTextWidget(representation=text_representation, text_actor=text_actor,
-                                        default_renderer=renderer, interactor=iren, selectable=False)
-            text_widgets.append(text_widget)
+        viewport = viewports[viewport_title].viewport
+        border = viewports[viewport_title].border
+        renderer = vtkRenderer(gradient_background=True, gradient_mode=modes[i], viewport=viewport)
+        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('border_color'), line_width=4)
+        if i == 1:
+            # Horizontal
+            renderer.background = left_color
+            renderer.background2 = right_color
+        elif i == 2:
+            # Radial Farthest Side
+            renderer.background = center_color
+            renderer.background2 = side_color
+        elif i == 3:
+            # Radial Farthest Corner
+            renderer.background = center_color
+            renderer.background2 = corner_color
         else:
-            print(f'Nonexistent file: {pth}')
+            # Vertical
+            renderer.background = bottom_color
+            renderer.background2 = top_color
+
+        renderer.AddActor(actor)
+
+        # Create the text actor and representation.
+        text_actor = vtkTextActor(input=viewport_title, text_scale_mode=vtkTextActor().TEXT_SCALE_MODE_NONE,
+                                  text_property=text_property)
+
+        # Create the text representation. Used for positioning the text actor.
+        text_representation = vtkTextRepresentation(enforce_normalized_viewport_bounds=True)
+        text_representation.GetPositionCoordinate().value = text_positions[viewport_title]['p']
+        text_representation.GetPosition2Coordinate().value = text_positions[viewport_title]['p2']
+
+        # Create the text widget, setting the default renderer and interactor.
+        text_widget = vtkTextWidget(representation=text_representation, text_actor=text_actor,
+                                    default_renderer=renderer, interactor=iren, selectable=False)
+        text_widgets.append(text_widget)
+        # else:
+        #     print(f'Nonexistent file: {pth}')
+        # renderers.append(renderer)
         ren_win.AddRenderer(renderer)
 
     for i in range(blank, x_grid_dimensions * y_grid_dimensions):
         viewport = viewports[i].viewport
         border = viewports[i].border
         renderer = vtkRenderer(background=colors.GetColor3d('SlateGray'), viewport=viewport)
-        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('Yellow'), line_width=4)
+        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('border_color'), line_width=4)
         ren_win.AddRenderer(renderer)
 
     for text_widget in text_widgets:
         text_widget.On()
 
     ren_win.Render()
+    iren.UpdateSize(width * 2, height * 2)
     iren.Start()
 
 
@@ -417,4 +462,7 @@ class TextPropertyVerticalJustification:
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+
+    file_path = get_program_parameters(sys.argv)
+    main(file_path)

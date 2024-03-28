@@ -8,17 +8,17 @@ To use the snippet, click the *Copy to clipboard* at the upper right of the code
 
 ``` Python
 
-from pathlib import Path
-
-from vtkmodules.vtkIOImage import (
-    vtkBMPWriter,
-    vtkJPEGWriter,
-    vtkPNGWriter,
-    vtkPNMWriter,
-    vtkPostScriptWriter,
-    vtkTIFFWriter
-)
-from vtkmodules.vtkRenderingCore import vtkWindowToImageFilter
+# from pathlib import Path
+# 
+# from vtkmodules.vtkIOImage import (
+#     vtkBMPWriter,
+#     vtkJPEGWriter,
+#     vtkPNGWriter,
+#     vtkPNMWriter,
+#     vtkPostScriptWriter,
+#     vtkTIFFWriter
+# )
+# from vtkmodules.vtkRenderingCore import vtkWindowToImageFilter
 
 
 def write_image(file_name, ren_win, rgba=True):
