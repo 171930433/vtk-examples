@@ -133,6 +133,11 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 
 This section includes examples of manipulating meshes.
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[DelaunayMesh](/PythonicAPI/Modelling/DelaunayMesh) | Two-dimensional Delaunay triangulation of a random set of points. Points and edges are shown highlighted with sphere glyphs and tubes.
+
+
 #### Clipping
 
 | Example Name | Description | Image |
@@ -146,7 +151,6 @@ This section includes examples of manipulating meshes.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [ImageWeightedSum](/PythonicAPI/ImageData/ImageWeightedSum) | Add two or more images.
-
 
 #### ?vtkExplicitStructuredGrid?
 
@@ -170,6 +174,11 @@ This section includes ?vtkUnstructuredGrid?.
 ### Registration
 
 ### Medical
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[MedicalDemo1](/PythonicAPI/Medical/MedicalDemo1) | Create a skin surface from volume data.
+
 
 ### Surface reconstruction
 
