@@ -82,7 +82,7 @@ def main():
     text_property = vtkTextProperty(color=colors.GetColor3d('LightGoldenrodYellow'), bold=True, italic=True,
                                     shadow=True,
                                     font_size=16, justification=TextPropertyJustification.VTK_TEXT_CENTERED,
-                                    vertical_justification=TextPropertyVerticalJustification().VTK_TEXT_CENTERED)
+                                    vertical_justification=TextPropertyVerticalJustification.VTK_TEXT_CENTERED)
 
     # Position text according to its length and centered in the viewport.
     text_positions = get_text_positions(files, justification='center')
@@ -158,7 +158,7 @@ def main():
             renderer.AddActor(actor)
 
             # Create the text actor and representation.
-            text_actor = vtkTextActor(input=file, text_scale_mode=vtkTextActor().TEXT_SCALE_MODE_NONE,
+            text_actor = vtkTextActor(input=file, text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                                       text_property=text_property)
 
             # Create the text representation. Used for positioning the text actor.

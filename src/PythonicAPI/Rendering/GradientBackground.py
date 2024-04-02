@@ -59,7 +59,7 @@ def get_program_parameters(argv):
     '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('file_name', default=None,
+    parser.add_argument('-f', '--file_name', default=None,
                         help='An optional file name, e.g. star-wars-vader-tie-fighter.obj.')
     args = parser.parse_args()
     return args.file_name
@@ -201,7 +201,7 @@ def main(fn):
         renderer.AddActor(actor)
 
         # Create the text actor and representation.
-        text_actor = vtkTextActor(input=viewport_title, text_scale_mode=vtkTextActor().TEXT_SCALE_MODE_NONE,
+        text_actor = vtkTextActor(input=viewport_title, text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                                   text_property=text_property)
 
         # Create the text representation. Used for positioning the text actor.
@@ -287,7 +287,7 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
         :param border_type:  The border type to draw, it must be one of the constants in ViewPortBorder
         :return: The points and lines.
         """
-        if border_type >= ViewPortBorder().NUMBER_OF_BORDER_TYPES:
+        if border_type >= ViewPortBorder.NUMBER_OF_BORDER_TYPES:
             print('Not a valid border type.')
             return None
 
@@ -337,15 +337,15 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     coordinate = vtkCoordinate()
     coordinate.SetCoordinateSystemToNormalizedViewport()
     poly = vtkAppendPolyData()
-    if border == ViewPortBorder().TOP_BOTTOM:
+    if border == ViewPortBorder.TOP_BOTTOM:
         (
-            generate_border_lines(ViewPortBorder().TOP),
-            generate_border_lines(ViewPortBorder().BOTTOM)
+            generate_border_lines(ViewPortBorder.TOP),
+            generate_border_lines(ViewPortBorder.BOTTOM)
         ) >> poly
-    elif border == ViewPortBorder().LEFT_RIGHT:
+    elif border == ViewPortBorder.LEFT_RIGHT:
         (
-            generate_border_lines(ViewPortBorder().LEFT),
-            generate_border_lines(ViewPortBorder().RIGHT)
+            generate_border_lines(ViewPortBorder.LEFT),
+            generate_border_lines(ViewPortBorder.RIGHT)
         ) >> poly
     else:
         generate_border_lines(border) >> poly

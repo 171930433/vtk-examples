@@ -28,7 +28,7 @@ def get_program_parameters():
         Add a background image to a render window.
    '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue)
-    parser.add_argument('filename', default=None, type=str, nargs='?',
+    parser.add_argument('-f', '--filename', default=None,
                         help='An optional filename e.g. Gourds2.jpg.')
     args = parser.parse_args()
     return args.filename
@@ -37,7 +37,7 @@ def get_program_parameters():
 def main():
     colors = vtkNamedColors()
 
-    #  Verify input arguments
+    #  Verify input arguments0
     fn = get_program_parameters()
     if fn:
         # Read the image.

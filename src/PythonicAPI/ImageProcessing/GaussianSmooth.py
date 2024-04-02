@@ -39,7 +39,7 @@ def main():
     reader.file_name = file_name
 
     # Process the image.
-    cast = vtkImageCast(output_scalar_type=ImageCastOutputScalarType().VTK_FLOAT)
+    cast = vtkImageCast(output_scalar_type=ImageCastOutputScalarType.VTK_FLOAT)
 
     smoothing_filter = vtkImageGaussianSmooth(dimensionality=2, standard_deviations=(4.0, 4.0),
                                               radius_factors=(2.0, 2.0))

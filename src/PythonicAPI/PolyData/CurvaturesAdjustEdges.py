@@ -163,7 +163,7 @@ def main(argv):
     for k, v in curvatures.items():
         src_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_curvatures'],
                                        lookup_table=v['lut'],
-                                       scalar_mode=MapperScalarMode().VTK_SCALAR_MODE_DEFAULT)
+                                       scalar_mode=MapperScalarMode.VTK_SCALAR_MODE_DEFAULT)
 
         src_actor = vtkActor(mapper=src_mapper)
         v['surface'] >> src_mapper
@@ -265,7 +265,7 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
 
     scalar_bar_labels = 5
 
-    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_GAUSS)
+    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType.VTK_CURVATURE_GAUSS)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
@@ -328,7 +328,7 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
 
     scalar_bar_labels = 5
 
-    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_MEAN)
+    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType.VTK_CURVATURE_MEAN)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:

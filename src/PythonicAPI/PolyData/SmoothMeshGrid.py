@@ -185,7 +185,7 @@ def main():
 
     for k, v in text.items():
         text_actors.append(
-            vtkTextActor(input=v, text_scale_mode=vtkTextActor().TEXT_SCALE_MODE_NONE, text_property=text_property))
+            vtkTextActor(input=v, text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE, text_property=text_property))
 
         # Create the text representation. Used for positioning the text actor.
         text_representations.append(vtkTextRepresentation(enforce_normalized_viewport_bounds=True))

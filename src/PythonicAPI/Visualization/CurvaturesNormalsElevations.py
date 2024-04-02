@@ -178,7 +178,7 @@ def main(argv):
 
         # Create contour edges
         edge_mapper = vtkPolyDataMapper(
-            resolve_coincident_topology=MapperResolveCoincidentTopology().VTK_RESOLVE_POLYGON_OFFSET)
+            resolve_coincident_topology=MapperResolveCoincidentTopology.VTK_RESOLVE_POLYGON_OFFSET)
 
         edge_actor = vtkActor(mapper=edge_mapper)
         edge_actor.property.color = colors.GetColor3d('Black')
@@ -186,9 +186,9 @@ def main(argv):
 
         glyph_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_elevation'],
                                          lookup_table=v['lut1'],
-                                         scalar_mode=MapperScalarMode().VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
+                                         scalar_mode=MapperScalarMode.VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
                                          scalar_visibility=True,
-                                         color_mode=MapperColorMode().VTK_COLOR_MODE_MAP_SCALARS)
+                                         color_mode=MapperColorMode.VTK_COLOR_MODE_MAP_SCALARS)
         glyph_mapper.SelectColorArray('Elevation')
 
         glyph_actor = vtkActor(mapper=glyph_mapper)

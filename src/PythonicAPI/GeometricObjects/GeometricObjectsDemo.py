@@ -120,7 +120,7 @@ def main():
                 # Create the text actor and representation.
                 text_actors.append(
                     vtkTextActor(input=geometric_object_sources[index].class_name,
-                                 text_scale_mode=vtkTextActor().TEXT_SCALE_MODE_NONE,
+                                 text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                                  text_property=text_property))
 
                 # Create the text representation. Used for positioning the text actor.

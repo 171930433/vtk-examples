@@ -51,7 +51,7 @@ def main():
     geometry = vtkCompositeDataGeometryFilter()
 
     # Mapper
-    mapper = vtkPolyDataMapper(scalar_mode=MapperScalarMode().VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
+    mapper = vtkPolyDataMapper(scalar_mode=MapperScalarMode.VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
                                interpolate_scalars_before_mapping=True)
     mapper.SelectColorArray(nodal_var)
     reader >> geometry >> mapper
