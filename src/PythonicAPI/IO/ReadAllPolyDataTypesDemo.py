@@ -100,7 +100,6 @@ def main():
     VP_Params = namedtuple('VP_Params', ['viewport', 'border'])
     last_col = False
     last_row = False
-    vpb = ViewPortBorder()
     for row in range(0, y_grid_dimensions):
         if row == y_grid_dimensions - 1:
             last_row = True
@@ -116,16 +115,16 @@ def main():
             )
 
             if last_row and last_col:
-                border = vpb.TOP_LEFT_BOTTOM_RIGHT
+                border = ViewPortBorder.TOP_LEFT_BOTTOM_RIGHT
                 last_row = False
                 last_col = False
             elif last_col:
-                border = vpb.RIGHT_TOP_LEFT
+                border = ViewPortBorder.RIGHT_TOP_LEFT
                 last_col = False
             elif last_row:
-                border = vpb.TOP_LEFT_BOTTOM
+                border = ViewPortBorder.TOP_LEFT_BOTTOM
             else:
-                border = vpb.TOP_LEFT
+                border = ViewPortBorder.TOP_LEFT
             vp_params = VP_Params(viewport, border)
             if index < blank:
                 viewports[files[index]] = vp_params
@@ -254,19 +253,18 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
             (1, 0, 0),
             (1, 1, 0),
         )
-        vpb = ViewPortBorder()
         pt_orders = {
-            vpb.TOP: (0, 1),
-            vpb.LEFT: (1, 2),
-            vpb.BOTTOM: (2, 3),
-            vpb.RIGHT: (3, 4),
-            vpb.LEFT_BOTTOM: (1, 2, 3),
-            vpb.BOTTOM_RIGHT: (2, 3, 4),
-            vpb.RIGHT_TOP: (3, 4, 1),
-            vpb.RIGHT_TOP_LEFT: (3, 4, 1, 2),
-            vpb.TOP_LEFT: (0, 1, 2),
-            vpb.TOP_LEFT_BOTTOM: (0, 1, 2, 3),
-            vpb.TOP_LEFT_BOTTOM_RIGHT: (0, 1, 2, 3, 4)
+            ViewPortBorder.TOP: (0, 1),
+            ViewPortBorder.LEFT: (1, 2),
+            ViewPortBorder.BOTTOM: (2, 3),
+            ViewPortBorder.RIGHT: (3, 4),
+            ViewPortBorder.LEFT_BOTTOM: (1, 2, 3),
+            ViewPortBorder.BOTTOM_RIGHT: (2, 3, 4),
+            ViewPortBorder.RIGHT_TOP: (3, 4, 1),
+            ViewPortBorder.RIGHT_TOP_LEFT: (3, 4, 1, 2),
+            ViewPortBorder.TOP_LEFT: (0, 1, 2),
+            ViewPortBorder.TOP_LEFT_BOTTOM: (0, 1, 2, 3),
+            ViewPortBorder.TOP_LEFT_BOTTOM_RIGHT: (0, 1, 2, 3, 4)
         }
         pt_order = pt_orders[border_type]
         number_of_points = len(pt_order)
