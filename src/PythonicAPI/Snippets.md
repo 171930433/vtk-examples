@@ -16,13 +16,17 @@ Check the VTK version returning `True` if the requested VTK version is >= the cu
 
 Draw a border around a renderer's viewport.
 
-#### [PointToGlyph](/PythonicAPI/Snippets/PointToGlyph.md)
-
-Represent points as glyphs.
-
 #### [GetProgramParameters](/PythonicAPI/Snippets/GetProgramParameters.md)
 
 Get the program parameters.
+
+#### [GetTextPositions](/PythonicAPI/Snippets/GetTextPositions.md)
+
+Get viewport positioning information for a list of names.
+
+#### [PointToGlyph](/PythonicAPI/Snippets/PointToGlyph.md)
+
+Represent points as glyphs.
 
 #### [ReadPolyData](/PythonicAPI/Snippets/ReadPolyData.md)
 

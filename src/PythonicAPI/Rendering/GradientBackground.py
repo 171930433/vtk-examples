@@ -114,10 +114,11 @@ def main(fn):
         'Vertical',
         'Horizontal',
     )
-    text_positions = get_text_positions(viewport_titles, justification='center')
+    text_positions = get_text_positions(viewport_titles, justification=TextPropertyJustification.VTK_TEXT_CENTERED)
 
     text_property = vtkTextProperty(color=colors.GetColor3d('MidnightBlue'),
-                                    bold=False, italic=False, shadow=False, font_size=12,
+                                    bold=True, italic=False, shadow=False,
+                                    font_size=12, font_family_as_string='Courier',
                                     justification=TextPropertyJustification.VTK_TEXT_CENTERED,
                                     vertical_justification=TextPropertyVerticalJustification().VTK_TEXT_CENTERED)
 
@@ -376,29 +377,39 @@ class ViewPortBorder:
     NUMBER_OF_BORDER_TYPES: int = 13
 
 
-def get_text_positions(available_surfaces, justification='center'):
+def get_text_positions(names, justification=0, vertical_justification=0, width=0.96, height=0.1):
     """
-    Get positioning information for the names of the surfaces.
+    Get viewport positioning information for a list of names.
 
-    :param available_surfaces: The surfaces.
-    :param justification: left, center or right.
+    :param names: The list of names.
+    :param justification: Horizontal justification of the text, default is left.
+    :param vertical_justification: Vertical justification of the text, default is bottom.
+    :param width: Width of the bounding_box of the text in screen coordinates.
+    :param height: Height of the bounding_box of the text in screen coordinates.
     :return: A list of positioning information.
     """
-    # Position the source name according to its length and justification in the viewport.
-    # Top
-    # y0 = 0.79
-    # Bottom
-    y0 = 0.01
-    dy = 0.1
     # The gap between the left or right edge of the screen and the text.
-    dx = 0.01
-    # The size of the maximum length of the text in screen units.
-    x_scale = 0.95
+    dx = 0.02
+    width = abs(width)
+    if width > 0.96:
+        width = 0.96
+
+    y0 = 0.01
+    height = abs(height)
+    if height > 0.9:
+        height = 0.9
+    dy = height
+    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_TOP:
+        y0 = 1.0 - (dy + y0)
+        dy = height
+    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_CENTERED:
+        y0 = 0.5 - (dy / 2.0 + y0)
+        dy = height
 
     name_len_min = 0
     name_len_max = 0
     first = True
-    for k in available_surfaces:
+    for k in names:
         sz = len(k)
         if first:
             name_len_min = name_len_max = sz
@@ -407,39 +418,24 @@ def get_text_positions(available_surfaces, justification='center'):
             name_len_min = min(name_len_min, sz)
             name_len_max = max(name_len_max, sz)
     text_positions = dict()
-    for k in available_surfaces:
+    for k in names:
         sz = len(k)
-        delta_sz = x_scale * sz / name_len_max
-        if delta_sz <= 2.0 * dx:
-            dx = 0.01
-            delta_sz -= 0.02
-        else:
-            delta_sz -= 2.0 * dx
+        delta_sz = width * sz / name_len_max
+        if delta_sz > width:
+            delta_sz = width
 
-        if justification.lower() in ['center', 'centre']:
+        if justification == TextPropertyJustification.VTK_TEXT_CENTERED:
             x0 = 0.5 - delta_sz / 2.0
-        elif justification.lower() == 'right':
-            x0 = 1.0 - delta_sz
-            if dx < x0:
-                x0 -= dx
-            else:
-                x0 = dx
-            if x0 + delta_sz >= 1:
-                delta_sz -= dx
-                x0 -= dx
+        elif justification == TextPropertyJustification.VTK_TEXT_RIGHT:
+            x0 = 1.0 - dx - delta_sz
         else:
             # Default is left justification.
             x0 = dx
-            if x0 + dx >= 1.0:
-                x0 = dx - x0
-            if x0 + delta_sz >= 1:
-                delta_sz -= dx
-                x0 = dx
 
         # For debugging!
         # print(
         #     f'{k:16s}: (x0, y0) = ({x0:3.2f}, {y0:3.2f}), (x1, y1) = ({x0 + delta_sz:3.2f}, {y0 + dy:3.2f})'
-        #     f', width={delta_sz:3.2f}')
+        #     f', width={delta_sz:3.2f}, height={dy:3.2f}')
         text_positions[k] = {'p': [x0, y0, 0], 'p2': [delta_sz, dy, 0]}
 
     return text_positions
