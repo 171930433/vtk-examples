@@ -78,12 +78,12 @@ def get_program_parameters():
     import argparse
     description = 'Demonstrates Gaussian and Mean curvatures on a surface, along with normals colored by elevation.'
     epilogue = '''
-    For example: "Random Hills" -f
+    For example: -s"Random Hills" -f
                  Will display the curvatures along with normals on the surface colored by elevation.
     '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('surface_name', default='random hills', help='The name of the surface.')
+    parser.add_argument('-s', '--surface_name', default='random hills', help='The name of the surface.')
     parser.add_argument('-f', '--frequency_table', action='store_true', help='Display the frequency table.')
 
     args = parser.parse_args()
@@ -98,7 +98,7 @@ def main(argv):
     needs_adjusting = ['hills', 'parametric torus', 'plane', 'random hills']
 
     surface_name = ' '.join(surface_name.lower().replace('_', ' ').split())
-    if surface_name not in available_surfaces:
+    if surface_name.lower() not in available_surfaces:
         print('Nonexistent surface:', surface_name)
         print('Available surfaces are:')
         asl = sorted(available_surfaces)
@@ -141,7 +141,7 @@ def main(argv):
     # --------------------------------------------------
     # Create the RenderWindow, Renderers and Interactor.
     # --------------------------------------------------
-    ren_win = vtkRenderWindow(size=(window_width, window_height), window_name='CurvatureBandsWithGlyphs')
+    ren_win = vtkRenderWindow(size=(window_width, window_height), window_name='CurvaturesNormalsElevations')
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
     style = vtkInteractorStyleTrackballCamera()
@@ -153,11 +153,15 @@ def main(argv):
     # Set up the scalar bar properties.
     scalar_bar_properties = ScalarBarProperties()
 
-    # Position the source name according to its length and centered in the viewport.
-    text_positions = get_title_positions(available_surfaces, justification='left')
+    # Position the source name according to its length.
+    text_positions = get_text_positions(available_surfaces,
+                                        justification=TextPropertyJustification.VTK_TEXT_LEFT,
+                                        vertical_justification=TextPropertyVerticalJustification.VTK_TEXT_TOP,
+                                        width=0.45)
 
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
-                                    font_size=16)
+                                    font_size=12,
+                                    justification=TextPropertyJustification.VTK_TEXT_LEFT)
     text_actor = vtkTextActor(input=surface_name.title(), text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                               text_property=text_property)
     # Create the text representation. Used for positioning the text actor.
@@ -1180,26 +1184,39 @@ def make_scalar_bar_widget(scalar_bar_properties, text_property, interactor):
     return widget
 
 
-def get_title_positions(available_surfaces, justification='center'):
+def get_text_positions(names, justification=0, vertical_justification=0, width=0.96, height=0.1):
     """
-    Get positioning information for the names of the surfaces.
+    Get viewport positioning information for a list of names.
 
-    :param available_surfaces: The surfaces
-    :param justification: left, center or right
+    :param names: The list of names.
+    :param justification: Horizontal justification of the text, default is left.
+    :param vertical_justification: Vertical justification of the text, default is bottom.
+    :param width: Width of the bounding_box of the text in screen coordinates.
+    :param height: Height of the bounding_box of the text in screen coordinates.
     :return: A list of positioning information.
     """
-    # Position the source name according to its length and justification in the viewport.
-    y0 = 0.89
-    dy = 0.1
     # The gap between the left or right edge of the screen and the text.
-    dx = 0.01
-    # The size of the maximum length of the text in screen units.
-    x_scale = 0.5
+    dx = 0.02
+    width = abs(width)
+    if width > 0.96:
+        width = 0.96
+
+    y0 = 0.01
+    height = abs(height)
+    if height > 0.9:
+        height = 0.9
+    dy = height
+    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_TOP:
+        y0 = 1.0 - (dy + y0)
+        dy = height
+    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_CENTERED:
+        y0 = 0.5 - (dy / 2.0 + y0)
+        dy = height
 
     name_len_min = 0
     name_len_max = 0
     first = True
-    for k in available_surfaces:
+    for k in names:
         sz = len(k)
         if first:
             name_len_min = name_len_max = sz
@@ -1208,51 +1225,43 @@ def get_title_positions(available_surfaces, justification='center'):
             name_len_min = min(name_len_min, sz)
             name_len_max = max(name_len_max, sz)
     text_positions = dict()
-    for k in available_surfaces:
+    for k in names:
         sz = len(k)
-        delta_sz = x_scale * sz / name_len_max
-        if delta_sz <= 2.0 * dx:
-            dx = 0.01
-            delta_sz -= 0.02
-        else:
-            delta_sz -= 2.0 * dx
+        delta_sz = width * sz / name_len_max
+        if delta_sz > width:
+            delta_sz = width
 
-        if justification.lower() in ['center', 'centre']:
+        if justification == TextPropertyJustification.VTK_TEXT_CENTERED:
             x0 = 0.5 - delta_sz / 2.0
-        elif justification.lower() == 'right':
-            x0 = 1.0 - delta_sz
-            if dx < x0:
-                x0 -= dx
-            else:
-                x0 = dx
-            if x0 + delta_sz >= 1:
-                delta_sz -= dx
-                x0 -= dx
+        elif justification == TextPropertyJustification.VTK_TEXT_RIGHT:
+            x0 = 1.0 - dx - delta_sz
         else:
             # Default is left justification.
             x0 = dx
-            if x0 + dx >= 1.0:
-                x0 = dx - x0
-            if x0 + delta_sz >= 1:
-                delta_sz -= dx
-                x0 = dx
 
         # For debugging!
         # print(
         #     f'{k:16s}: (x0, y0) = ({x0:3.2f}, {y0:3.2f}), (x1, y1) = ({x0 + delta_sz:3.2f}, {y0 + dy:3.2f})'
-        #     f', width={delta_sz:3.2f}')
+        #     f', width={delta_sz:3.2f}, height={dy:3.2f}')
         text_positions[k] = {'p': [x0, y0, 0], 'p2': [delta_sz, dy, 0]}
 
     return text_positions
 
 
-# -----------------------------------------------------------------------------
-# These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
-# The class name consists of the VTK class name (without the leading vtk)
-# appended to the relevant Set/Get Macro name.
-# Note: To find these constants, use the link to the header in the
-#       documentation for the class.
-# ------------------------------------------------------------------------------
+@dataclass(frozen=True)
+class TextPropertyJustification:
+    VTK_TEXT_LEFT: int = 0
+    VTK_TEXT_CENTERED: int = 1
+    VTK_TEXT_RIGHT: int = 2
+
+
+@dataclass(frozen=True)
+class TextPropertyVerticalJustification:
+    VTK_TEXT_BOTTOM: int = 0
+    VTK_TEXT_CENTERED: int = 1
+    VTK_TEXT_TOP: int = 2
+
+
 @dataclass(frozen=True)
 class BandedPolyDataContourFilterScalarMode:
     VTK_SCALAR_MODE_INDEX: int = 0
