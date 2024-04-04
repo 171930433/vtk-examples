@@ -160,7 +160,7 @@ def main(argv):
                                         width=0.45)
 
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
-                                    font_size=12,
+                                    font_size=16,
                                     justification=TextPropertyJustification.VTK_TEXT_LEFT)
     text_actor = vtkTextActor(input=surface_name.title(), text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                               text_property=text_property)
