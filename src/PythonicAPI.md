@@ -104,10 +104,13 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [BooleanOperationImplicitFunctions](/PythonicAPI/ImplicitFunctions/BooleanOperationImplicitFunctions) | Demonstrate booleans of two different implicit functions
+[DiscreteFlyingEdges3D](/PythonicAPI/Modelling/DiscreteFlyingEdges3D) | Generate surfaces from labeled data.
 [ImplicitQuadric](/PythonicAPI/ImplicitFunctions/ImplicitQuadric) | Create an ellipsoid using an implicit quadric
 [ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
 [ImplicitSphere1](/PythonicAPI/ImplicitFunctions/ImplicitSphere1) | Demonstrate sampling of a sphere implicit function
 [SampleFunction](/PythonicAPI/ImplicitFunctions/SampleFunction) | Sample and visualize an implicit function.
+[SmoothDiscreteFlyingEdges3D](/PythonicAPI/Modelling/SmoothDiscreteFlyingEdges3D) | Generate smooth surfaces from labeled data.
+
 
 ## Working with 3D Data
 
