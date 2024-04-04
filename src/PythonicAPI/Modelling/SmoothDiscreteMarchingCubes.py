@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+
+from dataclasses import dataclass
 
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
@@ -14,7 +17,10 @@ from vtkmodules.vtkCommonDataModel import (
     vtkSphere
 )
 from vtkmodules.vtkFiltersCore import vtkWindowedSincPolyDataFilter
-from vtkmodules.vtkFiltersGeneral import vtkDiscreteMarchingCubes
+from vtkmodules.vtkFiltersGeneral import (
+    vtkDiscreteFlyingEdges3D,
+    vtkDiscreteMarchingCubes
+)
 from vtkmodules.vtkImagingCore import vtkImageThreshold
 from vtkmodules.vtkImagingHybrid import vtkSampleFunction
 from vtkmodules.vtkImagingMath import vtkImageMathematics
@@ -27,54 +33,59 @@ from vtkmodules.vtkRenderingCore import (
 )
 
 
+def get_program_parameters():
+    import argparse
+    description = 'Create surfaces from labeled data and smooth them.'
+    epilogue = '''
+    '''
+    parser = argparse.ArgumentParser(description=description, epilog=epilogue,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('-m', '--marching_cubes', action='store_false',
+                        help='Use Marching Cubes instead of Flying Edges.')
+    args = parser.parse_args()
+    return args.marching_cubes
+
+
 def main():
+    use_flying_edges = get_program_parameters()
+
+    colors = vtkNamedColors()
+
+    # Create the RenderWindow, Renderer, Interactor
+    ren = vtkRenderer(background=colors.GetColor3d('Burlywood'))
+    ren_win = vtkRenderWindow(window_name='SmoothDiscreteMarchingCubes')
+    ren_win.AddRenderer(ren)
+
+    iren = vtkRenderWindowInteractor()
+    iren.SetRenderWindow(ren_win)
+
     n = 20
     radius = 8
     blob = make_blob(n, radius)
 
-    discrete = vtkDiscreteMarchingCubes()
-    discrete.SetInputData(blob)
+    if use_flying_edges:
+        discrete = vtkDiscreteFlyingEdges3D()
+    else:
+        discrete = vtkDiscreteMarchingCubes()
     discrete.GenerateValues(n, 1, n)
 
     smoothing_iterations = 15
     pass_band = 0.001
     feature_angle = 120.0
-
-    smoother = vtkWindowedSincPolyDataFilter()
-    smoother.SetInputConnection(discrete.GetOutputPort())
-    smoother.SetNumberOfIterations(smoothing_iterations)
-    smoother.BoundarySmoothingOff()
-    smoother.FeatureEdgeSmoothingOff()
-    smoother.SetFeatureAngle(feature_angle)
-    smoother.SetPassBand(pass_band)
-    smoother.NonManifoldSmoothingOn()
-    smoother.NormalizeCoordinatesOn()
-    smoother.Update()
+    smoother = vtkWindowedSincPolyDataFilter(number_of_iterations=smoothing_iterations,
+                                             pass_band=pass_band, feature_angle=feature_angle,
+                                             boundary_smoothing=False,
+                                             feature_edge_smoothing=False,
+                                             non_manifold_smoothing=True,
+                                             normalize_coordinates=True)
 
     lut = make_colors(n)
 
-    mapper = vtkPolyDataMapper()
-    mapper.SetInputConnection(smoother.GetOutputPort())
-    mapper.SetLookupTable(lut)
-    mapper.SetScalarRange(0, lut.GetNumberOfColors())
-
-    # Create the RenderWindow, Renderer and both Actors
-    #
-    ren = vtkRenderer()
-    ren_win = vtkRenderWindow()
-    ren_win.AddRenderer(ren)
-    ren_win.SetWindowName('SmoothDiscreteMarchingCubes')
-
-    iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
-
-    actor = vtkActor()
-    actor.SetMapper(mapper)
+    mapper = vtkPolyDataMapper(lookup_table=lut, scalar_range=(0, lut.number_of_colors))
+    blob >> discrete >> smoother >> mapper
+    actor = vtkActor(mapper=mapper)
 
     ren.AddActor(actor)
-
-    colors = vtkNamedColors()
-    ren.SetBackground(colors.GetColor3d('Burlywood'))
 
     ren_win.Render()
 
@@ -85,12 +96,8 @@ def make_blob(n, radius):
     blob_image = vtkImageData()
 
     max_r = 50 - 2.0 * radius
-    random_sequence = vtkMinimalStandardRandomSequence()
-    random_sequence.SetSeed(5071)
+    random_sequence = vtkMinimalStandardRandomSequence(seed=5071)
     for i in range(0, n):
-
-        sphere = vtkSphere()
-        sphere.SetRadius(radius)
 
         x = random_sequence.GetRangeValue(-max_r, max_r)
         random_sequence.Next()
@@ -99,33 +106,21 @@ def make_blob(n, radius):
         z = random_sequence.GetRangeValue(-max_r, max_r)
         random_sequence.Next()
 
-        sphere.SetCenter(int(x), int(y), int(z))
+        sphere = vtkSphere(radius=radius, center=(int(x), int(y), int(z)))
 
-        sampler = vtkSampleFunction()
-        sampler.SetImplicitFunction(sphere)
-        sampler.SetOutputScalarTypeToFloat()
-        sampler.SetSampleDimensions(100, 100, 100)
-        sampler.SetModelBounds(-50, 50, -50, 50, -50, 50)
+        sampler = vtkSampleFunction(implicit_function=sphere, output_scalar_type=ImageCastOutputScalarType.VTK_FLOAT,
+                                    sample_dimensions=(100, 100, 100), model_bounds=(-50, 50, -50, 50, -50, 50))
 
-        thres = vtkImageThreshold()
-        thres.SetInputConnection(sampler.GetOutputPort())
+        thres = vtkImageThreshold(replace_in=True, replace_out=True, in_value=i + 1, out_value=0)
         thres.ThresholdByLower(radius * radius)
-        thres.ReplaceInOn()
-        thres.ReplaceOutOn()
-        thres.SetInValue(i + 1)
-        thres.SetOutValue(0)
-        thres.Update()
+        (sampler >> thres).update()
         if i == 0:
-            blob_image.DeepCopy(thres.GetOutput())
+            blob_image.DeepCopy(thres.output)
 
-        max_value = vtkImageMathematics()
-        max_value.SetInputData(0, blob_image)
-        max_value.SetInputData(1, thres.GetOutput())
-        max_value.SetOperationToMax()
-        max_value.Modified()
-        max_value.Update()
+        max_value = vtkImageMathematics(operation=ImageMathematicsOperation.VTK_MAX)
+        ((blob_image, thres) >> max_value).update()
 
-        blob_image.DeepCopy(max_value.GetOutput())
+        blob_image.DeepCopy(max_value.output)
 
     return blob_image
 
@@ -137,12 +132,9 @@ def make_colors(n):
     :return: The lookup table.
     """
 
-    lut = vtkLookupTable()
-    lut.SetNumberOfColors(n)
-    lut.SetTableRange(0, n - 1)
-    lut.SetScaleToLinear()
+    lut = vtkLookupTable(number_of_colors=n, table_range=(0, n - 1), scale=LookupTableScale.VTK_SCALE_LINEAR)
     lut.Build()
-    lut.SetTableValue(0, 0, 0, 0, 1)
+    lut.SetTableValue(0, 0.0, 0.0, 0.0, 1.0)
 
     random_sequence = vtkMinimalStandardRandomSequence()
     random_sequence.SetSeed(5071)
@@ -156,6 +148,51 @@ def make_colors(n):
         lut.SetTableValue(i, r, g, b, 1.0)
 
     return lut
+
+
+@dataclass(frozen=True)
+class ImageCastOutputScalarType:
+    VTK_CHAR: int = 2
+    VTK_UNSIGNED_CHAR: int = 3
+    VTK_SHORT: int = 4
+    VTK_UNSIGNED_SHORT: int = 5
+    VTK_INT: int = 6
+    VTK_UNSIGNED_INT: int = 7
+    VTK_LONG: int = 8
+    VTK_UNSIGNED_LONG: int = 9
+    VTK_FLOAT: int = 10
+    VTK_DOUBLE: int = 11
+
+
+@dataclass(frozen=True)
+class ImageMathematicsOperation:
+    VTK_ADD: int = 0
+    VTK_SUBTRACT: int = 1
+    VTK_MULTIPLY: int = 2
+    VTK_DIVIDE: int = 3
+    VTK_INVERT: int = 4
+    VTK_SIN: int = 5
+    VTK_COS: int = 6
+    VTK_EXP: int = 7
+    VTK_LOG: int = 8
+    VTK_ABS: int = 9
+    VTK_SQR: int = 10
+    VTK_SQRT: int = 11
+    VTK_MIN: int = 12
+    VTK_MAX: int = 13
+    VTK_ATAN: int = 14
+    VTK_ATAN2: int = 15
+    VTK_MULTIPLYBYK: int = 16
+    VTK_ADDC: int = 17
+    VTK_CONJUGATE: int = 18
+    VTK_COMPLEX_MULTIPLY: int = 19
+    VTK_REPLACECBYK: int = 20
+
+
+@dataclass(frozen=True)
+class LookupTableScale:
+    VTK_SCALE_LINEAR: int = 0
+    VTK_SCALE_LOG10: int = 1
 
 
 if __name__ == '__main__':
