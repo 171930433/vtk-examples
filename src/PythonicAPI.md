@@ -264,10 +264,14 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[CallBack](/PythonicAPI/Interaction/CallBack) | Setting up a callback with client data. Two different methods are demonstrated.
 [CellPicking](/PythonicAPI/Picking/CellPicking) | Cell Picking.
 [HighlightPickedActor](/PythonicAPI/Picking/HighlightPickedActor) | Pick and highlight an actor based on mouse clicks.
 [HighlightWithSilhouette](/PythonicAPI/Picking/HighlightWithSilhouette) | Highlight a picked actor by adding a silhouette.
-
+[InteractorStyleTrackballActor](/PythonicAPI/Interaction/InteractorStyleTrackballActor) |
+[InteractorStyleTrackballCamera](/PythonicAPI/Interaction/InteractorStyleTrackballCamera) |
+[MouseEvents](/PythonicAPI/Interaction/MouseEvents) | Subclass the interactor style.
+[MouseEventsObserver](/PythonicAPI/Interaction/MouseEventsObserver) | Use an observer.
 
 ## Working with Images
 
