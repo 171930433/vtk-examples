@@ -262,6 +262,13 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 ## User Interaction
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[CellPicking](/PythonicAPI/Picking/CellPicking) | Cell Picking.
+[HighlightPickedActor](/PythonicAPI/Picking/HighlightPickedActor) | Pick and highlight an actor based on mouse clicks.
+[HighlightWithSilhouette](/PythonicAPI/Picking/HighlightWithSilhouette) | Highlight a picked actor by adding a silhouette.
+
+
 ## Working with Images
 
 | Example Name | Description | Image |
