@@ -310,6 +310,7 @@ These examples demonstrate how to create an display one of the many vtkParametri
 [ConvexHull](/Cxx/PolyData/ConvexHull) | Convex hull using vtkHull.
 [ConvexHullShrinkWrap](/Cxx/PolyData/ConvexHullShrinkWrap) | Convex hull using shrink wrapping.
 [CopyAllArrays](/Cxx/PolyData/CopyAllArrays) | Copy all arrays from one vtkPolyData to another.
+[Curvatures](/Cxx/PolyData/Curvatures) | Compute Gaussian and Mean Curvatures.
 [CurvaturesAdjustEdges](/Cxx/PolyData/CurvaturesAdjustEdges) | Get the Gaussian and Mean curvatures of a surface with adjustments for edge effects.
 [CurvaturesDemo](/Cxx/PolyData/CurvaturesDemo) | Demonstrates how to get the Gaussian and Mean curvatures of a surface.
 [DataBounds](/Cxx/PolyData/DataBounds) | Get the minimum and maximum value in each dimension. (Axis aligned bounding box)
@@ -463,7 +464,6 @@ These examples demonstrate how to create an display one of the many vtkParametri
 [ColorDisconnectedRegions](/Cxx/PolyData/ColorDisconnectedRegions) | Color each disconnected region of a vtkPolyData a different color.
 [ColorDisconnectedRegionsDemo](/Cxx/PolyData/ColorDisconnectedRegionsDemo) | Color each disconnected region of a vtkPolyData a different color for any vtkPolyData.
 [ColoredElevationMap](/Cxx/Meshes/ColoredElevationMap) | Color a mesh by height.
-[Curvatures](/Cxx/PolyData/Curvatures) | Compute Gaussian and Mean Curvatures.
 [Decimation](/Cxx/Meshes/Decimation) | Reduce the number of triangles in a mesh.
 [DeformPointSet](/Cxx/Meshes/DeformPointSet) | Deform a point set with a control polyhedra.
 [DelaunayMesh](/Cxx/Modelling/DelaunayMesh) | Two-dimensional Delaunay triangulation of a random set of points. Points and edges are shown highlighted with sphere glyphs and tubes.

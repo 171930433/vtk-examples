@@ -179,3 +179,45 @@ Try this example with a `.csv` file to see what happens.
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
 [ReadAllPolyDataTypesDemo](/PythonicAPI/IO/ReadAllPolyDataTypesDemo) | `read_poly_data(pth)` returns polydata that is fed directly into the mapper.
+
+## PythonicAPI hints
+
+### ?vtkLookupTable?
+
+When using vtkLookupTable, code like:
+
+``` Python
+        lut.SetTableValue(i, r, g, b, 1.0)
+```
+
+will give the wrong color.
+
+Keep using:
+
+``` Python
+        lut.SetTableValue(i, r, g, b, 1.0)
+```
+
+See [SmoothDiscreteFlyingEdges3D](/PythonicAPI/Modelling/SmoothDiscreteFlyingEdges3D)
+
+## Python hints
+
+### Make a tuple if you have a starred expression
+
+In [MultiplePlots](/PythonicAPI/Plotting/MultiplePlots) we had an expression:
+
+``` Python
+    points.SetColor(*colors.GetColor4ub('Black'))
+```
+
+This can be rewritten as a tuple, using brackets and a comma:
+
+``` Python
+    points.color = (*colors.GetColor4ub('Black'),)
+```
+
+or, even better, by using a tuple constructor to make it more obvious:
+
+``` Python
+    points.color = tuple(colors.GetColor4ub('Black'))
+```

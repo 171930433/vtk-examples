@@ -117,6 +117,7 @@ This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will l
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [ConnectivityFilter](/PythonicAPI/Filtering/ConnectivityFilter) | Color any dataset type based on connectivity.
+[Curvatures](/PythonicAPI/PolyData/Curvatures) | Compute Gaussian, and Mean Curvatures.
 [CurvaturesAdjustEdges](/PythonicAPI/PolyData/CurvaturesAdjustEdges) | Get the Gaussian and Mean curvatures of a surface with adjustments for edge effects.
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
@@ -291,6 +292,12 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 ## Widgets
 
 ## Plotting
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[MultiplePlots](/PythonicAPI/Plotting/MultiplePlots) | Display multiple plots by using viewports in a single render window.
+[ScatterPlot](/Python/Plotting/ScatterPlot) | Scatter plot.
+[SpiderPlot](/Python/Plotting/SpiderPlot) | Spider plot.
 
 ## Animation
 

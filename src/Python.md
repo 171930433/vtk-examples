@@ -216,6 +216,7 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 [ColoredTriangle](/Python/PolyData/ColoredTriangle) | Creates a file TriangleColored.vtp.
 [CombinePolyData](/Python/Filtering/CombinePolyData) | This example combines Polydata objects, and displays the result to the screen.
 [ConnectivityFilter](/Python/Filtering/ConnectivityFilter) | Color any dataset type based on connectivity.
+[Curvatures](/Python/PolyData/Curvatures) | Compute Gaussian, and Mean Curvatures.
 [CurvaturesAdjustEdges](/Python/PolyData/CurvaturesAdjustEdges) | Get the Gaussian and Mean curvatures of a surface with adjustments for edge effects.
 [CurvaturesDemo](/Python/PolyData/CurvaturesDemo) | Demonstrates how to get the Gaussian and Mean curvatures of a surface.
 [ExtractPolyLinesFromPolyData](/Python/PolyData/ExtractPolyLinesFromPolyData) | Extract polylines from polydata.
@@ -276,7 +277,6 @@ This section includes examples of manipulating meshes.
 [BoundaryEdges](/Python/Meshes/BoundaryEdges) | Find the edges that are used by only one face.
 [ClosedSurface](/Python/PolyData/ClosedSurface) | Check if a surface is closed.
 [ColoredElevationMap](/Python/Meshes/ColoredElevationMap) | Color a mesh by height.
-[Curvatures](/Python/PolyData/Curvatures) | Compute Gaussian, and Mean Curvatures.
 [Decimation](/Python/Meshes/Decimation) | Reduce the number of triangles in a mesh.
 [DeformPointSet](/Python/Meshes/DeformPointSet) | Use the vtkDeformPointSet filter to deform a vtkSphereSource with arbitrary polydata.
 [DelaunayMesh](/Python/Modelling/DelaunayMesh) | Two-dimensional Delaunay triangulation of a random set of points. Points and edges are shown highlighted with sphere glyphs and tubes.

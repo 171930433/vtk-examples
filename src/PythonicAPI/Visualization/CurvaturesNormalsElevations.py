@@ -212,7 +212,7 @@ def main(argv):
         # Use this LUT if you want the highest value at the top.
         scalar_bar_properties.lut = curvatures[k]['lut1']
         scalar_bar_properties.orientation = True
-        scalar_bar_properties.title_text = 'Elevation'
+        scalar_bar_properties.title_text = 'Elevation\n'
         scalar_bar_properties.number_of_labels = 13
         if surface_name == 'plane':
             scalar_bar_properties.number_of_labels = 1
@@ -220,14 +220,14 @@ def main(argv):
 
         renderer = vtkRenderer(background=colors.GetColor3d('ParaViewBkg'))
         if first:
-            text_widget.SetDefaultRenderer(renderer)
+            text_widget.default_renderer = renderer
             first = False
         renderer.SetViewport(*viewports[k])
         renderer.AddActor(src_actor)
         renderer.AddActor(edge_actor)
         renderer.AddActor(glyph_actor)
-        contour_widgets[k].SetDefaultRenderer(renderer)
-        elevation_widgets[k].SetDefaultRenderer(renderer)
+        contour_widgets[k].default_renderer = renderer
+        elevation_widgets[k].default_renderer = renderer
 
         renderers.append(renderer)
 

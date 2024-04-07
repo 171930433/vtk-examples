@@ -66,7 +66,6 @@ from vtkmodules.vtkRenderingCore import (
     vtkRenderer,
     vtkTextActor,
     vtkTextProperty
-
 )
 
 
@@ -174,17 +173,17 @@ def main(argv):
 
         scalar_bar_properties.lut = curvatures[k]['lut']
         scalar_bar_properties.orientation = True
-        scalar_bar_properties.title_text = k.replace('_', '\n')
+        scalar_bar_properties.title_text = k.replace('_', '\n') + '\n'
         scalar_bar_properties.number_of_labels = v['scalar_bar_labels']
         scalar_bar_widgets[k] = make_scalar_bar_widget(scalar_bar_properties, text_property, iren)
 
         renderer = vtkRenderer(background=colors.GetColor3d('ParaViewBkg'))
         if first:
-            text_widget.SetDefaultRenderer(renderer)
+            text_widget.default_renderer = renderer
             first = False
         renderer.SetViewport(*viewports[k])
         renderer.AddActor(src_actor)
-        scalar_bar_widgets[k].SetDefaultRenderer(renderer)
+        scalar_bar_widgets[k].default_renderer = renderer
 
         renderers.append(renderer)
 
