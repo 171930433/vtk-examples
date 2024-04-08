@@ -21,7 +21,7 @@ Follow the documented procedure [ForDevelopers](https://examples.vtk.org/site/In
 
 ## VTK Classes Summary
 
-This Python script, [SelectExamples](../Python/Utilities/SelectExamples), will let you select examples based on a VTK Class and language. It requires Python 3.7 or later. The following tables will produce similar information.
+This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), will let you select examples based on a VTK Class and language. It requires Python 3.7 or later. The following tables will produce similar information.
 
 - [VTK Classes with Examples](/Coverage/PythonicAPIVTKClassesUsed.md), this table is really useful when searching for example(s) using a particular class.
 
@@ -191,6 +191,7 @@ This section includes ?vtkUnstructuredGrid?.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [CheckVTKVersion](/PythonicAPI/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
+[SelectExamples](/PythonicAPI/Utilities/SelectExamples) | Given a VTK Class and a language, select the matching examples.
 
 ### Arrays
 
