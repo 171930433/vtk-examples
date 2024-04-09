@@ -179,10 +179,10 @@ def main():
     text_widgets = list()
     text_property = vtkTextProperty(color=nc.GetColor3d('DarkSlateGray'), bold=True, italic=False, shadow=False,
                                     font_size=12, font_family_as_string='Courier',
-                                    justification=TextPropertyJustification.VTK_TEXT_CENTERED,
+                                    justification=TextProperty_Justification.VTK_TEXT_CENTERED,
                                     vertical_justification=TextPropertyVerticalJustification.VTK_TEXT_CENTERED)
 
-    text_positions = get_text_positions(list(text.values()), justification=TextPropertyJustification.VTK_TEXT_CENTERED,
+    text_positions = get_text_positions(list(text.values()), justification=TextProperty_Justification.VTK_TEXT_CENTERED,
                                         vertical_justification=TextPropertyVerticalJustification.VTK_TEXT_BOTTOM
                                         )
 
@@ -255,9 +255,9 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
         if delta_sz > width:
             delta_sz = width
 
-        if justification == TextPropertyJustification.VTK_TEXT_CENTERED:
+        if justification == TextProperty_Justification.VTK_TEXT_CENTERED:
             x0 = 0.5 - delta_sz / 2.0
-        elif justification == TextPropertyJustification.VTK_TEXT_RIGHT:
+        elif justification == TextProperty_Justification.VTK_TEXT_RIGHT:
             x0 = 1.0 - dx - delta_sz
         else:
             # Default is left justification.
@@ -275,12 +275,12 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
 # -----------------------------------------------------------------------------
 # These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
 # The class name consists of the VTK class name (without the leading vtk)
-# appended to the relevant Set/Get Macro name.
+# appended to the relevant Set/Get Macro name with an underscore.
 # Note: To find these constants, use the link to the header in the
 #       documentation for the class.
 # ------------------------------------------------------------------------------
 @dataclass(frozen=True)
-class TextPropertyJustification:
+class TextProperty_Justification:
     VTK_TEXT_LEFT: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_RIGHT: int = 2

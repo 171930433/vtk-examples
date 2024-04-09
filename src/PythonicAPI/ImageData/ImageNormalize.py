@@ -25,9 +25,9 @@ def main():
     source = vtkImageSinusoidSource()
 
     # Create the filters.
-    input_cast_filter = vtkImageCast(output_scalar_type=ImageCastOutputScalarType.VTK_UNSIGNED_CHAR)
+    input_cast_filter = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_UNSIGNED_CHAR)
     normalize_filter = vtkImageNormalize()
-    normalize_cast_filter = vtkImageCast(output_scalar_type=ImageCastOutputScalarType.VTK_UNSIGNED_CHAR)
+    normalize_cast_filter = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_UNSIGNED_CHAR)
 
     # Create actors.
     input_actor = vtkImageActor()
@@ -69,7 +69,7 @@ def main():
 
 
 @dataclass(frozen=True)
-class ImageCastOutputScalarType:
+class ImageCast_OutputScalarType:
     VTK_CHAR: int = 2
     VTK_UNSIGNED_CHAR: int = 3
     VTK_SHORT: int = 4

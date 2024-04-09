@@ -155,13 +155,13 @@ def main(argv):
 
     # Position the source name according to its length.
     text_positions = get_text_positions(available_surfaces,
-                                        justification=TextPropertyJustification.VTK_TEXT_LEFT,
-                                        vertical_justification=TextPropertyVerticalJustification.VTK_TEXT_TOP,
+                                        justification=TextProperty_Justification.VTK_TEXT_LEFT,
+                                        vertical_justification=TextProperty_VerticalJustification.VTK_TEXT_TOP,
                                         width=0.45)
 
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
                                     font_size=16,
-                                    justification=TextPropertyJustification.VTK_TEXT_LEFT)
+                                    justification=TextProperty_Justification.VTK_TEXT_LEFT)
     text_actor = vtkTextActor(input=surface_name.title(), text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                               text_property=text_property)
     # Create the text representation. Used for positioning the text actor.
@@ -175,14 +175,14 @@ def main(argv):
     for k, v in curvatures.items():
         src_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_curvatures'],
                                        lookup_table=v['lut'],
-                                       scalar_mode=MapperScalarMode().VTK_SCALAR_MODE_USE_CELL_DATA)
+                                       scalar_mode=Mapper_ScalarMode().VTK_SCALAR_MODE_USE_CELL_DATA)
 
         src_actor = vtkActor(mapper=src_mapper)
         v['bcf'] >> src_mapper
 
         # Create contour edges
         edge_mapper = vtkPolyDataMapper(
-            resolve_coincident_topology=MapperResolveCoincidentTopology.VTK_RESOLVE_POLYGON_OFFSET)
+            resolve_coincident_topology=Mapper_ResolveCoincidentTopology.VTK_RESOLVE_POLYGON_OFFSET)
 
         edge_actor = vtkActor(mapper=edge_mapper)
         edge_actor.property.color = colors.GetColor3d('Black')
@@ -190,9 +190,9 @@ def main(argv):
 
         glyph_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_elevation'],
                                          lookup_table=v['lut1'],
-                                         scalar_mode=MapperScalarMode.VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
+                                         scalar_mode=Mapper_ScalarMode.VTK_SCALAR_MODE_USE_POINT_FIELD_DATA,
                                          scalar_visibility=True,
-                                         color_mode=MapperColorMode.VTK_COLOR_MODE_MAP_SCALARS)
+                                         color_mode=Mapper_ColorMode.VTK_COLOR_MODE_MAP_SCALARS)
         glyph_mapper.SelectColorArray('Elevation')
 
         glyph_actor = vtkActor(mapper=glyph_mapper)
@@ -747,9 +747,9 @@ def get_glyphs(surface, arrow_scale=None, scale_factor=None, reverse_normals=Fal
     p = (arrow >> transform_filter).update().output
 
     glyph = vtkGlyph3D(source_data=p, scale_factor=scale_factor,
-                       vector_mode=Glyph3DVectorMode().VTK_USE_NORMAL,
-                       color_mode=Glyph3DColorMode().VTK_COLOR_BY_VECTOR,
-                       scale_mode=Glyph3DScaleMode().VTK_SCALE_BY_VECTOR
+                       vector_mode=Glyph3D_VectorMode().VTK_USE_NORMAL,
+                       color_mode=Glyph3D_ColorMode().VTK_COLOR_BY_VECTOR,
+                       scale_mode=Glyph3D_ScaleMode().VTK_SCALE_BY_VECTOR
                        )
     glyph.OrientOn()
 
@@ -930,7 +930,7 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
     source = surface.source
     curvature = 'Gauss_Curvature'
 
-    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_GAUSS)
+    curvatures = vtkCurvatures(curvature_type=Curvatures_CurvatureType().VTK_CURVATURE_GAUSS)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
@@ -1018,7 +1018,7 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
     # Create the contour bands.
     # We will use an indexed lookup table.
     bcf = vtkBandedPolyDataContourFilter(input_data=p,
-                                         scalar_mode=BandedPolyDataContourFilterScalarMode().VTK_SCALAR_MODE_INDEX,
+                                         scalar_mode=BandedPolyDataContourFilter_ScalarMode().VTK_SCALAR_MODE_INDEX,
                                          generate_contour_edges=True)
 
     # Use either the minimum or maximum value for each band.
@@ -1055,7 +1055,7 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
     source = surface.source
     curvature = 'Mean_Curvature'
 
-    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType().VTK_CURVATURE_MEAN)
+    curvatures = vtkCurvatures(curvature_type=Curvatures_CurvatureType().VTK_CURVATURE_MEAN)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
@@ -1110,7 +1110,7 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
     # Create the contour bands.
     # We will use an indexed lookup table.
     bcf = vtkBandedPolyDataContourFilter(input_data=p,
-                                         scalar_mode=BandedPolyDataContourFilterScalarMode().VTK_SCALAR_MODE_INDEX,
+                                         scalar_mode=BandedPolyDataContourFilter_ScalarMode().VTK_SCALAR_MODE_INDEX,
                                          generate_contour_edges=True)
 
     # Use either the minimum or maximum value for each band.
@@ -1206,10 +1206,10 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
     if height > 0.9:
         height = 0.9
     dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_TOP:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_TOP:
         y0 = 1.0 - (dy + y0)
         dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_CENTERED:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_CENTERED:
         y0 = 0.5 - (dy / 2.0 + y0)
         dy = height
 
@@ -1231,9 +1231,9 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
         if delta_sz > width:
             delta_sz = width
 
-        if justification == TextPropertyJustification.VTK_TEXT_CENTERED:
+        if justification == TextProperty_Justification.VTK_TEXT_CENTERED:
             x0 = 0.5 - delta_sz / 2.0
-        elif justification == TextPropertyJustification.VTK_TEXT_RIGHT:
+        elif justification == TextProperty_Justification.VTK_TEXT_RIGHT:
             x0 = 1.0 - dx - delta_sz
         else:
             # Default is left justification.
@@ -1249,27 +1249,27 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
 
 
 @dataclass(frozen=True)
-class TextPropertyJustification:
+class TextProperty_Justification:
     VTK_TEXT_LEFT: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_RIGHT: int = 2
 
 
 @dataclass(frozen=True)
-class TextPropertyVerticalJustification:
+class TextProperty_VerticalJustification:
     VTK_TEXT_BOTTOM: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_TOP: int = 2
 
 
 @dataclass(frozen=True)
-class BandedPolyDataContourFilterScalarMode:
+class BandedPolyDataContourFilter_ScalarMode:
     VTK_SCALAR_MODE_INDEX: int = 0
     VTK_SCALAR_MODE_VALUE: int = 1
 
 
 @dataclass(frozen=True)
-class CurvaturesCurvatureType:
+class Curvatures_CurvatureType:
     VTK_CURVATURE_GAUSS: int = 0
     VTK_CURVATURE_MEAN: int = 1
     VTK_CURVATURE_MAXIMUM: int = 2
@@ -1277,7 +1277,7 @@ class CurvaturesCurvatureType:
 
 
 @dataclass(frozen=True)
-class Glyph3DScaleMode:
+class Glyph3D_ScaleMode:
     VTK_SCALE_BY_SCALAR: int = 0
     VTK_SCALE_BY_VECTOR: int = 1
     VTK_SCALE_BY_VECTORCOMPONENTS: int = 2
@@ -1285,14 +1285,14 @@ class Glyph3DScaleMode:
 
 
 @dataclass(frozen=True)
-class Glyph3DColorMode:
+class Glyph3D_ColorMode:
     VTK_COLOR_BY_SCALE: int = 0
     VTK_COLOR_BY_SCALAR: int = 1
     VTK_COLOR_BY_VECTOR: int = 2
 
 
 @dataclass(frozen=True)
-class Glyph3DVectorMode:
+class Glyph3D_VectorMode:
     VTK_USE_VECTOR: int = 0
     VTK_USE_NORMAL: int = 1
     VTK_VECTOR_ROTATION_OFF: int = 2
@@ -1300,14 +1300,14 @@ class Glyph3DVectorMode:
 
 
 @dataclass(frozen=True)
-class Glyph3DIndexMode:
+class Glyph3D_IndexMode:
     VTK_INDEXING_OFF: int = 0
     VTK_INDEXING_BY_SCALAR: int = 1
     VTK_INDEXING_BY_VECTOR: int = 2
 
 
 @dataclass(frozen=True)
-class MapperScalarMode:
+class Mapper_ScalarMode:
     VTK_SCALAR_MODE_DEFAULT: int = 0
     VTK_SCALAR_MODE_USE_POINT_DATA: int = 1
     VTK_SCALAR_MODE_USE_CELL_DATA: int = 2
@@ -1317,14 +1317,14 @@ class MapperScalarMode:
 
 
 @dataclass(frozen=True)
-class MapperResolveCoincidentTopology:
+class Mapper_ResolveCoincidentTopology:
     VTK_RESOLVE_OFF: int = 0
     VTK_RESOLVE_POLYGON_OFFSET: int = 1
     VTK_RESOLVE_SHIFT_ZBUFFER: int = 2
 
 
 @dataclass(frozen=True)
-class MapperColorMode:
+class Mapper_ColorMode:
     VTK_COLOR_MODE_DEFAULT: int = 0
     VTK_COLOR_MODE_MAP_SCALARS: int = 1
     VTK_COLOR_MODE_DIRECT_SCALARS: int = 2

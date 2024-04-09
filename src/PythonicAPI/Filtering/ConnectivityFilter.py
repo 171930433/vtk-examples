@@ -29,8 +29,10 @@ def main():
     vtkSphereSource() >> vtkDelaunay3D() >> append_filter
     vtkSphereSource(center=(5, 0, 0)) >> vtkDelaunay3D() >> append_filter
 
-    connectivity_filter = vtkConnectivityFilter(color_regions=True,
-                                                extraction_mode=ConnectivityFilterExtractionMode.VTK_EXTRACT_ALL_REGIONS)
+    connectivity_filter = vtkConnectivityFilter(
+        color_regions=True,
+        extraction_mode=ConnectivityFilter_ExtractionMode.VTK_EXTRACT_ALL_REGIONS
+    )
 
     # Visualize
     mapper = vtkDataSetMapper()
@@ -60,7 +62,7 @@ def main():
 #       documentation for the class.
 # ------------------------------------------------------------------------------
 @dataclass(frozen=True)
-class ConnectivityFilterExtractionMode:
+class ConnectivityFilter_ExtractionMode:
     VTK_EXTRACT_POINT_SEEDED_REGIONS: int = 1
     VTK_EXTRACT_CELL_SEEDED_REGIONS: int = 2
     VTK_EXTRACT_SPECIFIED_REGIONS: int = 3

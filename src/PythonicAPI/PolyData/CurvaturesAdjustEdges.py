@@ -146,13 +146,13 @@ def main(argv):
 
     # Position the source name according to its length.
     text_positions = get_text_positions(available_surfaces,
-                                        justification=TextPropertyJustification.VTK_TEXT_LEFT,
-                                        vertical_justification=TextPropertyVerticalJustification.VTK_TEXT_TOP,
+                                        justification=TextProperty_Justification.VTK_TEXT_LEFT,
+                                        vertical_justification=TextProperty_VerticalJustification.VTK_TEXT_TOP,
                                         width=0.45)
 
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
                                     font_size=16,
-                                    justification=TextPropertyJustification.VTK_TEXT_LEFT)
+                                    justification=TextProperty_Justification.VTK_TEXT_LEFT)
     text_actor = vtkTextActor(input=surface_name.title(), text_scale_mode=vtkTextActor.TEXT_SCALE_MODE_NONE,
                               text_property=text_property)
     # Create the text representation. Used for positioning the text actor.
@@ -166,7 +166,7 @@ def main(argv):
     for k, v in curvatures.items():
         src_mapper = vtkPolyDataMapper(scalar_range=v['scalar_range_curvatures'],
                                        lookup_table=v['lut'],
-                                       scalar_mode=MapperScalarMode.VTK_SCALAR_MODE_DEFAULT)
+                                       scalar_mode=Mapper_ScalarMode.VTK_SCALAR_MODE_DEFAULT)
 
         src_actor = vtkActor(mapper=src_mapper)
         v['surface'] >> src_mapper
@@ -268,7 +268,7 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
 
     scalar_bar_labels = 5
 
-    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType.VTK_CURVATURE_GAUSS)
+    curvatures = vtkCurvatures(curvature_type=Curvatures_CurvatureType.VTK_CURVATURE_GAUSS)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
@@ -331,7 +331,7 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
 
     scalar_bar_labels = 5
 
-    curvatures = vtkCurvatures(curvature_type=CurvaturesCurvatureType.VTK_CURVATURE_MEAN)
+    curvatures = vtkCurvatures(curvature_type=Curvatures_CurvatureType.VTK_CURVATURE_MEAN)
     p = (source >> curvatures).update().output
 
     if name in needs_adjusting:
@@ -994,10 +994,10 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
     if height > 0.9:
         height = 0.9
     dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_TOP:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_TOP:
         y0 = 1.0 - (dy + y0)
         dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_CENTERED:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_CENTERED:
         y0 = 0.5 - (dy / 2.0 + y0)
         dy = height
 
@@ -1019,9 +1019,9 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
         if delta_sz > width:
             delta_sz = width
 
-        if justification == TextPropertyJustification.VTK_TEXT_CENTERED:
+        if justification == TextProperty_Justification.VTK_TEXT_CENTERED:
             x0 = 0.5 - delta_sz / 2.0
-        elif justification == TextPropertyJustification.VTK_TEXT_RIGHT:
+        elif justification == TextProperty_Justification.VTK_TEXT_RIGHT:
             x0 = 1.0 - dx - delta_sz
         else:
             # Default is left justification.
@@ -1037,21 +1037,21 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
 
 
 @dataclass(frozen=True)
-class TextPropertyJustification:
+class TextProperty_Justification:
     VTK_TEXT_LEFT: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_RIGHT: int = 2
 
 
 @dataclass(frozen=True)
-class TextPropertyVerticalJustification:
+class TextProperty_VerticalJustification:
     VTK_TEXT_BOTTOM: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_TOP: int = 2
 
 
 @dataclass(frozen=True)
-class CurvaturesCurvatureType:
+class Curvatures_CurvatureType:
     VTK_CURVATURE_GAUSS: int = 0
     VTK_CURVATURE_MEAN: int = 1
     VTK_CURVATURE_MAXIMUM: int = 2
@@ -1059,7 +1059,7 @@ class CurvaturesCurvatureType:
 
 
 @dataclass(frozen=True)
-class MapperScalarMode:
+class Mapper_ScalarMode:
     VTK_SCALAR_MODE_DEFAULT: int = 0
     VTK_SCALAR_MODE_USE_POINT_DATA: int = 1
     VTK_SCALAR_MODE_USE_CELL_DATA: int = 2

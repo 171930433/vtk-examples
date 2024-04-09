@@ -57,10 +57,10 @@ def main():
 
     # Create the actors.
     original_actor = vtkImageActor()
-    original_actor.property.interpolation_type = VolumePropertyInterpolationType.VTK_NEAREST_INTERPOLATION
+    original_actor.property.interpolation_type = VolumeProperty_InterpolationType.VTK_NEAREST_INTERPOLATION
 
     compressed_actor = vtkImageActor()
-    compressed_actor.property.interpolation_type = VolumePropertyInterpolationType.VTK_NEAREST_INTERPOLATION
+    compressed_actor.property.interpolation_type = VolumeProperty_InterpolationType.VTK_NEAREST_INTERPOLATION
     create_image_actor(compressed_actor, 160, 120)
 
     # Set up the pipelines.
@@ -107,7 +107,7 @@ def create_image_actor(actor, color_window, color_level):
 
 
 @dataclass(frozen=True)
-class VolumePropertyInterpolationType:
+class VolumeProperty_InterpolationType:
     VTK_NEAREST_INTERPOLATION: int = 0
     VTK_LINEAR_INTERPOLATION: int = 1
     VTK_CUBIC_INTERPOLATION: int = 2

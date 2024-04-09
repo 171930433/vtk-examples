@@ -148,12 +148,12 @@ However, a lot of Set/Get functions in the VTK classes use values defined as `#d
 # -----------------------------------------------------------------------------
 # These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
 # The class name consists of the VTK class name (without the leading vtk)
-# appended to the relevant Set/Get Macro name.
+# appended to the relevant Set/Get Macro name with an underscore.
 # Note: To find these constants, use the link to the header in the
 #       documentation for the class.
 # ------------------------------------------------------------------------------
 @dataclass(frozen=True)
-class BandedPolyDataContourFilterScalarMode:
+class BandedPolyDataContourFilter_ScalarMode:
     VTK_SCALAR_MODE_INDEX: int = 0
     VTK_SCALAR_MODE_VALUE: int = 1
 ```

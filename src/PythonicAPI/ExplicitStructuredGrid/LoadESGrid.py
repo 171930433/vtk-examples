@@ -44,7 +44,7 @@ def main(fn):
 
     scalars = grid.cell_data.GetArray('ConnectivityFlags')
 
-    mapper = vtkDataSetMapper(color_mode=MapperColorMode.VTK_COLOR_MODE_MAP_SCALARS, scalar_range=scalars.range)
+    mapper = vtkDataSetMapper(color_mode=Mapper_ColorMode.VTK_COLOR_MODE_MAP_SCALARS, scalar_range=scalars.range)
 
     actor = vtkActor(mapper=mapper)
     actor.property.EdgeVisibilityOn()
@@ -78,7 +78,7 @@ def main(fn):
 
 
 @dataclass(frozen=True)
-class MapperColorMode:
+class Mapper_ColorMode:
     VTK_COLOR_MODE_DEFAULT: int = 0
     VTK_COLOR_MODE_MAP_SCALARS: int = 1
     VTK_COLOR_MODE_DIRECT_SCALARS: int = 2

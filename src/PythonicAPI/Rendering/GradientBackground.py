@@ -114,13 +114,13 @@ def main(fn):
         'Vertical',
         'Horizontal',
     )
-    text_positions = get_text_positions(viewport_titles, justification=TextPropertyJustification.VTK_TEXT_CENTERED)
+    text_positions = get_text_positions(viewport_titles, justification=TextProperty_Justification.VTK_TEXT_CENTERED)
 
     text_property = vtkTextProperty(color=colors.GetColor3d('MidnightBlue'),
                                     bold=True, italic=False, shadow=False,
                                     font_size=12, font_family_as_string='Courier',
-                                    justification=TextPropertyJustification.VTK_TEXT_CENTERED,
-                                    vertical_justification=TextPropertyVerticalJustification().VTK_TEXT_CENTERED)
+                                    justification=TextProperty_Justification.VTK_TEXT_CENTERED,
+                                    vertical_justification=TextProperty_VerticalJustification().VTK_TEXT_CENTERED)
 
     # Setup viewports for the renderers.
     x_grid_dimensions = 2
@@ -149,16 +149,16 @@ def main(fn):
             )
 
             if last_row and last_col:
-                border = ViewPortBorder.TOP_LEFT_BOTTOM_RIGHT
+                border = ViewPort_Border.TOP_LEFT_BOTTOM_RIGHT
                 last_row = False
                 last_col = False
             elif last_col:
-                border = ViewPortBorder.RIGHT_TOP_LEFT
+                border = ViewPort_Border.RIGHT_TOP_LEFT
                 last_col = False
             elif last_row:
-                border = ViewPortBorder.TOP_LEFT_BOTTOM
+                border = ViewPort_Border.TOP_LEFT_BOTTOM
             else:
-                border = ViewPortBorder.TOP_LEFT
+                border = ViewPort_Border.TOP_LEFT
 
             vp_params = VP_Params(viewport, border)
             if index < blank:
@@ -274,7 +274,7 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     Draw a border around the viewport of a renderer.
 
     :param renderer: The renderer.
-    :param border: The border to draw, it must be one of the constants in ViewPortBorder.
+    :param border: The border to draw, it must be one of the constants in ViewPort_Border.
     :param color: The color.
     :param line_width: The line width of the border.
     :return:
@@ -284,10 +284,10 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
         """
         Generate the lines for the border.
 
-        :param border_type:  The border type to draw, it must be one of the constants in ViewPortBorder
+        :param border_type:  The border type to draw, it must be one of the constants in ViewPort_Border
         :return: The points and lines.
         """
-        if border_type >= ViewPortBorder.NUMBER_OF_BORDER_TYPES:
+        if border_type >= ViewPort_Border.NUMBER_OF_BORDER_TYPES:
             print('Not a valid border type.')
             return None
 
@@ -300,17 +300,17 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
             (1, 1, 0),
         )
         pt_orders = {
-            ViewPortBorder.TOP: (0, 1),
-            ViewPortBorder.LEFT: (1, 2),
-            ViewPortBorder.BOTTOM: (2, 3),
-            ViewPortBorder.RIGHT: (3, 4),
-            ViewPortBorder.LEFT_BOTTOM: (1, 2, 3),
-            ViewPortBorder.BOTTOM_RIGHT: (2, 3, 4),
-            ViewPortBorder.RIGHT_TOP: (3, 4, 1),
-            ViewPortBorder.RIGHT_TOP_LEFT: (3, 4, 1, 2),
-            ViewPortBorder.TOP_LEFT: (0, 1, 2),
-            ViewPortBorder.TOP_LEFT_BOTTOM: (0, 1, 2, 3),
-            ViewPortBorder.TOP_LEFT_BOTTOM_RIGHT: (0, 1, 2, 3, 4)
+            ViewPort_Border.TOP: (0, 1),
+            ViewPort_Border.LEFT: (1, 2),
+            ViewPort_Border.BOTTOM: (2, 3),
+            ViewPort_Border.RIGHT: (3, 4),
+            ViewPort_Border.LEFT_BOTTOM: (1, 2, 3),
+            ViewPort_Border.BOTTOM_RIGHT: (2, 3, 4),
+            ViewPort_Border.RIGHT_TOP: (3, 4, 1),
+            ViewPort_Border.RIGHT_TOP_LEFT: (3, 4, 1, 2),
+            ViewPort_Border.TOP_LEFT: (0, 1, 2),
+            ViewPort_Border.TOP_LEFT_BOTTOM: (0, 1, 2, 3),
+            ViewPort_Border.TOP_LEFT_BOTTOM_RIGHT: (0, 1, 2, 3, 4)
         }
         pt_order = pt_orders[border_type]
         number_of_points = len(pt_order)
@@ -336,15 +336,15 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     coordinate = vtkCoordinate()
     coordinate.SetCoordinateSystemToNormalizedViewport()
     poly = vtkAppendPolyData()
-    if border == ViewPortBorder().TOP_BOTTOM:
+    if border == ViewPort_Border().TOP_BOTTOM:
         (
-            generate_border_lines(ViewPortBorder.TOP),
-            generate_border_lines(ViewPortBorder.BOTTOM)
+            generate_border_lines(ViewPort_Border.TOP),
+            generate_border_lines(ViewPort_Border.BOTTOM)
         ) >> poly
-    elif border == ViewPortBorder().LEFT_RIGHT:
+    elif border == ViewPort_Border().LEFT_RIGHT:
         (
-            generate_border_lines(ViewPortBorder.LEFT),
-            generate_border_lines(ViewPortBorder.RIGHT)
+            generate_border_lines(ViewPort_Border.LEFT),
+            generate_border_lines(ViewPort_Border.RIGHT)
         ) >> poly
     else:
         generate_border_lines(border) >> poly
@@ -360,7 +360,7 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
 
 
 @dataclass(frozen=True)
-class ViewPortBorder:
+class ViewPort_Border:
     TOP: int = 0
     LEFT: int = 1
     BOTTOM: int = 2
@@ -399,10 +399,10 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
     if height > 0.9:
         height = 0.9
     dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_TOP:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_TOP:
         y0 = 1.0 - (dy + y0)
         dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_CENTERED:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_CENTERED:
         y0 = 0.5 - (dy / 2.0 + y0)
         dy = height
 
@@ -424,9 +424,9 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
         if delta_sz > width:
             delta_sz = width
 
-        if justification == TextPropertyJustification.VTK_TEXT_CENTERED:
+        if justification == TextProperty_Justification.VTK_TEXT_CENTERED:
             x0 = 0.5 - delta_sz / 2.0
-        elif justification == TextPropertyJustification.VTK_TEXT_RIGHT:
+        elif justification == TextProperty_Justification.VTK_TEXT_RIGHT:
             x0 = 1.0 - dx - delta_sz
         else:
             # Default is left justification.
@@ -442,14 +442,14 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
 
 
 @dataclass(frozen=True)
-class TextPropertyJustification:
+class TextProperty_Justification:
     VTK_TEXT_LEFT: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_RIGHT: int = 2
 
 
 @dataclass(frozen=True)
-class TextPropertyVerticalJustification:
+class TextProperty_VerticalJustification:
     VTK_TEXT_BOTTOM: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_TOP: int = 2

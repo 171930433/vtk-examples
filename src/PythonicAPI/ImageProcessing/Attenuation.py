@@ -45,7 +45,7 @@ def main():
     reader = vtkImageReader2Factory().CreateImageReader2(file_name)
     reader.file_name = file_name
 
-    cast = vtkImageCast(output_scalar_type=ImageCastOutputScalarType.VTK_DOUBLE)
+    cast = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_DOUBLE)
 
     # Get rid of the discrete scalars.
     smooth = vtkImageGaussianSmooth(standard_deviations=(0.8, 0.8, 0))
@@ -54,7 +54,7 @@ def main():
     m2 = vtkSampleFunction(implicit_function=m1, model_bounds=(0, 264, 0, 264, 0, 1), sample_dimensions=(264, 264, 1))
     m3 = vtkImageShiftScale(scale=0.000095)
 
-    div = vtkImageMathematics(operation=ImageMathematicsOperation.VTK_MULTIPLY)
+    div = vtkImageMathematics(operation=ImageMathematics_Operation.VTK_MULTIPLY)
 
     # Create the actors.
     color_window = 256.0
@@ -101,7 +101,7 @@ def main():
 
 
 @dataclass(frozen=True)
-class ImageCastOutputScalarType:
+class ImageCast_OutputScalarType:
     VTK_CHAR: int = 2
     VTK_UNSIGNED_CHAR: int = 3
     VTK_SHORT: int = 4
@@ -115,7 +115,7 @@ class ImageCastOutputScalarType:
 
 
 @dataclass(frozen=True)
-class ImageMathematicsOperation:
+class ImageMathematics_Operation:
     VTK_ADD: int = 0
     VTK_SUBTRACT: int = 1
     VTK_MULTIPLY: int = 2

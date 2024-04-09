@@ -98,7 +98,7 @@ def make_blob(n, radius):
 
         sphere = vtkSphere(radius=radius, center=(int(x), int(y), int(z)))
 
-        sampler = vtkSampleFunction(implicit_function=sphere, output_scalar_type=ImageCastOutputScalarType.VTK_FLOAT,
+        sampler = vtkSampleFunction(implicit_function=sphere, output_scalar_type=ImageCast_OutputScalarType.VTK_FLOAT,
                                     sample_dimensions=(100, 100, 100), model_bounds=(-50, 50, -50, 50, -50, 50))
 
         thres = vtkImageThreshold(replace_in=True, replace_out=True, in_value=i + 1, out_value=0)
@@ -107,7 +107,7 @@ def make_blob(n, radius):
         if i == 0:
             blob_image.DeepCopy(thres.output)
 
-        max_value = vtkImageMathematics(operation=ImageMathematicsOperation.VTK_MAX)
+        max_value = vtkImageMathematics(operation=ImageMathematics_Operation.VTK_MAX)
         ((blob_image, thres) >> max_value).update()
 
         blob_image.DeepCopy(max_value.output)
@@ -122,7 +122,7 @@ def make_colors(n):
     :return: The lookup table.
     """
 
-    lut = vtkLookupTable(number_of_colors=n, table_range=(0, n - 1), scale=LookupTableScale.VTK_SCALE_LINEAR)
+    lut = vtkLookupTable(number_of_colors=n, table_range=(0, n - 1), scale=LookupTable_Scale.VTK_SCALE_LINEAR)
     lut.Build()
     lut.SetTableValue(0, 0.0, 0.0, 0.0, 1.0)
 
@@ -141,7 +141,7 @@ def make_colors(n):
 
 
 @dataclass(frozen=True)
-class ImageCastOutputScalarType:
+class ImageCast_OutputScalarType:
     VTK_CHAR: int = 2
     VTK_UNSIGNED_CHAR: int = 3
     VTK_SHORT: int = 4
@@ -155,7 +155,7 @@ class ImageCastOutputScalarType:
 
 
 @dataclass(frozen=True)
-class ImageMathematicsOperation:
+class ImageMathematics_Operation:
     VTK_ADD: int = 0
     VTK_SUBTRACT: int = 1
     VTK_MULTIPLY: int = 2
@@ -180,7 +180,7 @@ class ImageMathematicsOperation:
 
 
 @dataclass(frozen=True)
-class LookupTableScale:
+class LookupTable_Scale:
     VTK_SCALE_LINEAR: int = 0
     VTK_SCALE_LOG10: int = 1
 

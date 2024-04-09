@@ -32,10 +32,10 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
     if height > 0.9:
         height = 0.9
     dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_TOP:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_TOP:
         y0 = 1.0 - (dy + y0)
         dy = height
-    if vertical_justification == TextPropertyVerticalJustification.VTK_TEXT_CENTERED:
+    if vertical_justification == TextProperty_VerticalJustification.VTK_TEXT_CENTERED:
         y0 = 0.5 - (dy / 2.0 + y0)
         dy = height
 
@@ -82,7 +82,7 @@ class TextPropertyJustification:
 
 
 @dataclass(frozen=True)
-class TextPropertyVerticalJustification:
+class TextProperty_VerticalJustification:
     VTK_TEXT_BOTTOM: int = 0
     VTK_TEXT_CENTERED: int = 1
     VTK_TEXT_TOP: int = 2
