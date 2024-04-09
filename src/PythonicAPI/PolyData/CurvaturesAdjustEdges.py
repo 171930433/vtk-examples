@@ -17,13 +17,11 @@ from vtkmodules.vtkCommonComputationalGeometry import (
 )
 from vtkmodules.vtkCommonCore import (
     VTK_DOUBLE,
-    VTK_VERSION_NUMBER,
     vtkDoubleArray,
     vtkFloatArray,
     vtkIdList,
     vtkLookupTable,
-    vtkPoints,
-    vtkVersion
+    vtkPoints
 )
 from vtkmodules.vtkCommonDataModel import vtkPolyData
 from vtkmodules.vtkCommonTransforms import vtkTransform
@@ -80,13 +78,15 @@ def get_program_parameters():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-s', '--surface_name', default='random hills', help='The name of the surface.')
     parser.add_argument('-f', '--frequency_table', action='store_true', help='Display the frequency table.')
+    parser.add_argument('-omw', action='store_false',
+                        help='Use an OrientationMarkerWidget instead of a CameraOrientationWidget.')
 
     args = parser.parse_args()
-    return args.surface_name, args.frequency_table
+    return args.surface_name, args.frequency_table, args.omw
 
 
 def main(argv):
-    surface_name, frequency_table = get_program_parameters()
+    surface_name, frequency_table, use_camera_omw = get_program_parameters()
 
     available_surfaces = ['bour', 'cube', 'enneper', 'hills', 'mobius', 'random hills', 'sphere', 'torus']
     # Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
@@ -191,7 +191,7 @@ def main(argv):
         ren_win.AddRenderer(renderer)
 
     # Enable the widgets.
-    if vtk_version_ok(9, 0, 20210718):
+    if use_camera_omw:
         cam_orient_manipulator = vtkCameraOrientationWidget(parent_renderer=renderers[0])
         # Enable the widget.
         cam_orient_manipulator.On()
@@ -225,32 +225,6 @@ def main(argv):
     ren_win.Render()
 
     iren.Start()
-
-
-def vtk_version_ok(major, minor, build):
-    """
-    Check the VTK version.
-
-    :param major: Major version.
-    :param minor: Minor version.
-    :param build: Build version.
-    :return: True if the requested VTK version is greater or equal to the actual VTK version.
-    """
-    needed_version = 10000000000 * int(major) \
-                     + 100000000 * int(minor) \
-                     + int(build)
-    try:
-        vtk_version_number = VTK_VERSION_NUMBER
-    except AttributeError:
-        # Expand component-wise comparisons for VTK versions < 8.90.
-        ver = vtkVersion()
-        vtk_version_number = 10000000000 * ver.v_t_k_major_version() \
-                             + 100000000 * ver.v_t_k_minor_version() \
-                             + ver.v_t_k_build_version()
-    if vtk_version_number >= needed_version:
-        return True
-    else:
-        return False
 
 
 def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False):

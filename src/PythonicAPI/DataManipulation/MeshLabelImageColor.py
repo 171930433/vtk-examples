@@ -6,9 +6,7 @@ import vtkmodules.vtkInteractionStyle
 import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonCore import (
-    vtkLookupTable,
-    VTK_VERSION_NUMBER,
-    vtkVersion
+    vtkLookupTable
 )
 from vtkmodules.vtkFiltersCore import (
     vtkPolyDataNormals,
@@ -39,16 +37,15 @@ def get_program_parameters():
     parser = argparse.ArgumentParser(description=description, epilog=epilogue)
     parser.add_argument('filename', help='labels.mhd')
     parser.add_argument('label', nargs='?', const=1, type=int, default=31, help='The label to use e.g 31')
+    parser.add_argument('-m', '--marching_cubes', action='store_false',
+                        help='Use Marching Cubes instead of Flying Edges.')
     args = parser.parse_args()
-    return args.filename, args.label
+    return args.filename, args.label, args.marching_cubes
 
 
 def main():
-    # vtkFlyingEdges3D was introduced in VTK >= 8.2
-    use_flying_edges = vtk_version_ok(8, 2, 0)
-
     colors = vtkNamedColors()
-    ifn, index = get_program_parameters()
+    ifn, index, use_flying_edges = get_program_parameters()
 
     print('Doing label', index)
 
@@ -61,10 +58,7 @@ def main():
     # Prepare surface generation.
     # For label images.
     if use_flying_edges:
-        try:
-            contour = vtkDiscreteFlyingEdges3D(value=(0, index))
-        except AttributeError:
-            contour = vtkDiscreteMarchingCubes(value=(0, index))
+        contour = vtkDiscreteFlyingEdges3D(value=(0, index))
     else:
         contour = vtkDiscreteMarchingCubes()
 
@@ -167,32 +161,6 @@ def get_diverging_lut(ct=0):
         lut.SetTableValue(i, rgba)
 
     return lut
-
-
-def vtk_version_ok(major, minor, build):
-    """
-    Check the VTK version.
-
-    :param major: Major version.
-    :param minor: Minor version.
-    :param build: Build version.
-    :return: True if the requested VTK version is greater or equal to the actual VTK version.
-    """
-    needed_version = 10000000000 * int(major) \
-                     + 100000000 * int(minor) \
-                     + int(build)
-    try:
-        vtk_version_number = VTK_VERSION_NUMBER
-    except AttributeError:
-        # Expand component-wise comparisons for VTK versions < 8.90.
-        ver = vtkVersion()
-        vtk_version_number = 10000000000 * ver.GetVTKMajorVersion() \
-                             + 100000000 * ver.GetVTKMinorVersion() \
-                             + ver.GetVTKBuildVersion()
-    if vtk_version_number >= needed_version:
-        return True
-    else:
-        return False
 
 
 if __name__ == '__main__':

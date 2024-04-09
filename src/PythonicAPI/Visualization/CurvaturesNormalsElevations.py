@@ -23,8 +23,7 @@ from vtkmodules.vtkCommonCore import (
     vtkLookupTable,
     vtkPoints,
     vtkVariant,
-    vtkVariantArray,
-    vtkVersion
+    vtkVariantArray
 )
 from vtkmodules.vtkCommonDataModel import vtkPolyData
 from vtkmodules.vtkCommonTransforms import vtkTransform
@@ -85,13 +84,15 @@ def get_program_parameters():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-s', '--surface_name', default='random hills', help='The name of the surface.')
     parser.add_argument('-f', '--frequency_table', action='store_true', help='Display the frequency table.')
+    parser.add_argument('-omw', action='store_false',
+                        help='Use an OrientationMarkerWidget instead of a CameraOrientationWidget.')
 
     args = parser.parse_args()
-    return args.surface_name, args.frequency_table
+    return args.surface_name, args.frequency_table, args.omw
 
 
 def main(argv):
-    surface_name, frequency_table = get_program_parameters()
+    surface_name, frequency_table, use_camera_omw = get_program_parameters()
 
     available_surfaces = ['hills', 'parametric torus', 'plane', 'random hills', 'sphere', 'torus']
     # Surfaces whose curvatures need to be adjusted along the edges of the surface or constrained.
@@ -242,7 +243,7 @@ def main(argv):
             elevation_widgets[k].On()
     text_widget.On()
 
-    if vtk_version_ok(9, 0, 20210718):
+    if use_camera_omw:
         cam_orient_manipulator = vtkCameraOrientationWidget(parent_renderer=renderers[0])
         # Enable the widget.
         cam_orient_manipulator.On()
@@ -272,25 +273,6 @@ def main(argv):
     ren_win.Render()
 
     iren.Start()
-
-
-def vtk_version_ok(major, minor, build):
-    """
-    Check the VTK version.
-
-    :param major: Requested major version.
-    :param minor: Requested minor version.
-    :param build: Requested build version.
-    :return: True if the requested VTK version is >= the actual VTK version.
-    """
-    requested_version = (100 * int(major) + int(minor)) * 100000000 + int(build)
-    ver = vtkVersion()
-    actual_version = (100 * ver.GetVTKMajorVersion() + ver.GetVTKMinorVersion()) \
-                     * 100000000 + ver.GetVTKBuildVersion()
-    if actual_version >= requested_version:
-        return True
-    else:
-        return False
 
 
 def adjust_edge_curvatures(source, curvature_name, epsilon=1.0e-08):

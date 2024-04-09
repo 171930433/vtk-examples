@@ -14,10 +14,8 @@ from vtkmodules.vtkCommonComputationalGeometry import (
     vtkParametricTorus
 )
 from vtkmodules.vtkCommonCore import (
-    VTK_VERSION_NUMBER,
     vtkCommand,
-    vtkFloatArray,
-    vtkVersion
+    vtkFloatArray
 )
 from vtkmodules.vtkCommonDataModel import vtkPlane
 from vtkmodules.vtkCommonTransforms import vtkTransform
@@ -90,21 +88,19 @@ A Skybox is used to create the illusion of distant three-dimensional surrounding
                              ' Overrides the equirectangular entry in the json file.')
     parser.add_argument('-t', '--use_tonemapping', action='store_true',
                         help='Use tone mapping.')
+    parser.add_argument('-omw', action='store_false',
+                        help='Use an OrientationMarkerWidget instead of a CameraOrientationWidget.')
     args = parser.parse_args()
-    return args.file_name, args.surface, args.use_cubemap, args.use_tonemapping
+    return args.file_name, args.surface, args.use_cubemap, args.use_tonemapping, args.omw
 
 
 def main():
-    if not vtk_version_ok(9, 0, 0):
-        print('You need VTK version 9.0 or greater to run this program.')
-        return
-
     colors = vtkNamedColors()
 
     # Default background color.
-    colors.SetColor('BkgColor', [26, 51, 102, 255])
+    colors.SetColor('BkgColor', *[26, 51, 102, 255])
 
-    fn, surface_name, use_cubemap, use_tonemapping = get_program_parameters()
+    fn, surface_name, use_cubemap, use_tonemapping, use_camera_omw = get_program_parameters()
 
     fn_path = Path(fn)
     if not fn_path.suffix:
@@ -369,13 +365,10 @@ def main():
 
     render_window.Render()
 
-    if vtk_version_ok(9, 0, 20210718):
-        try:
-            cam_orient_manipulator = vtkCameraOrientationWidget(parent_renderer=ren2)
-            # Enable the widget.
-            cam_orient_manipulator.On()
-        except AttributeError:
-            pass
+    if use_camera_omw:
+        cam_orient_manipulator = vtkCameraOrientationWidget(parent_renderer=ren2)
+        # Enable the widget.
+        cam_orient_manipulator.On()
     else:
         rgb = [0.0] * 4
         colors.GetColor("Carrot", rgb)
@@ -390,32 +383,6 @@ def main():
     interactor.AddObserver('KeyPressEvent', print_callback)
 
     interactor.Start()
-
-
-def vtk_version_ok(major, minor, build):
-    """
-    Check the VTK version.
-
-    :param major: Major version.
-    :param minor: Minor version.
-    :param build: Build version.
-    :return: True if the requested VTK version is greater or equal to the actual VTK version.
-    """
-    needed_version = 10000000000 * int(major) \
-                     + 100000000 * int(minor) \
-                     + int(build)
-    try:
-        vtk_version_number = VTK_VERSION_NUMBER
-    except AttributeError:
-        # Expand component-wise comparisons for VTK versions < 8.90.
-        ver = vtkVersion()
-        vtk_version_number = 10000000000 * ver.v_t_k_major_version() \
-                             + 100000000 * ver.v_t_k_minor_version() \
-                             + ver.v_t_k_build_version()
-    if vtk_version_number >= needed_version:
-        return True
-    else:
-        return False
 
 
 def get_parameters(fn_path):

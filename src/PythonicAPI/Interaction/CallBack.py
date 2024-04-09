@@ -87,14 +87,13 @@ def main():
 
     ren_win.Render()
 
-    axes1 = make_axes_actor()
-    om1 = vtkOrientationMarkerWidget()
-    om1.SetOrientationMarker(axes1)
-    # Position lower left in the viewport.
-    om1.viewport = (0, 0, 0.2, 0.2)
-    om1.interactor = iren
-    om1.enabled = True
-    om1.interactive = True
+    rgb = [0.0] * 4
+    colors.GetColor("Carrot", rgb)
+    rgb = tuple(rgb[:3])
+    widget = vtkOrientationMarkerWidget(orientation_marker=make_axes_actor(),
+                                        interactor=iren, default_renderer=ren,
+                                        outline_color=rgb, viewport=(0.0, 0.0, 0.2, 0.2), zoom=1.5, enabled=True,
+                                        interactive=True)
 
     # Set up the callback.
     if use_function_callback:
