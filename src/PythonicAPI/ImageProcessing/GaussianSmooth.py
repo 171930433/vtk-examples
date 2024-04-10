@@ -39,7 +39,7 @@ def main():
     reader.file_name = file_name
 
     # Process the image.
-    cast = vtkImageCast(output_scalar_type=ImageCastOutputScalarType.VTK_FLOAT)
+    cast = vtkImageCast(output_scalar_type=ImageCast.OutputScalarType.VTK_FLOAT)
 
     smoothing_filter = vtkImageGaussianSmooth(dimensionality=2, standard_deviations=(4.0, 4.0),
                                               radius_factors=(2.0, 2.0))
@@ -83,17 +83,19 @@ def main():
 
 
 @dataclass(frozen=True)
-class ImageCastOutputScalarType:
-    VTK_CHAR: int = 2
-    VTK_UNSIGNED_CHAR: int = 3
-    VTK_SHORT: int = 4
-    VTK_UNSIGNED_SHORT: int = 5
-    VTK_INT: int = 6
-    VTK_UNSIGNED_INT: int = 7
-    VTK_LONG: int = 8
-    VTK_UNSIGNED_LONG: int = 9
-    VTK_FLOAT: int = 10
-    VTK_DOUBLE: int = 11
+class ImageCast:
+    @dataclass(frozen=True)
+    class OutputScalarType:
+        VTK_CHAR: int = 2
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_UNSIGNED_INT: int = 7
+        VTK_LONG: int = 8
+        VTK_UNSIGNED_LONG: int = 9
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
 
 
 if __name__ == '__main__':

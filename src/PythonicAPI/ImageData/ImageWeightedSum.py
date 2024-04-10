@@ -27,7 +27,7 @@ def main():
     # Create image 1.
     source1 = vtkImageMandelbrotSource(whole_extent=(0, 255, 0, 255, 0, 0))
     # We need this for the image weighted sum.
-    source1_double = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_DOUBLE)
+    source1_double = vtkImageCast(output_scalar_type=ImageCast.OutputScalarType.VTK_DOUBLE)
     # Create image 2.
     source2 = vtkImageSinusoidSource(whole_extent=(0, 255, 0, 255, 0, 0))
     # Do the sum.
@@ -38,9 +38,9 @@ def main():
         sum_filter.SetWeight(*weight)
 
     # Display the images.
-    source1_cast_filter = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_UNSIGNED_CHAR)
-    source2_cast_filter = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_UNSIGNED_CHAR)
-    summed_cast_filter = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_UNSIGNED_CHAR)
+    source1_cast_filter = vtkImageCast(output_scalar_type=ImageCast.OutputScalarType.VTK_UNSIGNED_CHAR)
+    source2_cast_filter = vtkImageCast(output_scalar_type=ImageCast.OutputScalarType.VTK_UNSIGNED_CHAR)
+    summed_cast_filter = vtkImageCast(output_scalar_type=ImageCast.OutputScalarType.VTK_UNSIGNED_CHAR)
 
     # Create actors.
     source1_actor = vtkImageActor()
@@ -87,17 +87,19 @@ def main():
 
 
 @dataclass(frozen=True)
-class ImageCast_OutputScalarType:
-    VTK_CHAR: int = 2
-    VTK_UNSIGNED_CHAR: int = 3
-    VTK_SHORT: int = 4
-    VTK_UNSIGNED_SHORT: int = 5
-    VTK_INT: int = 6
-    VTK_UNSIGNED_INT: int = 7
-    VTK_LONG: int = 8
-    VTK_UNSIGNED_LONG: int = 9
-    VTK_FLOAT: int = 10
-    VTK_DOUBLE: int = 11
+class ImageCast:
+    @dataclass(frozen=True)
+    class OutputScalarType:
+        VTK_CHAR: int = 2
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_UNSIGNED_INT: int = 7
+        VTK_LONG: int = 8
+        VTK_UNSIGNED_LONG: int = 9
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
 
 
 if __name__ == '__main__':

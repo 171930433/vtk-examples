@@ -132,11 +132,11 @@ Grpuping the pipelines into code blocks may improve the readability of the code.
 | -------------- | ---------------------- | ------- |
 [EnhanceEdges](/PythonicAPI/ImageProcessing/EnhanceEdges) | The pipelines are grouped into a single code block. This may make understanding the code easier.
 
-## How to handle #defines
+## How to handle #defines using dataclasses
 
-This example is relatively complex in that a single source feeds into two functions `generate_gaussian_curvatures(...)` and `generate_mean_curvatures(...)` returning filters, scalar ranges of curvatures and elevation along with the lookup tables. Additionally a text widget and scalar bar widgets are positioned into two viewports.
+This example, [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations), is relatively complex in that a single source feeds into two functions `generate_gaussian_curvatures(...)` and `generate_mean_curvatures(...)` returning filters, scalar ranges of curvatures and elevation along with the lookup tables. Additionally a text widget and scalar bar widgets are positioned into two viewports. It nicely demonstrates the usage of dataclasses.
 
-We initialize nearly all properties of a wrapped VTK class by specifying keyword arguments in the constructor. There are no issues if the properties are True or False or an existing variable or an enum (which is wrapped in Python) e.g.:
+We can initialize nearly all properties of a wrapped VTK class by specifying keyword arguments in the constructor. There are no issues if the properties are True or False or an existing variable or an enum (which is wrapped in Python) e.g.:
 
 ``` Python
 color_series = ?vtkColorSeries?(color_scheme=?vtkColorSeries?.BREWER_QUALITATIVE_SET3)
@@ -144,29 +144,15 @@ color_series = ?vtkColorSeries?(color_scheme=?vtkColorSeries?.BREWER_QUALITATIVE
 
 However, a lot of Set/Get functions in the VTK classes use values defined as `#define VTK_SOME_CONSTANT x`, these are not wrapped. In order to get around this we can use a data class in Python 3.7 or later.
 
-``` Python
-# -----------------------------------------------------------------------------
-# These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
-# The class name consists of the VTK class name (without the leading vtk)
-# appended to the relevant Set/Get Macro name with an underscore.
-# Note: To find these constants, use the link to the header in the
-#       documentation for the class.
-# ------------------------------------------------------------------------------
-@dataclass(frozen=True)
-class BandedPolyDataContourFilter_ScalarMode:
-    VTK_SCALAR_MODE_INDEX: int = 0
-    VTK_SCALAR_MODE_VALUE: int = 1
-```
-
 The real advantage of this approach is that the defined VTK constants are used instead of meaningless integers or other values.
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Using immutable data classes for constants.  Demonstrating positioning of title and scalar bar widgets into multiple viewports.
+[VTKDataClasses](/PythonicAPI/Utilities/VTKDataClasses) | The VTK immutable data classes for constants, these are usually used to initialize VTK classes.
 
 ## Python functions and pipelines
 
-A Python function returning a VTK object can be used as the first element of a pipeline. 
+A Python function returning a VTK object can be used as the first element of a pipeline.
 
 - If the function returns `None`, then the pipeline will never be implemented.
 

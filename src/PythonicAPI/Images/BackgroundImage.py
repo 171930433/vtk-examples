@@ -48,7 +48,7 @@ def main():
         image_data = jpeg_reader.update().output
     else:
         canvas_source = vtkImageCanvasSource2D(extent=(0, 100, 0, 100, 0, 0), number_of_scalar_components=3,
-                                               scalar_type=ImageCanvasSource2D_ScalarType.VTK_UNSIGNED_CHAR)
+                                               scalar_type=ImageCanvasSource2D.ScalarType.VTK_UNSIGNED_CHAR)
         # Do the drawing.
         canvas_source.SetDrawColor(colors.GetColor4ub('warm_grey'))
         canvas_source.FillBox(0, 100, 0, 100)
@@ -120,17 +120,19 @@ def main():
 
 
 @dataclass(frozen=True)
-class ImageCanvasSource2D_ScalarType:
-    VTK_CHAR: int = 2
-    VTK_UNSIGNED_CHAR: int = 3
-    VTK_SHORT: int = 4
-    VTK_UNSIGNED_SHORT: int = 5
-    VTK_INT: int = 6
-    VTK_UNSIGNED_INT: int = 7
-    VTK_LONG: int = 8
-    VTK_UNSIGNED_LONG: int = 9
-    VTK_FLOAT: int = 10
-    VTK_DOUBLE: int = 11
+class ImageCanvasSource2D:
+    @dataclass(frozen=True)
+    class ScalarType:
+        VTK_CHAR: int = 2
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_UNSIGNED_INT: int = 7
+        VTK_LONG: int = 8
+        VTK_UNSIGNED_LONG: int = 9
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
 
 
 if __name__ == '__main__':

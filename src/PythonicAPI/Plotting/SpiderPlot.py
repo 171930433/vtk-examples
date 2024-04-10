@@ -54,7 +54,7 @@ def main():
     dobj.field_data.AddArray(oily)
 
     actor = vtkSpiderPlotActor(title='Spider Plot', input_data=dobj, legend_visibility=True,
-                               independent_variables=SpiderPlotActor_IndependentVariables.VTK_IV_COLUMN)
+                               independent_variables=SpiderPlotActor.IndependentVariables.VTK_IV_COLUMN)
     actor.position_coordinate.value = (0.05, 0.1, 0.0)
     actor.position2_coordinate.value = (0.95, 0.85, 0.0)
     actor.property.color = colors.GetColor3d('Red')
@@ -101,9 +101,11 @@ def main():
 
 
 @dataclass(frozen=True)
-class SpiderPlotActor_IndependentVariables:
-    VTK_IV_COLUMN: int = 0
-    VTK_IV_ROW: int = 1
+class SpiderPlotActor:
+    @dataclass(frozen=True)
+    class IndependentVariables:
+        VTK_IV_COLUMN: int = 0
+        VTK_IV_ROW: int = 1
 
 
 if __name__ == '__main__':

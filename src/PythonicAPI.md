@@ -192,6 +192,7 @@ This section includes ?vtkUnstructuredGrid?.
 | -------------- | ------------- | ------- |
 [CheckVTKVersion](/PythonicAPI/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
 [SelectExamples](/PythonicAPI/Utilities/SelectExamples) | Given a VTK Class and a language, select the matching examples.
+[VTKDataClasses](/PythonicAPI/Utilities/VTKDataClasses) | The VTK immutable data classes for constants, these are usually used to initialize VTK classes.
 
 ### Arrays
 

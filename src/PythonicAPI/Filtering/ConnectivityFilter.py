@@ -31,7 +31,7 @@ def main():
 
     connectivity_filter = vtkConnectivityFilter(
         color_regions=True,
-        extraction_mode=ConnectivityFilter_ExtractionMode.VTK_EXTRACT_ALL_REGIONS
+        extraction_mode=ConnectivityFilter.ExtractionMode.VTK_EXTRACT_ALL_REGIONS
     )
 
     # Visualize
@@ -54,21 +54,16 @@ def main():
     iren.Start()
 
 
-# -----------------------------------------------------------------------------
-# These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
-# The class name consists of the VTK class name (without the leading vtk)
-# appended to the relevant Set/Get Macro name.
-# Note: To find these constants, use the link to the header in the
-#       documentation for the class.
-# ------------------------------------------------------------------------------
 @dataclass(frozen=True)
-class ConnectivityFilter_ExtractionMode:
-    VTK_EXTRACT_POINT_SEEDED_REGIONS: int = 1
-    VTK_EXTRACT_CELL_SEEDED_REGIONS: int = 2
-    VTK_EXTRACT_SPECIFIED_REGIONS: int = 3
-    VTK_EXTRACT_LARGEST_REGION: int = 4
-    VTK_EXTRACT_ALL_REGIONS: int = 5
-    VTK_EXTRACT_CLOSEST_POINT_REGION: int = 6
+class ConnectivityFilter:
+    @dataclass(frozen=True)
+    class ExtractionMode:
+        VTK_EXTRACT_POINT_SEEDED_REGIONS: int = 1
+        VTK_EXTRACT_CELL_SEEDED_REGIONS: int = 2
+        VTK_EXTRACT_SPECIFIED_REGIONS: int = 3
+        VTK_EXTRACT_LARGEST_REGION: int = 4
+        VTK_EXTRACT_ALL_REGIONS: int = 5
+        VTK_EXTRACT_CLOSEST_POINT_REGION: int = 6
 
 
 if __name__ == '__main__':

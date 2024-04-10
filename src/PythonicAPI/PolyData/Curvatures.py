@@ -77,9 +77,9 @@ def main(argv):
     source = reader.GetOutput()
 
     if gaussian_curvature:
-        cc = vtkCurvatures(curvature_type=Curvatures_CurvatureType.VTK_CURVATURE_GAUSS)
+        cc = vtkCurvatures(curvature_type=Curvatures.CurvatureType.VTK_CURVATURE_GAUSS)
     else:
-        cc = vtkCurvatures(curvature_type=Curvatures_CurvatureType.VTK_CURVATURE_MEAN)
+        cc = vtkCurvatures(curvature_type=Curvatures.CurvatureType.VTK_CURVATURE_MEAN)
     p = (source >> cc).update().output
     adjust_edge_curvatures(p, curvature)
     source.point_data.AddArray(p.point_data.GetAbstractArray(curvature))
@@ -110,7 +110,7 @@ def main(argv):
 
     # Create a mapper and actor.
     mapper = vtkPolyDataMapper(scalar_range=scalar_range, lookup_table=lut,
-                               scalar_mode=Mapper_ScalarMode.VTK_SCALAR_MODE_USE_POINT_FIELD_DATA)
+                               scalar_mode=Mapper.ScalarMode.VTK_SCALAR_MODE_USE_POINT_FIELD_DATA)
     mapper.SelectColorArray(curvature)
 
     actor = vtkActor(mapper=mapper)
@@ -141,7 +141,7 @@ def main(argv):
 
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
                                     font_size=16,
-                                    justification=TextProperty_Justification.VTK_TEXT_LEFT)
+                                    justification=TextProperty.Justification.VTK_TEXT_LEFT)
     scalar_bar_widget = make_scalar_bar_widget(scalar_bar_properties, text_property, iren)
     scalar_bar_widget.default_renderer = renderer
 
@@ -311,35 +311,46 @@ def make_scalar_bar_widget(scalar_bar_properties, text_property, interactor):
 
 
 @dataclass(frozen=True)
-class Curvatures_CurvatureType:
-    VTK_CURVATURE_GAUSS: int = 0
-    VTK_CURVATURE_MEAN: int = 1
-    VTK_CURVATURE_MAXIMUM: int = 2
-    VTK_CURVATURE_MINIMUM: int = 3
+class Curvatures:
+    @dataclass(frozen=True)
+    class CurvatureType:
+        VTK_CURVATURE_GAUSS: int = 0
+        VTK_CURVATURE_MEAN: int = 1
+        VTK_CURVATURE_MAXIMUM: int = 2
+        VTK_CURVATURE_MINIMUM: int = 3
 
 
 @dataclass(frozen=True)
-class Mapper_ScalarMode:
-    VTK_SCALAR_MODE_DEFAULT: int = 0
-    VTK_SCALAR_MODE_USE_POINT_DATA: int = 1
-    VTK_SCALAR_MODE_USE_CELL_DATA: int = 2
-    VTK_SCALAR_MODE_USE_POINT_FIELD_DATA: int = 3
-    VTK_SCALAR_MODE_USE_CELL_FIELD_DATA: int = 4
-    VTK_SCALAR_MODE_USE_FIELD_DATA: int = 5
+class Mapper:
+    @dataclass(frozen=True)
+    class ColorMode:
+        VTK_COLOR_MODE_DEFAULT: int = 0
+        VTK_COLOR_MODE_MAP_SCALARS: int = 1
+        VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
+
+    @dataclass(frozen=True)
+    class ScalarMode:
+        VTK_SCALAR_MODE_DEFAULT: int = 0
+        VTK_SCALAR_MODE_USE_POINT_DATA: int = 1
+        VTK_SCALAR_MODE_USE_CELL_DATA: int = 2
+        VTK_SCALAR_MODE_USE_POINT_FIELD_DATA: int = 3
+        VTK_SCALAR_MODE_USE_CELL_FIELD_DATA: int = 4
+        VTK_SCALAR_MODE_USE_FIELD_DATA: int = 5
 
 
 @dataclass(frozen=True)
-class TextProperty_Justification:
-    VTK_TEXT_LEFT: int = 0
-    VTK_TEXT_CENTERED: int = 1
-    VTK_TEXT_RIGHT: int = 2
+class TextProperty:
+    @dataclass(frozen=True)
+    class Justification:
+        VTK_TEXT_LEFT: int = 0
+        VTK_TEXT_CENTERED: int = 1
+        VTK_TEXT_RIGHT: int = 2
 
-
-@dataclass(frozen=True)
-class TextProperty_VerticalJustification:
-    VTK_TEXT_BOTTOM: int = 0
-    VTK_TEXT_CENTERED: int = 1
-    VTK_TEXT_TOP: int = 2
+    @dataclass(frozen=True)
+    class VerticalJustification:
+        VTK_TEXT_BOTTOM: int = 0
+        VTK_TEXT_CENTERED: int = 1
+        VTK_TEXT_TOP: int = 2
 
 
 if __name__ == '__main__':

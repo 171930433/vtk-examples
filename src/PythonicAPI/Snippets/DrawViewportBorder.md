@@ -21,7 +21,7 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     Draw a border around the viewport of a renderer.
 
     :param renderer: The renderer.
-    :param border: The border to draw, it must be one of the constants in ViewPort_Border.
+    :param border: The border to draw, it must be one of the constants in ViewPort.Border.
     :param color: The color.
     :param line_width: The line width of the border.
     :return:
@@ -31,10 +31,10 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
         """
         Generate the lines for the border.
 
-        :param border_type:  The border type to draw, it must be one of the constants in ViewPort_Border
+        :param border_type:  The border type to draw, it must be one of the constants in ViewPort.Border
         :return: The points and lines.
         """
-        if border_type >= ViewPort_Border.NUMBER_OF_BORDER_TYPES:
+        if border_type >= ViewPort.Border.NUMBER_OF_BORDER_TYPES:
             print('Not a valid border type.')
             return None
 
@@ -47,17 +47,17 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
             (1, 1, 0),
         )
         pt_orders = {
-            ViewPort_Border.TOP: (0, 1),
-            ViewPort_Border.LEFT: (1, 2),
-            ViewPort_Border.BOTTOM: (2, 3),
-            ViewPort_Border.RIGHT: (3, 4),
-            ViewPort_Border.LEFT_BOTTOM: (1, 2, 3),
-            ViewPort_Border.BOTTOM_RIGHT: (2, 3, 4),
-            ViewPort_Border.RIGHT_TOP: (3, 4, 1),
-            ViewPort_Border.RIGHT_TOP_LEFT: (3, 4, 1, 2),
-            ViewPort_Border.TOP_LEFT: (0, 1, 2),
-            ViewPort_Border.TOP_LEFT_BOTTOM: (0, 1, 2, 3),
-            ViewPort_Border.TOP_LEFT_BOTTOM_RIGHT: (0, 1, 2, 3, 4)
+            ViewPort.Border.TOP: (0, 1),
+            ViewPort.Border.LEFT: (1, 2),
+            ViewPort.Border.BOTTOM: (2, 3),
+            ViewPort.Border.RIGHT: (3, 4),
+            ViewPort.Border.LEFT_BOTTOM: (1, 2, 3),
+            ViewPort.Border.BOTTOM_RIGHT: (2, 3, 4),
+            ViewPort.Border.RIGHT_TOP: (3, 4, 1),
+            ViewPort.Border.RIGHT_TOP_LEFT: (3, 4, 1, 2),
+            ViewPort.Border.TOP_LEFT: (0, 1, 2),
+            ViewPort.Border.TOP_LEFT_BOTTOM: (0, 1, 2, 3),
+            ViewPort.Border.TOP_LEFT_BOTTOM_RIGHT: (0, 1, 2, 3, 4)
         }
         pt_order = pt_orders[border_type]
         number_of_points = len(pt_order)
@@ -83,15 +83,15 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     coordinate = vtkCoordinate()
     coordinate.SetCoordinateSystemToNormalizedViewport()
     poly = vtkAppendPolyData()
-    if border == ViewPort_Border().TOP_BOTTOM:
+    if border == ViewPort.Border.TOP_BOTTOM:
         (
-            generate_border_lines(ViewPort_Border.TOP),
-            generate_border_lines(ViewPort_Border.BOTTOM)
+            generate_border_lines(ViewPort.Border.TOP),
+            generate_border_lines(ViewPort.Border.BOTTOM)
         ) >> poly
-    elif border == ViewPort_Border().LEFT_RIGHT:
+    elif border == ViewPort.Border.LEFT_RIGHT:
         (
-            generate_border_lines(ViewPort_Border.LEFT),
-            generate_border_lines(ViewPort_Border.RIGHT)
+            generate_border_lines(ViewPort.Border.LEFT),
+            generate_border_lines(ViewPort.Border.RIGHT)
         ) >> poly
     else:
         generate_border_lines(border) >> poly
@@ -107,21 +107,23 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
 
 
 @dataclass(frozen=True)
-class ViewPort_Border:
-    TOP: int = 0
-    LEFT: int = 1
-    BOTTOM: int = 2
-    RIGHT: int = 3
-    LEFT_BOTTOM: int = 4
-    BOTTOM_RIGHT: int = 5
-    RIGHT_TOP: int = 6
-    RIGHT_TOP_LEFT: int = 7
-    TOP_LEFT: int = 8
-    TOP_LEFT_BOTTOM: int = 9
-    TOP_LEFT_BOTTOM_RIGHT: int = 10
-    TOP_BOTTOM: int = 11
-    LEFT_RIGHT: int = 12
-    NUMBER_OF_BORDER_TYPES: int = 13
+class ViewPort:
+    @dataclass(frozen=True)
+    class Border:
+        TOP: int = 0
+        LEFT: int = 1
+        BOTTOM: int = 2
+        RIGHT: int = 3
+        LEFT_BOTTOM: int = 4
+        BOTTOM_RIGHT: int = 5
+        RIGHT_TOP: int = 6
+        RIGHT_TOP_LEFT: int = 7
+        TOP_LEFT: int = 8
+        TOP_LEFT_BOTTOM: int = 9
+        TOP_LEFT_BOTTOM_RIGHT: int = 10
+        TOP_BOTTOM: int = 11
+        LEFT_RIGHT: int = 12
+        NUMBER_OF_BORDER_TYPES: int = 13
 
 ```
 

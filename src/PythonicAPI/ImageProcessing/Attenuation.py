@@ -45,7 +45,7 @@ def main():
     reader = vtkImageReader2Factory().CreateImageReader2(file_name)
     reader.file_name = file_name
 
-    cast = vtkImageCast(output_scalar_type=ImageCast_OutputScalarType.VTK_DOUBLE)
+    cast = vtkImageCast(output_scalar_type=ImageCast.OutputScalarType.VTK_DOUBLE)
 
     # Get rid of the discrete scalars.
     smooth = vtkImageGaussianSmooth(standard_deviations=(0.8, 0.8, 0))
@@ -54,7 +54,7 @@ def main():
     m2 = vtkSampleFunction(implicit_function=m1, model_bounds=(0, 264, 0, 264, 0, 1), sample_dimensions=(264, 264, 1))
     m3 = vtkImageShiftScale(scale=0.000095)
 
-    div = vtkImageMathematics(operation=ImageMathematics_Operation.VTK_MULTIPLY)
+    div = vtkImageMathematics(operation=ImageMathematics.Operation.VTK_MULTIPLY)
 
     # Create the actors.
     color_window = 256.0
@@ -101,42 +101,46 @@ def main():
 
 
 @dataclass(frozen=True)
-class ImageCast_OutputScalarType:
-    VTK_CHAR: int = 2
-    VTK_UNSIGNED_CHAR: int = 3
-    VTK_SHORT: int = 4
-    VTK_UNSIGNED_SHORT: int = 5
-    VTK_INT: int = 6
-    VTK_UNSIGNED_INT: int = 7
-    VTK_LONG: int = 8
-    VTK_UNSIGNED_LONG: int = 9
-    VTK_FLOAT: int = 10
-    VTK_DOUBLE: int = 11
+class ImageCast:
+    @dataclass(frozen=True)
+    class OutputScalarType:
+        VTK_CHAR: int = 2
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_UNSIGNED_INT: int = 7
+        VTK_LONG: int = 8
+        VTK_UNSIGNED_LONG: int = 9
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
 
 
 @dataclass(frozen=True)
-class ImageMathematics_Operation:
-    VTK_ADD: int = 0
-    VTK_SUBTRACT: int = 1
-    VTK_MULTIPLY: int = 2
-    VTK_DIVIDE: int = 3
-    VTK_INVERT: int = 4
-    VTK_SIN: int = 5
-    VTK_COS: int = 6
-    VTK_EXP: int = 7
-    VTK_LOG: int = 8
-    VTK_ABS: int = 9
-    VTK_SQR: int = 10
-    VTK_SQRT: int = 11
-    VTK_MIN: int = 12
-    VTK_MAX: int = 13
-    VTK_ATAN: int = 14
-    VTK_ATAN2: int = 15
-    VTK_MULTIPLYBYK: int = 16
-    VTK_ADDC: int = 17
-    VTK_CONJUGATE: int = 18
-    VTK_COMPLEX_MULTIPLY: int = 19
-    VTK_REPLACECBYK: int = 20
+class ImageMathematics:
+    @dataclass(frozen=True)
+    class Operation:
+        VTK_ADD: int = 0
+        VTK_SUBTRACT: int = 1
+        VTK_MULTIPLY: int = 2
+        VTK_DIVIDE: int = 3
+        VTK_INVERT: int = 4
+        VTK_SIN: int = 5
+        VTK_COS: int = 6
+        VTK_EXP: int = 7
+        VTK_LOG: int = 8
+        VTK_ABS: int = 9
+        VTK_SQR: int = 10
+        VTK_SQRT: int = 11
+        VTK_MIN: int = 12
+        VTK_MAX: int = 13
+        VTK_ATAN: int = 14
+        VTK_ATAN2: int = 15
+        VTK_MULTIPLYBYK: int = 16
+        VTK_ADDC: int = 17
+        VTK_CONJUGATE: int = 18
+        VTK_COMPLEX_MULTIPLY: int = 19
+        VTK_REPLACECBYK: int = 20
 
 
 if __name__ == '__main__':
