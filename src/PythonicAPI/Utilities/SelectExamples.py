@@ -4,7 +4,6 @@ import json
 import os
 import random
 import tempfile
-from dataclasses import dataclass
 from datetime import datetime
 from operator import itemgetter
 from pathlib import Path
@@ -19,6 +18,13 @@ def get_program_parameters():
 The JSON file needed by this script is obtained from the gh-pages branch
  of the vtk-examples GitHub site.
 It is stored in your tempfile directory.
+If you change the URL to the JSON file, remember that there is a ten minute
+wait before you can overwrite the last downloaded file. To force the download
+specify -o on the command line.
+
+Here is the URL for an alternative site for testing:
+"https://raw.githubusercontent.com/ajpmaclean/web-test/gh-pages/src/Coverage/vtk_vtk-examples_xref.json"
+
 '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawTextHelpFormatter)
@@ -29,21 +35,15 @@ It is stored in your tempfile directory.
     parser.add_argument('-n', '--number', type=int, default=5, help='The maximum number of examples.')
     parser.add_argument('-m', '--md', action="store_true",
                         help='Display links in markdown inline format e.g. [label](URL).')
+    parser.add_argument('-j', '--json_xref_url',
+                        default='https://raw.githubusercontent.com/Kitware/vtk-examples/gh-pages/src/Coverage/vtk_vtk-examples_xref.json',
+                        help='The URL for the JSON cross-reference file.')
+    parser.add_argument('-o', '--overwrite', action="store_true",
+                        help='Force an initial download of the JSON cross-reference file.')
 
     args = parser.parse_args()
-    return args.vtk_class, args.language, args.all_values, args.md, args.number
+    return args.vtk_class, args.language, args.all_values, args.md, args.number, args.json_xref_url, args.overwrite
 
-
-@dataclass(frozen=True)
-class Links:
-    """
-    The URL to the JSON cross-reference file.
-    """
-    xref_url: str = \
-        'https://raw.githubusercontent.com/Kitware/vtk-examples/gh-pages/src/Coverage/vtk_vtk-examples_xref.json'
-    # For testing.
-    # xref_url: str = \
-    #     'https://raw.githubusercontent.com/ajpmaclean/web-test/gh-pages/src/Coverage/vtk_vtk-examples_xref.json'
 
 def download_file(dl_path, dl_url, overwrite=False):
     """
@@ -56,7 +56,7 @@ def download_file(dl_path, dl_url, overwrite=False):
     """
     file_name = dl_url.split('/')[-1]
 
-    # Create necessary sub-directories in the dl_path
+    # Create necessary subdirectories in the dl_path
     # (if they don't exist).
     Path(dl_path).mkdir(parents=True, exist_ok=True)
     # Download if it doesn't exist in the directory overriding if overwrite is True.
@@ -100,29 +100,31 @@ def get_examples(d, vtk_class, lang, all_values=False, number=5, md_fmt=False):
     return len(links), links
 
 
-def get_crossref_dict(ref_dir):
+def get_crossref_dict(ref_dir, xref_url, overwrite=False):
     """
     Download and return the json cross-reference file.
 
     This function ensures that the dictionary is recent.
 
-    :param ref_dir: The directory where the file will be downloaded
-    :return: The dictionary cross-referencing vtk classes to examples
+    :param ref_dir: The directory where the file will be downloaded.
+    :param xref_url: The URL for the JSON cross-reference file.
+    :param overwrite: If true, do a download even if the file exists.
+    :return: The dictionary cross-referencing vtk classes to examples.
     """
-    path = download_file(ref_dir, Links.xref_url, overwrite=False)
+    path = download_file(ref_dir, xref_url, overwrite=overwrite)
     if not path.is_file():
         print(f'The path: {str(path)} does not exist.')
         return None
     dt = datetime.today().timestamp() - os.path.getmtime(path)
     # Force a new download if the time difference is > 10 minutes.
     if dt > 600:
-        path = download_file(ref_dir, Links.xref_url, overwrite=True)
+        path = download_file(ref_dir, xref_url, overwrite=True)
     with open(path) as json_file:
         return json.load(json_file)
 
 
 def main():
-    vtk_class, language, all_values, md, number = get_program_parameters()
+    vtk_class, language, all_values, md, number, xref_url, overwrite = get_program_parameters()
     language = language.lower()
     available_languages = {k.lower(): k for k in ['CSharp', 'Cxx', 'Java', 'Python', 'PythonicAPI']}
     available_languages.update({'cpp': 'Cxx', 'c++': 'Cxx', 'c#': 'CSharp'})
@@ -133,8 +135,9 @@ def main():
         return
     else:
         language = available_languages[language]
-    xref_dict = get_crossref_dict(tempfile.gettempdir())
+    xref_dict = get_crossref_dict(tempfile.gettempdir(), xref_url, overwrite)
     if xref_dict is None:
+        print('The dictionary cross-referencing vtk classes to examples was not downloaded.')
         return
 
     total_number, examples = get_examples(xref_dict, vtk_class, language, all_values=all_values, number=number,
