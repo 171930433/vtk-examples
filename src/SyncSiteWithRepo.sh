@@ -68,6 +68,7 @@ mkdir -p ${WEB_REPO_DIR}/site
 mkdir -p ${WEB_REPO_DIR}/_layouts
 mkdir -p ${WEB_REPO_DIR}/custom_theme
 mkdir -p ${WEB_REPO_DIR}/src/Artifacts
+mkdir -p ${WEB_REPO_DIR}/src/Coverage
 mkdir -p ${WEB_REPO_DIR}/src/Images
 mkdir -p ${WEB_REPO_DIR}/src/stylesheets
 mkdir -p ${WEB_REPO_DIR}/src/SupplementaryData
@@ -92,7 +93,7 @@ rsync -zavh src/VTKBook/Figures/ ${WEB_REPO_DIR}/src/VTKBook/Figures
 cp web_gitignore ${WEB_REPO_DIR}/.gitignore
 
 echo "3) Create coverage files"
-(cd src/Admin; python ./VTKClassesUsedInExamples.py -a .. ${WEB_REPO_DIR}/src/Coverage)
+(cd src/Admin; python ./VTKClassesUsedInExamples.py -a .. ${WEB_REPO_DIR}/src/Coverage -w ${WEB_SITE_URL})
 
 echo "4) Scrape the repo building the markdown files"
 rm -rf ${WEB_REPO_DIR}/docs/*
