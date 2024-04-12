@@ -174,6 +174,22 @@ class Mapper:
 
 
 @dataclass(frozen=True)
+class Property:
+    @dataclass(frozen=True)
+    class Interpolation:
+        VTK_FLAT: int = 0
+        VTK_GOURAUD: int = 1
+        VTK_PHONG: int = 2
+        VTK_PBR: int = 3
+
+    @dataclass(frozen=True)
+    class Representation:
+        VTK_POINTS: int = 0
+        VTK_WIREFRAME: int = 1
+        VTK_SURFACE: int = 2
+
+
+@dataclass(frozen=True)
 class SpiderPlotActor:
     @dataclass(frozen=True)
     class IndependentVariables:
