@@ -7,4 +7,4 @@ In order to do this, a JSON file listing the vtk examples by VTK class is obtain
 When you run this script by specifying the VTK Class and Language (one of: `CSharp`, `Cxx`, `Java`, `Python`, `PythonicAPI`), a list of links to the respective examples containing that class is returned. By default five or fewer examples are returned. If there are more than five examples for a class then five examples are randomly selected. You can override the maximum number of examples (e.g. `-n20`) or select all examples `-a`.
 
 !!! note
-    Options are also provided to force an overwrite of downloaded the JSON file (`-0`) or to change the URL to the JSON file (`-j`)
+    Options are also provided to force an overwrite of downloaded the JSON file (`-o`) or to change the URL to the JSON file (`-j`)
