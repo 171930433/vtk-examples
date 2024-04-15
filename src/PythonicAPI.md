@@ -121,9 +121,9 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [ConnectivityFilter](/PythonicAPI/Filtering/ConnectivityFilter) | Color any dataset type based on connectivity.
 [Curvatures](/PythonicAPI/PolyData/Curvatures) | Compute Gaussian, and Mean Curvatures.
 [CurvaturesAdjustEdges](/PythonicAPI/PolyData/CurvaturesAdjustEdges) | Get the Gaussian and Mean curvatures of a surface with adjustments for edge effects.
-[ExtractPolyLinesFromPolyData](/Python/PolyData/ExtractPolyLinesFromPolyData) | Extract polylines from polydata.
-[ExtractSelection](/Python/PolyData/ExtractSelection) |Extract selected points.
-[ExtractSelectionCells](/Python/PolyData/ExtractSelectionCells) | Extract cell, select cell.
+[ExtractPolyLinesFromPolyData](/PythonicAPI/PolyData/ExtractPolyLinesFromPolyData) | Extract polylines from polydata.
+[ExtractSelection](/PythonicAPI/PolyData/ExtractSelection) |Extract selected points.
+[ExtractSelectionCells](/PythonicAPI/PolyData/ExtractSelectionCells) | Extract cell, select cell.
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
@@ -176,8 +176,8 @@ This section includes examples of manipulating meshes.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
-[RGrid](/Python/PythonicAPI/RGrid) | Creating a rectilinear grid dataset. The coordinates along each axis are defined using an instance of vtkDataArray.
-[VisualizeRectilinearGrid](/Python/PythonicAPI/VisualizeRectilinearGrid) | Visualize the cells of a rectilinear grid.
+[RGrid](/PythonicAPI/RectilinearGrid/RGrid) | Creating a rectilinear grid dataset. The coordinates along each axis are defined using an instance of vtkDataArray.
+[VisualizeRectilinearGrid](/PythonicAPI/RectilinearGrid/VisualizeRectilinearGrid) | Visualize the cells of a rectilinear grid.
 
 ### Working with Unstructured 3D Data
 
@@ -241,12 +241,12 @@ This section includes ?vtkUnstructuredGrid?.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
-[ColoredSphere](/Python/PythonicAPI/ColoredSphere) | A simple sphere.
+[ColoredSphere](/PythonicAPI/Rendering/ColoredSphere) | A simple sphere.
 [GradientBackground](/PythonicAPI/Rendering/GradientBackground) | Demonstrates the background shading options.
 [PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
 [PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
 [PBR_Skybox_Anisotropy](/PythonicAPI/Rendering/PBR_Skybox_Anisotropy) | Demonstrates physically based rendering, a skybox, image based lighting, and anisotropic texturing.
-[TransformSphere](/Python/PythonicAPI/TransformSphere) | The addition of a transform filter to [ColoredSphere](/Python/Rendering/ColoredSphere).
+[TransformSphere](/PythonicAPI/Rendering/TransformSphere) | The addition of a transform filter to [ColoredSphere](/PythonicAPI/Rendering/ColoredSphere).
 
 ## Lighting
 
@@ -309,8 +309,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [MultiplePlots](/PythonicAPI/Plotting/MultiplePlots) | Display multiple plots by using viewports in a single render window.
-[ScatterPlot](/Python/Plotting/ScatterPlot) | Scatter plot.
-[SpiderPlot](/Python/Plotting/SpiderPlot) | Spider plot.
+[ScatterPlot](/PythonicAPI/Plotting/ScatterPlot) | Scatter plot.
+[SpiderPlot](/PythonicAPI/Plotting/SpiderPlot) | Spider plot.
 
 ## Animation
 
