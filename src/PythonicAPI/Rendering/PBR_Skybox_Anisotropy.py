@@ -2,6 +2,7 @@
 
 import json
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 # noinspection PyUnresolvedReferences
@@ -80,7 +81,7 @@ A Skybox is used to create the illusion of distant three-dimensional surrounding
     '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('file_name', help='The path to the JSON file.')
+    parser.add_argument('file_name', help='The path to the JSON file e.g. PBR_Skybox_Anisotropy.json.')
     parser.add_argument('-s', '--surface', default='',
                         help='The name of the surface. Overrides the surface entry in the json file.')
     parser.add_argument('-c', '--use_cubemap', action='store_true',
@@ -98,15 +99,16 @@ def main():
     colors = vtkNamedColors()
 
     # Default background color.
-    colors.SetColor('BkgColor', *[26, 51, 102, 255])
+    colors.color = ('BkgColor', (26, 51, 102, 255))
 
     fn, surface_name, use_cubemap, use_tonemapping, use_camera_omw = get_program_parameters()
 
     fn_path = Path(fn)
     if not fn_path.suffix:
-        fn_path = fn_path.with_suffix(".json")
+        fn_path = fn_path.with_suffix('.json')
     if not fn_path.is_file():
         print('Unable to find: ', fn_path)
+        return
     paths_ok, parameters = get_parameters(fn_path)
     if not paths_ok:
         return
@@ -137,9 +139,9 @@ def main():
     render_window.AddRenderer(ren2)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
     style = vtkInteractorStyleTrackballCamera()
-    interactor.SetInteractorStyle(style)
+    interactor.interactor_style = style
 
     # Set up tone mapping, so we can vary the exposure.
     # Custom Passes.
@@ -153,19 +155,17 @@ def main():
     passes.AddItem(lights)
     passes.AddItem(opaque)
     passes.AddItem(overlay)
-    seq.SetPasses(passes)
+    seq.passes = passes
     camera_p.delegate_pass = seq
 
-    tone_mapping_p = vtkToneMappingPass()
-    tone_mapping_p.delegate_pass = camera_p
+    tone_mapping_p = vtkToneMappingPass(delegate_pass=camera_p)
 
     if use_tonemapping:
         ren2.SetPass(tone_mapping_p)
 
     skybox = vtkSkybox()
 
-    irradiance = ren2.GetEnvMapIrradiance()
-    irradiance.SetIrradianceStep(0.3)
+    ren2.env_map_irradiance.irradiance_step = 0.3
 
     # Choose how to generate the skybox.
     is_hdr = False
@@ -197,25 +197,25 @@ def main():
         return
 
     # Turn off the default lighting and use image based lighting.
-    ren2.AutomaticLightCreationOff()
-    ren2.UseImageBasedLightingOn()
+    ren2.automatic_light_creation = False
+    ren2.use_image_based_lighting = True
     if is_hdr:
-        ren2.UseSphericalHarmonicsOn()
+        ren2.use_spherical_harmonics = True
         ren2.SetEnvironmentTexture(env_texture, False)
     else:
-        ren2.UseSphericalHarmonicsOff()
+        ren2.use_spherical_harmonics = False
         ren2.SetEnvironmentTexture(env_texture, True)
 
     # Get the textures
     base_color = read_texture(parameters['albedo'])
-    base_color.SetColorModeToDirectScalars()
-    base_color.UseSRGBColorSpaceOn()
+    base_color.color_mode = Texture.ColorMode.VTK_COLOR_MODE_DIRECT_SCALARS
+    base_color.use_s_r_g_b_color_space = True
     normal = read_texture(parameters['normal'])
-    normal.SetColorModeToDirectScalars()
+    normal.color_mode = Texture.ColorMode.VTK_COLOR_MODE_DIRECT_SCALARS
     material = read_texture(parameters['material'])
-    material.SetColorModeToDirectScalars()
+    material.color_mode = Texture.ColorMode.VTK_COLOR_MODE_DIRECT_SCALARS
     anisotropy = read_texture(parameters['anisotropy'])
-    anisotropy.SetColorModeToDirectScalars()
+    anisotropy.color_mode = Texture.ColorMode.VTK_COLOR_MODE_DIRECT_SCALARS
 
     # Get the surface.
     surface = parameters['object'].lower()
@@ -287,9 +287,9 @@ def main():
 
     if has_skybox:
         if gamma_correct:
-            skybox.GammaCorrectOn()
+            skybox.gamma_correct = True
         else:
-            skybox.GammaCorrectOff()
+            skybox.gamma_correct = False
         ren2.AddActor(skybox)
 
     # Create the slider callbacks to manipulate various parameters.
@@ -304,9 +304,9 @@ def main():
     slider_properties.position = {'point1': (0.1, y_val), 'point2': (0.9, y_val)}
     sw_exposure = make_slider_widget(slider_properties, interactor)
     if use_tonemapping:
-        sw_exposure.EnabledOn()
+        sw_exposure.enable = True
     else:
-        sw_exposure.EnabledOff()
+        sw_exposure.enable = False
     sw_exposure_cb = SliderCallbackExposure(tone_mapping_p)
     sw_exposure.AddObserver(vtkCommand.InteractionEvent, sw_exposure_cb)
 
@@ -781,7 +781,7 @@ def make_slider_widget(slider_properties, interactor):
                                            label_height=slider_properties.dimensions['label_height'],
                                            )
 
-    # Set the color properties
+    # Set the color properties.
     slider_rep.title_property.color = colors.GetColor3d(slider_properties.colors['title_color'])
     slider_rep.label_property.color = colors.GetColor3d(slider_properties.colors['label_color'])
     slider_rep.tube_property.color = colors.GetColor3d(slider_properties.colors['bar_color'])
@@ -789,10 +789,10 @@ def make_slider_widget(slider_properties, interactor):
     slider_rep.slider_property.color = colors.GetColor3d(slider_properties.colors['slider_color'])
     slider_rep.selected_property.color = colors.GetColor3d(slider_properties.colors['selected_color'])
 
-    # Set the position
-    slider_rep.point1_coordinate.SetCoordinateSystemToNormalizedViewport()
+    # Set the position.
+    slider_rep.point1_coordinate.coordinate_system = Coordinate.CoordinateSystem.VTK_NORMALIZED_VIEWPORT
     slider_rep.point1_coordinate.value = slider_properties.position['point1']
-    slider_rep.point2_coordinate.SetCoordinateSystemToNormalizedViewport()
+    slider_rep.point2_coordinate.coordinate_system = Coordinate.CoordinateSystem.VTK_NORMALIZED_VIEWPORT
     slider_rep.point2_coordinate.value = slider_properties.position['point2']
 
     widget = vtkSliderWidget(representation=slider_rep, interactor=interactor, enabled=True)
@@ -920,6 +920,35 @@ class PrintCallback:
             w2if >> writer
             writer.Write()
             print('Screenshot saved to:', self.path)
+
+
+@dataclass(frozen=True)
+class Texture:
+    @dataclass(frozen=True)
+    class Quality:
+        VTK_TEXTURE_QUALITY_DEFAULT: int = 0
+        VTK_TEXTURE_QUALITY_16BIT: int = 16
+        VTK_TEXTURE_QUALITY: int = 32
+
+    @dataclass(frozen=True)
+    class ColorMode:
+        VTK_COLOR_MODE_DEFAULT: int = 0
+        VTK_COLOR_MODE_MAP_SCALARS: int = 1
+        VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
+
+
+@dataclass(frozen=True)
+class Coordinate:
+    @dataclass(frozen=True)
+    class CoordinateSystem:
+        VTK_DISPLAY: int = 0
+        VTK_NORMALIZED_DISPLAY: int = 1
+        VTK_VIEWPORT: int = 2
+        VTK_NORMALIZED_VIEWPORT: int = 3
+        VTK_VIEW: int = 4
+        VTK_POSE: int = 5
+        VTK_WORLD: int = 6
+        VTK_USERDEFINED: int = 7
 
 
 if __name__ == '__main__':

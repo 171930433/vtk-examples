@@ -45,6 +45,20 @@ class ConnectivityFilter:
 
 
 @dataclass(frozen=True)
+class Coordinate:
+    @dataclass(frozen=True)
+    class CoordinateSystem:
+        VTK_DISPLAY: int = 0
+        VTK_NORMALIZED_DISPLAY: int = 1
+        VTK_VIEWPORT: int = 2
+        VTK_NORMALIZED_VIEWPORT: int = 3
+        VTK_VIEW: int = 4
+        VTK_POSE: int = 5
+        VTK_WORLD: int = 6
+        VTK_USERDEFINED: int = 7
+
+
+@dataclass(frozen=True)
 class Glyph3D:
     @dataclass(frozen=True)
     class ColorMode:
@@ -210,6 +224,21 @@ class TextProperty:
         VTK_TEXT_BOTTOM: int = 0
         VTK_TEXT_CENTERED: int = 1
         VTK_TEXT_TOP: int = 2
+
+
+@dataclass(frozen=True)
+class Texture:
+    @dataclass(frozen=True)
+    class Quality:
+        VTK_TEXTURE_QUALITY_DEFAULT: int = 0
+        VTK_TEXTURE_QUALITY_16BIT: int = 16
+        VTK_TEXTURE_QUALITY: int = 32
+
+    @dataclass(frozen=True)
+    class ColorMode:
+        VTK_COLOR_MODE_DEFAULT: int = 0
+        VTK_COLOR_MODE_MAP_SCALARS: int = 1
+        VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
 
 
 @dataclass(frozen=True)
