@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from dataclasses import dataclass
+
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
 # noinspection PyUnresolvedReferences
@@ -28,7 +30,7 @@ from vtkmodules.vtkRenderingCore import (
 def main():
     colors = vtkNamedColors()
 
-    colors.SetColor('BkgColor', [26, 51, 102, 255])
+    colors.SetColor('BkgColor', (26, 51, 102, 255))
 
     # Create a parametric function source, renderer, mapper, and actor
     surface = vtkParametricKuen(minimum_u=-4.5, maximum_u=4.5, minimum_v=0.05, maximum_v=vtkMath.Pi() - 0.05)
@@ -50,32 +52,43 @@ def main():
     render_window.AddRenderer(renderer)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
 
     # Setup a slider widget for each varying parameter.
-    slider_dimensions = {'tube_width': 0.008, 'slider_length': 0.008, 'title_height': 0.02, 'label_height': 0.02}
-    slider_range_name = {'minimum_value': -4.5, 'maximum_value': 4.5, 'value': -4.5, 'title_text': 'U min'}
-    slider_position = {'point1': (0.1, 0.1), 'point2': (0.9, 0.1)}
-    slider_widget_minimum_u = make_slider_widget(slider_dimensions, slider_range_name, slider_position, interactor)
-    slider_widget_minimum_u.AddObserver('InteractionEvent', SliderCallbackMinimumU(surface))
+    slider_properties = SliderProperties()
 
-    slider_range_name['value'] = 4.5
-    slider_range_name['title_text'] = 'U max'
-    slider_position = {'point1': (0.1, 0.9), 'point2': (0.9, 0.9)}
-    slider_widget_maximum_u = make_slider_widget(slider_dimensions, slider_range_name, slider_position, interactor)
-    slider_widget_maximum_u.AddObserver('InteractionEvent', SliderCallbackMaximumU(surface))
+    # Setup a slider widget for each varying parameter.
+    slider_properties.title_text = 'U min'
+    slider_properties.range['maximum_value'] = 4.5
+    slider_properties.range['minimum_value'] = -4.5
+    slider_properties.range['value'] = -4.5
+    slider_properties.dimensions['tube_width'] = 0.008
+    slider_properties.dimensions['slider_length'] = 0.008
+    slider_properties.dimensions['label_height'] = 0.02
+    slider_properties.dimensions['title_height'] = 0.02
+    slider_properties.position = {'point1': (0.1, 0.1), 'point2': (0.9, 0.1)}
+    slider_widget_minimum_u = make_slider_widget(slider_properties, interactor)
+    slider_widget_minimum_u.AddObserver(vtkCommand.InteractionEvent, SliderCallbackMinimumU(surface))
 
-    slider_range_name = {'minimum_value': 0.05, 'maximum_value': vtkMath.Pi() - 0.05, 'value': 0.0,
-                         'title_text': 'V min'}
-    slider_position = {'point1': (0.1, 0.1), 'point2': (0.1, 0.9)}
-    slider_widget_minimum_v = make_slider_widget(slider_dimensions, slider_range_name, slider_position, interactor)
-    slider_widget_minimum_v.AddObserver(vtkCommand.InteractionEvent, SliderCallbackMinimumV(surface))
+    slider_properties.title_text = 'U max'
+    slider_properties.range['value'] = 4.5
+    slider_properties.position = {'point1': (0.1, 0.9), 'point2': (0.9, 0.9)}
+    slider_widget_maximum_u = make_slider_widget(slider_properties, interactor)
+    slider_widget_maximum_u.AddObserver(vtkCommand.InteractionEvent, SliderCallbackMaximumU(surface))
 
-    slider_range_name['value'] = vtkMath.Pi() - 0.05
-    slider_range_name['title_text'] = 'V max'
-    slider_position = {'point1': (0.9, 0.1), 'point2': (0.9, 0.9)}
-    slider_widget_maximum_v = make_slider_widget(slider_dimensions, slider_range_name, slider_position, interactor)
-    slider_widget_maximum_v.AddObserver(vtkCommand.InteractionEvent, SliderCallbackMaximumV(surface))
+    slider_properties.title_text = 'V min'
+    slider_properties.range['maximum_value'] = vtkMath.Pi() - 0.05
+    slider_properties.range['minimum_value'] = 0.05
+    slider_properties.range['value'] = 0.05
+    slider_properties.position = {'point1': (0.1, 0.1), 'point2': (0.1, 0.9)}
+    slider_widget_minimum_v = make_slider_widget(slider_properties, interactor)
+    slider_widget_minimum_v.AddObserver(vtkCommand.InteractionEvent, SliderCallbackMaximumU(surface))
+
+    slider_properties.title_text = 'V max'
+    slider_properties.range['value'] = vtkMath.Pi() - 0.05
+    slider_properties.position = {'point1': (0.9, 0.1), 'point2': (0.9, 0.9)}
+    slider_widget_maximum_v = make_slider_widget(slider_properties, interactor)
+    slider_widget_maximum_v.AddObserver(vtkCommand.InteractionEvent, SliderCallbackMaximumU(surface))
 
     render_window.Render()
     renderer.active_camera.Azimuth(60)
@@ -87,40 +100,70 @@ def main():
     interactor.Start()
 
 
-def make_slider_widget(slider_dimensions, slider_range_name, slider_position, interactor):
+class SliderProperties:
+    """
+    These are default values.
+    """
+    dimensions = {
+        'tube_width': 0.008,
+        'slider_length': 0.01, 'slider_width': 0.02,
+        'end_cap_length': 0.005, 'end_cap_width': 0.05,
+        'title_height': 0.03, 'label_height': 0.025,
+    }
+    colors = {
+        'title_color': 'White', 'label_color': 'White', 'slider_color': 'White',
+        'selected_color': 'HotPink', 'bar_color': 'White', 'bar_ends_color': 'White',
+    }
+    range = {'minimum_value': 0.0, 'maximum_value': 1.0, 'value': 0.0}
+    title_text = '',
+    position = {'point1': (0.1, 0.1), 'point2': (0.9, 0.1)}
+
+
+def make_slider_widget(slider_properties, interactor):
     """
     Make a slider widget.
-    :param slider_dimensions: Dimensions of the slider.
-    :param slider_range_name: Slider range and name.
-    :param slider_position: The position of the slider.
+    :param slider_properties: range, title name, dimensions, colors, and position.
     :param interactor: The vtkInteractor.
     :return: The slider widget.
     """
+    colors = vtkNamedColors()
 
-    slider_rep = vtkSliderRepresentation2D(minimum_value=slider_range_name['minimum_value'],
-                                           maximum_value=slider_range_name['maximum_value'],
-                                           value=slider_range_name['value'],
-                                           title_text=slider_range_name['title_text'],
-                                           tube_width=slider_dimensions['tube_width'],
-                                           slider_length=slider_dimensions['slider_length'],
-                                           title_height=slider_dimensions['title_height'],
-                                           label_height=slider_dimensions['label_height'],
+    slider_rep = vtkSliderRepresentation2D(minimum_value=slider_properties.range['minimum_value'],
+                                           maximum_value=slider_properties.range['maximum_value'],
+                                           value=slider_properties.range['value'],
+                                           title_text=slider_properties.title_text,
+                                           tube_width=slider_properties.dimensions['tube_width'],
+                                           slider_length=slider_properties.dimensions['slider_length'],
+                                           slider_width=slider_properties.dimensions['slider_width'],
+                                           end_cap_length=slider_properties.dimensions['end_cap_length'],
+                                           end_cap_width=slider_properties.dimensions['end_cap_width'],
+                                           title_height=slider_properties.dimensions['title_height'],
+                                           label_height=slider_properties.dimensions['label_height'],
                                            )
 
-    slider_rep.point1_coordinate.SetCoordinateSystemToNormalizedDisplay()
-    slider_rep.point1_coordinate.value = slider_position['point1']
-    slider_rep.point2_coordinate.SetCoordinateSystemToNormalizedDisplay()
-    slider_rep.point2_coordinate.value = slider_position['point2']
+    # Set the color properties.
+    slider_rep.title_property.color = colors.GetColor3d(slider_properties.colors['title_color'])
+    slider_rep.label_property.color = colors.GetColor3d(slider_properties.colors['label_color'])
+    slider_rep.tube_property.color = colors.GetColor3d(slider_properties.colors['bar_color'])
+    slider_rep.cap_property.color = colors.GetColor3d(slider_properties.colors['bar_ends_color'])
+    slider_rep.slider_property.color = colors.GetColor3d(slider_properties.colors['slider_color'])
+    slider_rep.selected_property.color = colors.GetColor3d(slider_properties.colors['selected_color'])
 
-    slider = vtkSliderWidget(representation=slider_rep, interactor=interactor, enabled=True)
-    slider.SetAnimationModeToAnimate()
+    # Set the position.
+    slider_rep.point1_coordinate.coordinate_system = Coordinate.CoordinateSystem.VTK_NORMALIZED_VIEWPORT
+    slider_rep.point1_coordinate.value = slider_properties.position['point1']
+    slider_rep.point2_coordinate.coordinate_system = Coordinate.CoordinateSystem.VTK_NORMALIZED_VIEWPORT
+    slider_rep.point2_coordinate.value = slider_properties.position['point2']
 
-    return slider
+    widget = vtkSliderWidget(representation=slider_rep, interactor=interactor, enabled=True)
+    widget.SetAnimationModeToAnimate()
+
+    return widget
 
 
 # These callbacks do the actual work.
 # Callbacks for the interactions
-class SliderCallbackMinimumU():
+class SliderCallbackMinimumU:
     def __init__(self, kuen):
         self.kuen = kuen
 
@@ -133,7 +176,7 @@ class SliderCallbackMinimumU():
         self.kuen.minimum_u = value
 
 
-class SliderCallbackMaximumU():
+class SliderCallbackMaximumU:
     def __init__(self, kuen):
         self.kuen = kuen
 
@@ -146,7 +189,7 @@ class SliderCallbackMaximumU():
         self.kuen.maximum_u = value
 
 
-class SliderCallbackMinimumV():
+class SliderCallbackMinimumV:
     def __init__(self, kuen):
         self.kuen = kuen
 
@@ -170,6 +213,20 @@ class SliderCallbackMaximumV():
             value = self.kuen.minimum_v
             slider_widget.GetRepresentation().value = value
         self.kuen.maximum_v = value
+
+
+@dataclass(frozen=True)
+class Coordinate:
+    @dataclass(frozen=True)
+    class CoordinateSystem:
+        VTK_DISPLAY: int = 0
+        VTK_NORMALIZED_DISPLAY: int = 1
+        VTK_VIEWPORT: int = 2
+        VTK_NORMALIZED_VIEWPORT: int = 3
+        VTK_VIEW: int = 4
+        VTK_POSE: int = 5
+        VTK_WORLD: int = 6
+        VTK_USERDEFINED: int = 7
 
 
 if __name__ == '__main__':
