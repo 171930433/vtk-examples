@@ -174,6 +174,11 @@ This section includes examples of manipulating meshes.
 
 #### ?vtkRectilinearGrid?
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[RGrid](/Python/PythonicAPI/RGrid) | Creating a rectilinear grid dataset. The coordinates along each axis are defined using an instance of vtkDataArray.
+[VisualizeRectilinearGrid](/Python/PythonicAPI/VisualizeRectilinearGrid) | Visualize the cells of a rectilinear grid.
+
 ### Working with Unstructured 3D Data
 
 This section includes ?vtkUnstructuredGrid?.
@@ -187,7 +192,6 @@ This section includes ?vtkUnstructuredGrid?.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [MedicalDemo1](/PythonicAPI/Medical/MedicalDemo1) | Create a skin surface from volume data.
-
 
 ### Surface reconstruction
 
