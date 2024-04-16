@@ -6,7 +6,7 @@ You can initialize the properties of a wrapped VTK class by specifying keyword a
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Note that in the initialization of `?vtkMultiBlockPLOT3DReader?`, `SetFileName` is an alias for `SetXYZFileName` so you can use `file_name` instead of `x_y_z_file_name`.
+[WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Note that in the initialization of `?vtkMultiBlockPLOT3DReader?`, `SetFileName` is an alias for `SetXYZFileName` so you can use `file_name` instead of `xyz_file_name`.
 [ParametricKuenDemo](/PythonicAPI/GeometricObjects/ParametricKuenDemo) | Very useful in regards to the intitialization of `?vtkSliderRepresentation2D?` in `make_slider_widget(...)`.
 
 ## Set/Get Properties of a VTK Class

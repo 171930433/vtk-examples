@@ -209,7 +209,7 @@ def main():
     # Get the textures
     base_color = read_texture(parameters['albedo'])
     base_color.color_mode = Texture.ColorMode.VTK_COLOR_MODE_DIRECT_SCALARS
-    base_color.use_s_r_g_b_color_space = True
+    base_color.use_srgb_color_space = True
     normal = read_texture(parameters['normal'])
     normal.color_mode = Texture.ColorMode.VTK_COLOR_MODE_DIRECT_SCALARS
     material = read_texture(parameters['material'])

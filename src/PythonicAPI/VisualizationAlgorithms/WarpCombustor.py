@@ -31,8 +31,8 @@ def main():
     # Here we read data from an annular combustor. A combustor burns fuel and air
     # in a gas turbine (e.g., a jet engine) and the hot gas eventually makes its
     # way to the turbine section.
-    # Note that SetFileName is an alias for SetXYZFileName so you can use file_name instead of `x_y_z_file_name`.
-    pl3d = vtkMultiBlockPLOT3DReader(file_name=xyz_fn, q_file_name=q_fn, scalar_function_number=100,
+    # Note that SetFileName is an alias for SetXYZFileName so you can use `file_name` instead of `xyz_file_name`.
+    pl3d = vtkMultiBlockPLOT3DReader(xyz_file_name=xyz_fn, q_file_name=q_fn, scalar_function_number=100,
                                      vector_function_number=202)
     # Update and get the block that we want.
     pl3d.update()

@@ -111,8 +111,8 @@ def create_planes(func, number_of_planes):
     slice_num = -4
     slices = list()
     for i in range(0, number_of_planes):
-        extract = vtkExtractVOI(v_o_i=(0, dims[0] - 1, 0, dims[1] - 1,
-                                       slice_num + slice_incr, slice_num + slice_incr))
+        extract = vtkExtractVOI(voi=(0, dims[0] - 1, 0, dims[1] - 1,
+                                     slice_num + slice_incr, slice_num + slice_incr))
         slices.append(func >> extract)
         slice_num += slice_incr
 
@@ -138,8 +138,8 @@ def create_contours(func, number_of_planes, number_of_contours):
     ranges = [1.0, 6.0]
     contours = list()
     for i in range(0, number_of_planes):
-        extract = vtkExtractVOI(v_o_i=(0, dims[0] - 1, 0, dims[1] - 1,
-                                       slice_num + slice_incr, slice_num + slice_incr))
+        extract = vtkExtractVOI(voi=(0, dims[0] - 1, 0, dims[1] - 1,
+                                     slice_num + slice_incr, slice_num + slice_incr))
         contour = vtkContourFilter(number_of_contours=number_of_contours)
         contour.GenerateValues(number_of_contours, ranges)
         contours.append(func >> extract >> contour)

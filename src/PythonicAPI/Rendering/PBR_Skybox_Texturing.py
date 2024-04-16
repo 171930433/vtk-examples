@@ -215,11 +215,11 @@ def main():
 
     # Get the textures
     base_color = read_texture(parameters['albedo'])
-    base_color.use_s_r_g_b_color_space = True
+    base_color.use_srgb_color_space = True
     normal = read_texture(parameters['normal'])
     material = read_texture(parameters['material'])
     emissive = read_texture(parameters['emissive'])
-    emissive.use_s_r_g_b_color_space = True
+    emissive.use_srgb_color_space = True
 
     # Get the surface
     surface = parameters['object'].lower()

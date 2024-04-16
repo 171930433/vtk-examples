@@ -141,7 +141,6 @@ class OrientationObserver:
 
 
 def camera_orientation(cam):
-    # fmt1 = '{:>15s}'
     flt_fmt = '9.6g'
     fmt = '{:' + flt_fmt + '}'
     print(f'{"Position:":>15s},{" ".join(map(fmt.format, cam.position))}')
@@ -154,15 +153,15 @@ def camera_orientation(cam):
 def make_axes_actor():
     axes = vtkAxesActor(shaft_type=vtkAxesActor.CYLINDER_SHAFT, tip_type=vtkAxesActor.CONE_TIP,
                         x_axis_label_text='X', y_axis_label_text='Y', z_axis_label_text='Z',
-                        total_length=(1.0, 1.0, 1.0), )
+                        total_length=(1.0, 1.0, 1.0))
     axes.cylinder_radius = 1.25 * axes.cylinder_radius
     axes.cone_radius = 1.25 * axes.cone_radius
     axes.sphere_radius = 1.5 * axes.sphere_radius
 
     colors = vtkNamedColors()
-    axes.x_axis_caption_actor2_d.caption_text_property.color = colors.GetColor3d('FireBrick')
-    axes.y_axis_caption_actor2_d.caption_text_property.color = colors.GetColor3d('DarkGreen')
-    axes.z_axis_caption_actor2_d.caption_text_property.color = colors.GetColor3d('DarkBlue')
+    axes.x_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('FireBrick')
+    axes.y_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkGreen')
+    axes.z_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkBlue')
 
     return axes
 

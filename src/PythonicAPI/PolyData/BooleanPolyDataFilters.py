@@ -44,9 +44,9 @@ def get_program_parameters():
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('fn1', nargs='?', default=None,
-                        help='The polydata source file name,e.g. thingiverse/Grey_Nurse_Shark.stl.')
+                        help='The polydata source file name,e.g. Torso.vtp.')
     parser.add_argument('fn2', nargs='?', default=None,
-                        help='The polydata target file name, e.g. shark.ply.')
+                        help='The polydata target file name, e.g. ObliqueCone.vtp.')
     parser.add_argument('-o', '--operation', default='intersection',
                         help='The type of operation: union, intersection, or difference.')
     parser.add_argument('-l', '--loop', action='store_false',

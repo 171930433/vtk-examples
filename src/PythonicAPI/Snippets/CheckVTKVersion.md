@@ -15,7 +15,7 @@ from vtkmodules.vtkCommonCore import (
     vtkVersion
 )
 
-def vtk_version_ok(major, minor, build):
+def vtk_version_ok(major: int, minor: int, build: int):
     """
     Check the VTK version.
 
@@ -24,17 +24,8 @@ def vtk_version_ok(major, minor, build):
     :param build: Build version.
     :return: True if the requested VTK version is greater or equal to the actual VTK version.
     """
-    needed_version = 10000000000 * int(major) \
-                     + 100000000 * int(minor) \
-                     + int(build)
-    try:
-        vtk_version_number = VTK_VERSION_NUMBER
-    except AttributeError:
-        # Expand component-wise comparisons for VTK versions < 8.90.
-        ver = vtkVersion()
-        vtk_version_number = 10000000000 * ver.v_t_k_major_version() \
-                             + 100000000 * ver.v_t_k_minor_version() \
-                             + ver.v_t_k_build_version()
+    needed_version = 10000000000 * int(major) + 100000000 * int(minor) + int(build)
+    vtk_version_number = VTK_VERSION_NUMBER
     if vtk_version_number >= needed_version:
         return True
     else:
@@ -46,18 +37,21 @@ def vtk_version_ok(major, minor, build):
 
 ``` Python
 
-    if vtk_version_ok(*ver):
+    current_version = tuple(map(int, vtkVersion.GetVTKVersion().split('.')))
+    if vtk_version_ok(*current_version):
         try:
-            print('Our newest version of the code.')
+            print(f'This code works for VTK Version {vtkVersion.GetVTKVersion()}.')
+            # ...
         except AttributeError:
             pass
     else:
-        print('This is code for older versions of VTK.')
+        print(f'This is code for older versions of VTK <= {vtkVersion.GetVTKVersion()}.')
+        # ...
     print('Rest of the code.')
+    # ...
 
 ```
 
 See:
 
-- [PBR_Skybox](../../Rendering/PBR_Skybox) for a typical usage example. Here we are deciding to use `vtkCameraOrientationWidget` instead of `vtkOrientationMarkerWidget` if the VTK version is >= 9.0.20210718.
 - [CheckVTKVersion](../../Utilities/CheckVTKVersion) for a test/example.

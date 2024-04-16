@@ -53,7 +53,7 @@ def main():
     reader_volume = vtkMetaImageReader(file_name=ifn)
 
     # Extract the region of interest.
-    voi = vtkExtractVOI(v_o_i=(0, 517, 0, 228, 0, 392), sample_rate=(1, 1, 1))
+    voi = vtkExtractVOI(voi=(0, 517, 0, 228, 0, 392), sample_rate=(1, 1, 1))
 
     # Prepare surface generation.
     # For label images.
