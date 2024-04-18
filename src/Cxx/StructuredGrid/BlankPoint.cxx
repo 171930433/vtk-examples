@@ -7,9 +7,9 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
 #include <vtkStructuredGrid.h>
+#include <vtkStructuredGridGeometryFilter.h>
 
 #include <iostream>
-#include <string>
 
 int main(int, char*[])
 {
@@ -22,6 +22,7 @@ int main(int, char*[])
 
   unsigned int gridSize = 8;
   unsigned int counter = 0;
+  unsigned int ptIdx = 0;
   // Create a 5x5 grid of points
   for (unsigned int j = 0; j < gridSize; j++)
   {
@@ -31,6 +32,7 @@ int main(int, char*[])
       {
         points->InsertNextPoint(i, j, 2);
         std::cout << "The different point is number " << counter << std::endl;
+        ptIdx = counter;
       }
       else
       {
@@ -41,12 +43,10 @@ int main(int, char*[])
     }
   }
 
-  // Specify the dimensions of the grid
+  // Specify the dimensions of the grid, set the points and blank one point.
   structuredGrid->SetDimensions(gridSize, gridSize, 1);
-
   structuredGrid->SetPoints(points);
-
-  structuredGrid->BlankPoint(27);
+  structuredGrid->BlankPoint(ptIdx);
   structuredGrid->Modified();
 
   // Check.
@@ -62,20 +62,27 @@ int main(int, char*[])
   };
 
   // Should not be visible.
-  isVisible(27);
+  isVisible(ptIdx);
   // Should be visible.
   isVisible(7);
 
-  // Create a mapper and actor
+  // We need the geometry filter to ensure that the
+  // blanked point and surrounding faces is missing.
+  vtkNew<vtkStructuredGridGeometryFilter>geometryFilter;
+  geometryFilter->SetInputData(structuredGrid);
+
+  // Create a mapper and actor.
   vtkNew<vtkDataSetMapper> gridMapper;
-  gridMapper->SetInputData(structuredGrid);
+  // gridMapper->SetInputData(structuredGrid);
+  gridMapper->SetInputConnection(geometryFilter->GetOutputPort());
+
 
   vtkNew<vtkActor> gridActor;
   gridActor->SetMapper(gridMapper);
   gridActor->GetProperty()->EdgeVisibilityOn();
   gridActor->GetProperty()->SetEdgeColor(colors->GetColor3d("Blue").GetData());
 
-  // Create a renderer, render window, and interactor
+  // Create a renderer, render window, and interactor.
   vtkNew<vtkRenderer> renderer;
   vtkNew<vtkRenderWindow> renderWindow;
   renderWindow->AddRenderer(renderer);
@@ -84,11 +91,11 @@ int main(int, char*[])
   vtkNew<vtkRenderWindowInteractor> renderWindowInteractor;
   renderWindowInteractor->SetRenderWindow(renderWindow);
 
-  // Add the actor to the scene
+  // Add the actor to the scene.
   renderer->AddActor(gridActor);
   renderer->SetBackground(colors->GetColor3d("ForestGreen").GetData());
 
-  // Render and interact
+  // Render and interact.
   renderWindow->Render();
 
   renderWindowInteractor->Start();
