@@ -177,6 +177,10 @@ This section includes examples of manipulating meshes.
 
 #### ?vtkStructuredPoints?
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[Vol](/PythonicAPI/StructuredPoints/Vol) | Creating a image data dataset. Scalar data is generated from the equation for a sphere. Volume dimensions are 26 x 26 x 26.
+
 #### ?vtkRectilinearGrid?
 
 | Example Name | Description | Image |
