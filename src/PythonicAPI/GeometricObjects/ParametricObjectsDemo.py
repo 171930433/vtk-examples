@@ -213,7 +213,7 @@ def main():
                     mask_pts = vtkMaskPoints(random_mode=True, maximum_number_of_points=150)
 
                     arrow = vtkArrowSource(tip_resolution=16, tip_length=0.3, tip_radius=0.1)
-                    glyph = vtkGlyph3D(source_connection=arrow.output_port(),
+                    glyph = vtkGlyph3D(source_connection=arrow.output_port,
                                        vector_mode=glyph_vector_mode['use_normal'], orient=True,
                                        scale_factor=get_maximum_length(bounds) / 10.0)
 

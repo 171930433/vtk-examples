@@ -728,9 +728,9 @@ def get_glyphs(surface, arrow_scale=None, scale_factor=None, reverse_normals=Fal
     p = (arrow >> transform_filter).update().output
 
     glyph = vtkGlyph3D(source_data=p, scale_factor=scale_factor,
-                       vector_mode=Glyph3D.VectorMode().VTK_USE_NORMAL,
-                       color_mode=Glyph3D.ColorMode().VTK_COLOR_BY_VECTOR,
-                       scale_mode=Glyph3D.ScaleMode().VTK_SCALE_BY_VECTOR
+                       vector_mode=Glyph3D.VectorMode.VTK_USE_NORMAL,
+                       color_mode=Glyph3D.ColorMode.VTK_COLOR_BY_VECTOR,
+                       scale_mode=Glyph3D.ScaleMode.VTK_SCALE_BY_VECTOR
                        )
     glyph.OrientOn()
 
