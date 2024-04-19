@@ -23,13 +23,20 @@ class BandedPolyDataContourFilter:
 
 
 @dataclass(frozen=True)
-class Curvatures:
+class ColorTransferFunction:
     @dataclass(frozen=True)
-    class CurvatureType:
-        VTK_CURVATURE_GAUSS: int = 0
-        VTK_CURVATURE_MEAN: int = 1
-        VTK_CURVATURE_MAXIMUM: int = 2
-        VTK_CURVATURE_MINIMUM: int = 3
+    class ColorSpace:
+        VTK_CTF_RGB: int = 0
+        VTK_CTF_HSV: int = 1
+        VTK_CTF_LAB: int = 2
+        VTK_CTF_DIVERGING: int = 3
+        VTK_CTF_LAB_CIEDE2000: int = 4
+        VTK_CTF_STEP: int = 5
+
+    @dataclass(frozen=True)
+    class Scale:
+        VTK_CTF_LINEAR: int = 0
+        VTK_CTF_LOG10: int = 1
 
 
 @dataclass(frozen=True)
@@ -56,6 +63,16 @@ class Coordinate:
         VTK_POSE: int = 5
         VTK_WORLD: int = 6
         VTK_USERDEFINED: int = 7
+
+
+@dataclass(frozen=True)
+class Curvatures:
+    @dataclass(frozen=True)
+    class CurvatureType:
+        VTK_CURVATURE_GAUSS: int = 0
+        VTK_CURVATURE_MEAN: int = 1
+        VTK_CURVATURE_MAXIMUM: int = 2
+        VTK_CURVATURE_MINIMUM: int = 3
 
 
 @dataclass(frozen=True)

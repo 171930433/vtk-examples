@@ -96,8 +96,7 @@ def main(argv):
     color_series = vtkColorSeries(color_scheme=color_map_idx)
     print(f'Using color scheme #: {color_series.GetColorScheme()}, {color_series.GetColorSchemeName()}')
 
-    lut = vtkColorTransferFunction()
-    lut.SetColorSpaceToHSV()
+    lut = vtkColorTransferFunction(color_space=ColorTransferFunction.ColorSpace.VTK_CTF_HSV)
 
     # Use a color series to create a transfer function
     for i in range(0, color_series.GetNumberOfColors()):
@@ -308,6 +307,23 @@ def make_scalar_bar_widget(scalar_bar_properties, text_property, interactor):
     widget = vtkScalarBarWidget(representation=sb_rep, scalar_bar_actor=sb_actor, interactor=interactor, enabled=True)
 
     return widget
+
+
+@dataclass(frozen=True)
+class ColorTransferFunction:
+    @dataclass(frozen=True)
+    class ColorSpace:
+        VTK_CTF_RGB: int = 0
+        VTK_CTF_HSV: int = 1
+        VTK_CTF_LAB: int = 2
+        VTK_CTF_DIVERGING: int = 3
+        VTK_CTF_LAB_CIEDE2000: int = 4
+        VTK_CTF_STEP: int = 5
+
+    @dataclass(frozen=True)
+    class Scale:
+        VTK_CTF_LINEAR: int = 0
+        VTK_CTF_LOG10: int = 1
 
 
 @dataclass(frozen=True)

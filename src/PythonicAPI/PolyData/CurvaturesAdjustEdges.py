@@ -500,8 +500,7 @@ def get_diverging_lut():
 
     :return:
     """
-    ctf = vtkColorTransferFunction()
-    ctf.SetColorSpaceToDiverging()
+    ctf = vtkColorTransferFunction(color_space=ColorTransferFunction.ColorSpace.VTK_CTF_DIVERGING)
     # Cool to warm.
     ctf.AddRGBPoint(0.0, 0.230, 0.299, 0.754)
     ctf.AddRGBPoint(0.5, 0.865, 0.865, 0.865)
@@ -521,8 +520,7 @@ def get_diverging_lut():
 def get_diverging_lut1():
     colors = vtkNamedColors()
     # Colour transfer function.
-    ctf = vtkColorTransferFunction()
-    ctf.SetColorSpaceToDiverging()
+    ctf = vtkColorTransferFunction(color_space=ColorTransferFunction.ColorSpace.VTK_CTF_DIVERGING)
     p1 = [0.0] + list(colors.GetColor3d('MidnightBlue'))
     p2 = [0.5] + list(colors.GetColor3d('Gainsboro'))
     p3 = [1.0] + list(colors.GetColor3d('DarkOrange'))
@@ -1008,6 +1006,23 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
         text_positions[k] = {'p': [x0, y0, 0], 'p2': [delta_sz, dy, 0]}
 
     return text_positions
+
+
+@dataclass(frozen=True)
+class ColorTransferFunction:
+    @dataclass(frozen=True)
+    class ColorSpace:
+        VTK_CTF_RGB: int = 0
+        VTK_CTF_HSV: int = 1
+        VTK_CTF_LAB: int = 2
+        VTK_CTF_DIVERGING: int = 3
+        VTK_CTF_LAB_CIEDE2000: int = 4
+        VTK_CTF_STEP: int = 5
+
+    @dataclass(frozen=True)
+    class Scale:
+        VTK_CTF_LINEAR: int = 0
+        VTK_CTF_LOG10: int = 1
 
 
 @dataclass(frozen=True)

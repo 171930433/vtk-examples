@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from dataclasses import dataclass
+
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
 # noinspection PyUnresolvedReferences
@@ -145,8 +147,7 @@ def get_diverging_lut(ct=0):
         ct = 0
         print('The selected diverging color map is unavailable. Using the default cool to warm one.')
 
-    ctf = vtkColorTransferFunction()
-    ctf.SetColorSpaceToDiverging()
+    ctf = vtkColorTransferFunction(color_space=ColorTransferFunction.ColorSpace.VTK_CTF_DIVERGING)
     for scheme in cm[ct]:
         ctf.AddRGBPoint(*scheme)
 
@@ -161,6 +162,23 @@ def get_diverging_lut(ct=0):
         lut.SetTableValue(i, rgba)
 
     return lut
+
+
+@dataclass(frozen=True)
+class ColorTransferFunction:
+    @dataclass(frozen=True)
+    class ColorSpace:
+        VTK_CTF_RGB: int = 0
+        VTK_CTF_HSV: int = 1
+        VTK_CTF_LAB: int = 2
+        VTK_CTF_DIVERGING: int = 3
+        VTK_CTF_LAB_CIEDE2000: int = 4
+        VTK_CTF_STEP: int = 5
+
+    @dataclass(frozen=True)
+    class Scale:
+        VTK_CTF_LINEAR: int = 0
+        VTK_CTF_LOG10: int = 1
 
 
 if __name__ == '__main__':

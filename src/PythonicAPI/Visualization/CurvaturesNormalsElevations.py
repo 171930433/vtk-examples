@@ -642,8 +642,7 @@ def get_diverging_lut():
 
     :return: The lookup table.
     """
-    ctf = vtkColorTransferFunction()
-    ctf.SetColorSpaceToDiverging()
+    ctf = vtkColorTransferFunction(color_space=ColorTransferFunction.ColorSpace.VTK_CTF_DIVERGING)
     # Cool to warm.
     ctf.AddRGBPoint(0.0, 0.085, 0.532, 0.201)
     ctf.AddRGBPoint(0.5, 0.865, 0.865, 0.865)
@@ -1236,6 +1235,23 @@ class BandedPolyDataContourFilter:
     class ScalarMode:
         VTK_SCALAR_MODE_INDEX: int = 0
         VTK_SCALAR_MODE_VALUE: int = 1
+
+
+@dataclass(frozen=True)
+class ColorTransferFunction:
+    @dataclass(frozen=True)
+    class ColorSpace:
+        VTK_CTF_RGB: int = 0
+        VTK_CTF_HSV: int = 1
+        VTK_CTF_LAB: int = 2
+        VTK_CTF_DIVERGING: int = 3
+        VTK_CTF_LAB_CIEDE2000: int = 4
+        VTK_CTF_STEP: int = 5
+
+    @dataclass(frozen=True)
+    class Scale:
+        VTK_CTF_LINEAR: int = 0
+        VTK_CTF_LOG10: int = 1
 
 
 @dataclass(frozen=True)
