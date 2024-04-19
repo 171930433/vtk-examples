@@ -173,7 +173,7 @@ Try this example with a `.csv` file to see what happens.
 When using vtkLookupTable, code like:
 
 ``` Python
-        lut.SetTableValue(i, r, g, b, 1.0)
+        lut.table_value = (i, r, g, b, 1.0)
 ```
 
 will give the wrong color.
