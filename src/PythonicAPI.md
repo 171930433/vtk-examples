@@ -261,6 +261,15 @@ This section includes ?vtkUnstructuredGrid?.
 
 ## Texture Mapping
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[AnimateVectors](/PythonicAPI/Texture/AnimateVectors) | One frame from a vector field animation using texture maps.
+[TextureCutQuadric](/PythonicAPI/Texture/TextureCutQuadric) | Cut a quadric with boolean textures.
+[TextureCutSphere](/PythonicAPI/Texture/TextureCutSphere) | Examples of texture thresholding using a boolean combination of two planes to cut nested spheres.
+[TexturePlane](/PythonicAPI/Texture/TexturePlane) | Example of texture mapping.
+[TextureThreshold](/PythonicAPI/Texture/TextureThreshold) | Demonstrate the use of scalar thresholds to show values of flow density on three planes.
+
+
 ## Tutorial
 
 If you are new to VTK then these tutorials will help to get you started.
