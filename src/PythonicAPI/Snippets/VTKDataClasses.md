@@ -1,19 +1,19 @@
-#!/usr/bin/env python3
+### Introduction
 
-from dataclasses import dataclass
+These immutable dataclasses are usually used in the initialization VTK classes or to replace the Set/Get functions that set and get these constants.
 
-"""
-    These handle the "#define VTK_SOME_CONSTANT x" in the VTK C++ code.
-    The outer dataclass class name consists of the VTK class name
-     (without the leading vtk).
-    The nested dataclasses are named after the relevant macro name in the
-     VTK class.
-    
-    Note: To find these constants, use the link to the header in the
-          documentation for the class.
-"""
+These handle the `#define VTK_SOME_CONSTANT x` in the VTK C++ code.  The outer dataclass class name consists of the VTK class name (without the leading vtk).
 
+The nested dataclasses are named after the relevant function/macro name in the VTK class.
 
+The big advantage of using dataclasses is that:
+
+- The values in the class are constant because of `frozen=True`
+- We can use meaningful names consistent with the naming of the VTK defines e.g. `VTK_SCALAR_MODE_INDEX`
+
+For example:
+
+``` Python
 @dataclass(frozen=True)
 class BandedPolyDataContourFilter:
     @dataclass(frozen=True)
@@ -21,7 +21,71 @@ class BandedPolyDataContourFilter:
         VTK_SCALAR_MODE_INDEX: int = 0
         VTK_SCALAR_MODE_VALUE: int = 1
 
+```
 
+Here:
+
+- `BandedPolyDataContourFilter` refers to `?vtkBandedPolyDataContourFilter?`
+- `ScalarMode` refers to the functions in the class called `SetScalarModeToIndex()` and `SetScalarModeToValue()`. This is why this subclass is named `ScalarMode`.
+
+This allows us to write code like this:
+
+``` Python
+    bcf = ?vtkBandedPolyDataContourFilter?(
+        input_data=p,
+        scalar_mode=BandedPolyDataContourFilter.ScalarMode.VTK_SCALAR_MODE_INDEX,
+        generate_contour_edges=True)
+
+    # Use either the minimum or maximum value for each band.
+    for k in bands:
+        bcf.SetValue(k, bands[k][2])
+
+```
+
+Instead of:
+
+``` Python
+    bcf = ?vtkBandedPolyDataContourFilter?()
+    bcf.SetInputData(cc.GetOutput())
+    # Use either the minimum or maximum value for each band.
+    for k in bands:
+        bcf.SetValue(k, bands[k][2])
+    # We will use an indexed lookup table.
+    bcf.SetScalarModeToIndex()
+    bcf.GenerateContourEdgesOn()
+
+```
+
+For an example of the usage of dataclasses, please see: [CurvaturesNormalsElevations](../../Visualization/CurvaturesNormalsElevations).
+
+!!! note
+    Just copy the needed dataclasses into your own code.
+    More dataclasses will be added in alphabetical order as the need arises.
+
+!!! note
+    Generally there is no need for a dataclass if an enum has been used in the C++ code and it is public.
+
+To use these dataclasses, remember to import the following:
+
+``` Python
+from dataclasses import dataclass
+```
+
+### BandedPolyDataContourFilter
+
+``` Python
+@dataclass(frozen=True)
+class BandedPolyDataContourFilter:
+    @dataclass(frozen=True)
+    class ScalarMode:
+        VTK_SCALAR_MODE_INDEX: int = 0
+        VTK_SCALAR_MODE_VALUE: int = 1
+
+```
+
+### ColorTransferFunction
+
+``` Python
 @dataclass(frozen=True)
 class ColorTransferFunction:
     @dataclass(frozen=True)
@@ -39,6 +103,11 @@ class ColorTransferFunction:
         VTK_CTF_LOG10: int = 1
 
 
+```
+
+### ConnectivityFilter
+
+``` Python
 @dataclass(frozen=True)
 class ConnectivityFilter:
     @dataclass(frozen=True)
@@ -51,6 +120,11 @@ class ConnectivityFilter:
         VTK_EXTRACT_CLOSEST_POINT_REGION: int = 6
 
 
+```
+
+### Coordinate
+
+``` Python
 @dataclass(frozen=True)
 class Coordinate:
     @dataclass(frozen=True)
@@ -65,6 +139,11 @@ class Coordinate:
         VTK_USERDEFINED: int = 7
 
 
+```
+
+### Curvatures
+
+``` Python
 @dataclass(frozen=True)
 class Curvatures:
     @dataclass(frozen=True)
@@ -75,6 +154,11 @@ class Curvatures:
         VTK_CURVATURE_MINIMUM: int = 3
 
 
+```
+
+### Glyph3D
+
+``` Python
 @dataclass(frozen=True)
 class Glyph3D:
     @dataclass(frozen=True)
@@ -104,6 +188,11 @@ class Glyph3D:
         VTK_FOLLOW_CAMERA_DIRECTION: int = 3
 
 
+```
+
+### ImageCanvasSource2D
+
+``` Python
 @dataclass(frozen=True)
 class ImageCanvasSource2D:
     @dataclass(frozen=True)
@@ -120,6 +209,11 @@ class ImageCanvasSource2D:
         VTK_DOUBLE: int = 11
 
 
+```
+
+### ImageCast
+
+``` Python
 @dataclass(frozen=True)
 class ImageCast:
     @dataclass(frozen=True)
@@ -136,6 +230,11 @@ class ImageCast:
         VTK_DOUBLE: int = 11
 
 
+```
+
+### ImageMathematics
+
+``` Python
 @dataclass(frozen=True)
 class ImageMathematics:
     @dataclass(frozen=True)
@@ -163,6 +262,11 @@ class ImageMathematics:
         VTK_REPLACECBYK: int = 20
 
 
+```
+
+### LandmarkTransform
+
+``` Python
 @dataclass(frozen=True)
 class LandmarkTransform:
     @dataclass(frozen=True)
@@ -172,6 +276,11 @@ class LandmarkTransform:
         VTK_LANDMARK_AFFINE: int = 12
 
 
+```
+
+### LookupTable
+
+``` Python
 @dataclass(frozen=True)
 class LookupTable:
     @dataclass(frozen=True)
@@ -180,6 +289,11 @@ class LookupTable:
         VTK_SCALE_LOG10: int = 1
 
 
+```
+
+### Mapper
+
+``` Python
 @dataclass(frozen=True)
 class Mapper:
     @dataclass(frozen=True)
@@ -204,6 +318,11 @@ class Mapper:
         VTK_SCALAR_MODE_USE_FIELD_DATA: int = 5
 
 
+```
+
+### Property
+
+``` Python
 @dataclass(frozen=True)
 class Property:
     @dataclass(frozen=True)
@@ -220,6 +339,11 @@ class Property:
         VTK_SURFACE: int = 2
 
 
+```
+
+### SpiderPlotActor
+
+``` Python
 @dataclass(frozen=True)
 class SpiderPlotActor:
     @dataclass(frozen=True)
@@ -228,6 +352,11 @@ class SpiderPlotActor:
         VTK_IV_ROW: int = 1
 
 
+```
+
+### TextProperty
+
+``` Python
 @dataclass(frozen=True)
 class TextProperty:
     @dataclass(frozen=True)
@@ -243,6 +372,11 @@ class TextProperty:
         VTK_TEXT_TOP: int = 2
 
 
+```
+
+### Texture
+
+``` Python
 @dataclass(frozen=True)
 class Texture:
     @dataclass(frozen=True)
@@ -258,6 +392,11 @@ class Texture:
         VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
 
 
+```
+
+### VolumeProperty
+
+``` Python
 @dataclass(frozen=True)
 class VolumeProperty:
     @dataclass(frozen=True)
@@ -265,3 +404,5 @@ class VolumeProperty:
         VTK_NEAREST_INTERPOLATION: int = 0
         VTK_LINEAR_INTERPOLATION: int = 1
         VTK_CUBIC_INTERPOLATION: int = 2
+
+```

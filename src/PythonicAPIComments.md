@@ -148,7 +148,9 @@ The real advantage of this approach is that the defined VTK constants are used i
 
 | Example Name | Comments | Image |
 | -------------- | ---------------------- | ------- |
-[VTKDataClasses](/PythonicAPI/Utilities/VTKDataClasses) | The VTK immutable data classes for constants, these are usually used to initialize VTK classes.
+[VTKDataClasses](/PythonicAPI/Snippets/VTKDataClasses.md) | This snippet defines immutable dataclasses that can be used in the initialization of VTK classes or to replace the Set/Get functions that set and get these constants.
+[CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | A lot of immutable dataclasses are used in this example
+
 
 ## Python functions and pipelines
 
@@ -166,7 +168,12 @@ Try this example with a `.csv` file to see what happens.
 | -------------- | ---------------------- | ------- |
 [ReadAllPolyDataTypesDemo](/PythonicAPI/IO/ReadAllPolyDataTypesDemo) | `read_poly_data(pth)` returns polydata that is fed directly into the mapper.
 
+## Snippets
+
+Here are some code snippets that can be directly dropped into your code [Snippets](/PythonicAPI/Snippets.md).
+
 ## PythonicAPI hints
+
 
 ### ?vtkLookupTable?
 
