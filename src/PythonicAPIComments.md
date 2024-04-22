@@ -172,27 +172,6 @@ Try this example with a `.csv` file to see what happens.
 
 Here are some code snippets that can be directly dropped into your code [Snippets](/PythonicAPI/Snippets.md).
 
-## PythonicAPI hints
-
-
-### ?vtkLookupTable?
-
-When using vtkLookupTable, code like:
-
-``` Python
-        lut.table_value = (i, r, g, b, 1.0)
-```
-
-will give the wrong color.
-
-Keep using:
-
-``` Python
-        lut.SetTableValue(i, r, g, b, 1.0)
-```
-
-See [SmoothDiscreteFlyingEdges3D](/PythonicAPI/Modelling/SmoothDiscreteFlyingEdges3D)
-
 ## Python hints
 
 ### Make a tuple if you have a starred expression

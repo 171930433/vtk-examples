@@ -134,7 +134,7 @@ def make_colors(n):
 
     lut = vtkLookupTable(number_of_colors=n, table_range=(0, n - 1), scale=LookupTable.Scale.VTK_SCALE_LINEAR)
     lut.Build()
-    lut.SetTableValue(0, 0.0, 0.0, 0.0, 1.0)
+    lut.table_value = (0, 0.0, 0.0, 0.0, 1.0)
 
     random_sequence = vtkMinimalStandardRandomSequence()
     random_sequence.SetSeed(5071)
@@ -145,7 +145,7 @@ def make_colors(n):
         random_sequence.Next()
         b = random_sequence.GetRangeValue(0.4, 1)
         random_sequence.Next()
-        lut.SetTableValue(i, r, g, b, 1.0)
+        lut.table_value = (i, r, g, b, 1.0)
 
     return lut
 

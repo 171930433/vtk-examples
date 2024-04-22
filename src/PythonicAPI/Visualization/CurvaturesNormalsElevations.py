@@ -656,7 +656,7 @@ def get_diverging_lut():
     for i in range(0, table_size):
         rgba = list(ctf.GetColor(float(i) / table_size))
         rgba.append(1)
-        lut.SetTableValue(i, rgba)
+        lut.table_value = (i, rgba)
 
     return lut
 
@@ -676,11 +676,11 @@ def reverse_lut(lut):
         v = float(i)
         lut.GetColor(v, rgba)
         rgba.append(lut.GetOpacity(v))
-        lutr.SetTableValue(t - i, rgba)
-    t = lut.GetNumberOfAnnotatedValues() - 1
+        lutr.table_value = (t - i, rgba)
+    t = lut.number_of_annotated_values - 1
     rev_range = reversed(list(range(t + 1)))
     for i in rev_range:
-        lutr.SetAnnotation(t - i, lut.GetAnnotation(i))
+        lutr.annotation = (t - i, lut.GetAnnotation(i))
     return lutr
 
 
