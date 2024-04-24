@@ -14,7 +14,7 @@
 // https://en.wikipedia.org/wiki/Lorenz_system
 static void Lorenz(void* arg)
 {
-  double sigma = 10.0; /* The Lorenz paramaters */
+  double sigma = 10.0; /* The Lorenz parameters */
   double beta = 8.0 / 3.0;
   double rho = 28.0;
   double h = .001; /* Integration step size */
