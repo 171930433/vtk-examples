@@ -120,7 +120,7 @@ def main(fn):
                                     bold=True, italic=False, shadow=False,
                                     font_size=12, font_family_as_string='Courier',
                                     justification=TextProperty.Justification.VTK_TEXT_CENTERED,
-                                    vertical_justification=TextProperty.VerticalJustification().VTK_TEXT_CENTERED)
+                                    vertical_justification=TextProperty.VerticalJustification.VTK_TEXT_CENTERED)
 
     # Setup viewports for the renderers.
     x_grid_dimensions = 2

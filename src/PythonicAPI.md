@@ -209,7 +209,17 @@ This section includes ?vtkUnstructuredGrid?.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [CheckVTKVersion](/PythonicAPI/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
+[ColorMapToLUT_JSON](/PythonicAPI/Utilities/ColorMapToLUT_JSON) | Take a JSON description of a colormap and convert it to a VTK colormap.
+[ColorMapToLUT_XML](/PythonicAPI/Utilities/ColorMapToLUT_XML) | Take an XML description of a colormap and convert it to a VTK colormap.
+[ColorMapToLUT](/PythonicAPI/Utilities/ColorMapToLUT) | Use vtkDiscretizableColorTransferFunction to generate a VTK colormap.
+[RescaleReverseLUT](/PythonicAPI/Utilities/RescaleReverseLUT) | Demonstrate how to adjust a colormap so that the colormap scalar range matches the scalar range on the object. You can optionally reverse the colors.
+[ResetCameraOrientation](/PythonicAPI/Utilities/ResetCameraOrientation) | Reset camera orientation to a previously saved orientation.
+[SaveSceneToFieldData](/PythonicAPI/Utilities/SaveSceneToFieldData) | Save a vtkCamera's state in a vtkDataSet's vtkFieldData and restore it.
+[SaveSceneToFile](/PythonicAPI/Utilities/SaveSceneToFile) | Save a vtkCamera's state in a file and restore it.
+[Screenshot](/PythonicAPI/Utilities/Screenshot) |
 [SelectExamples](/PythonicAPI/Utilities/SelectExamples) | Given a VTK Class and a language, select the matching examples.
+[ShareCamera](/PythonicAPI/Utilities/ShareCamera) | Share a camera between multiple renderers.
+[VTKWithNumpy](/PythonicAPI/Utilities/VTKWithNumpy) |
 
 ### Arrays
 
@@ -267,7 +277,6 @@ This section includes ?vtkUnstructuredGrid?.
 [TextureCutSphere](/PythonicAPI/Texture/TextureCutSphere) | Examples of texture thresholding using a boolean combination of two planes to cut nested spheres.
 [TexturePlane](/PythonicAPI/Texture/TexturePlane) | Example of texture mapping.
 [TextureThreshold](/PythonicAPI/Texture/TextureThreshold) | Demonstrate the use of scalar thresholds to show values of flow density on three planes.
-
 
 ## Tutorial
 
@@ -330,6 +339,10 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [SpiderPlot](/PythonicAPI/Plotting/SpiderPlot) | Spider plot.
 
 ## Animation
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[Animation](/PythonicAPI/Utilities/Animation) | Move a sphere across a scene.
 
 ## Annotation
 

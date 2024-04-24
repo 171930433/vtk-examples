@@ -8,6 +8,7 @@ To use the snippet, click the *Copy to clipboard* at the upper right of the code
 
 ``` Python
 
+# from dataclasses import dataclass
 # from pathlib import Path
 # 
 # from vtkmodules.vtkIOImage import (
@@ -54,11 +55,12 @@ def write_image(file_name, ren_win, rgba=True):
 
         wtif = vtkWindowToImageFilter(input=ren_win, scale=1)
         if rgba:
-            wtif.SetInputBufferTypeToRGBA()
+            wtif.input_buffer_type = WindowToImageFilter.InputBufferType.VTK_RGBA
         else:
             wtif.SetInputBufferTypeToRGB()
-            # Read from the front buffer.
-            wtif.ReadFrontBufferOff()
+            wtif.input_buffer_type = WindowToImageFilter.InputBufferType.VTK_RGB
+            # Do not read from the front buffer.
+            wtif.read_front_buffer = False
             wtif.update()
 
         if ext == '.bmp':
@@ -73,11 +75,20 @@ def write_image(file_name, ren_win, rgba=True):
             writer = vtkTIFFWriter(file_name=path)
         else:
             writer = vtkPNGWriter(file_name=path)
-            
+
         wtif >> writer
         writer.Write()
     else:
         raise RuntimeError('Need a filename.')
+
+
+@dataclass(frozen=True)
+class WindowToImageFilter:
+    @dataclass(frozen=True)
+    class InputBufferType:
+        VTK_RGB: int = 3
+        VTK_RGBA: int = 4
+        VTK_ZBUFFER: int = 5
 
 ```
 

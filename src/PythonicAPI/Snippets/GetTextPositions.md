@@ -94,6 +94,6 @@ class TextProperty:
 
 ``` Python
 
-    text_positions = get_text_positions(names, justification=TextPropertyJustification.VTK_TEXT_CENTERED)
+    text_positions = get_text_positions(names, justification=TextProperty.Justification.VTK_TEXT_CENTERED)
 
 ```

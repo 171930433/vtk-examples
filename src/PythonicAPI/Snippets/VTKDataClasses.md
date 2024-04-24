@@ -232,6 +232,22 @@ class ImageCast:
 
 ```
 
+### ImageImport
+
+``` Python
+@dataclass(frozen=True)
+class ImageImport:
+    @dataclass(frozen=True)
+    class DataScalarType:
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
+
+```
+
 ### ImageMathematics
 
 ``` Python
@@ -404,5 +420,18 @@ class VolumeProperty:
         VTK_NEAREST_INTERPOLATION: int = 0
         VTK_LINEAR_INTERPOLATION: int = 1
         VTK_CUBIC_INTERPOLATION: int = 2
+
+```
+
+### WindowToImageFilter
+
+``` Python
+@dataclass(frozen=True)
+class WindowToImageFilter:
+    @dataclass(frozen=True)
+    class InputBufferType:
+        VTK_RGB: int = 3
+        VTK_RGBA: int = 4
+        VTK_ZBUFFER: int = 5
 
 ```
