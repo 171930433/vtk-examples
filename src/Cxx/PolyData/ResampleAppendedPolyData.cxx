@@ -22,7 +22,7 @@
 
 int main(int, char*[])
 {
-  // Define adjustable paramaters.
+  // Define adjustable parameters.
   constexpr double xMin = -10.0;
   constexpr double xMax = 10.0;
   constexpr double yMin = -10.0;
