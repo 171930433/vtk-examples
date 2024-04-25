@@ -70,8 +70,8 @@ public class  ReadSLC
     vtkContourFilter cFilter = new vtkContourFilter();
     cFilter.SetInputConnection(reader.GetOutputPort());
     
-    // Change the range(2nd and 3rd Paramater) based on your
-    // requirement. recomended value for 1st parameter is above 1
+    // Change the range(2nd and 3rd Parameter) based on your
+    // requirement. recommended value for 1st parameter is above 1
     // cFilter.GenerateValues(5, 80.0, 100.0); 
     cFilter.SetValue(0, isoValue);
     cFilter.Update();

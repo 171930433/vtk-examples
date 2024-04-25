@@ -34,8 +34,8 @@ def main():
     # Implementing Marching Cubes Algorithm to create the surface using vtkContourFilter object.
     contourFilter = vtkContourFilter()
     contourFilter.SetInputConnection(reader.GetOutputPort())
-    # Change the range(2nd and 3rd Paramater) based on your
-    # requirement. recomended value for 1st parameter is above 1
+    # Change the range(2nd and 3rd Parameter) based on your
+    # requirement. recommended value for 1st parameter is above 1
     # contourFilter.GenerateValues(5, 80.0, 100.0)
     contourFilter.SetValue(0, iso_value)
 
