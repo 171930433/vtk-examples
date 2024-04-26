@@ -289,6 +289,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [AnnotatedCubeActor](/PythonicAPI/Visualization/AnnotatedCubeActor) | Annotated cube.
+[AssignCellColorsFromLUT](/PythonicAPI/Visualization/AssignCellColorsFromLUT) | Demonstrates how to assign colors to cells in a vtkPolyData structure using lookup tables.
 [ColoredAnnotatedCube](/PythPythonicAPIon/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
