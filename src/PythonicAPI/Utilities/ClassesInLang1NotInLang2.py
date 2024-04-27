@@ -2,10 +2,8 @@
 
 import json
 import os
-import random
 import tempfile
 from datetime import datetime
-from operator import itemgetter
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
@@ -13,7 +11,7 @@ from urllib.request import urlretrieve
 
 def get_program_parameters():
     import argparse
-    description = 'Get examples that use a particular VTK class for a given language.'
+    description = 'Classes in language 1 but not in language 2.'
     epilogue = '''
 The JSON file needed by this script is obtained from the gh-pages branch
  of the vtk-examples GitHub site.
@@ -28,21 +26,18 @@ Here is the URL for an alternative site for testing:
 '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('vtk_class', help='The desired VTK class.')
-    parser.add_argument('language', help='The desired language, one of: CSharp, Cxx, Java, Python.')
-    parser.add_argument('-a', '--all_values', action="store_true",
-                        help='All examples (Warning: Can be a very long list).')
-    parser.add_argument('-n', '--number', type=int, default=5, help='The maximum number of examples.')
-    parser.add_argument('-m', '--md', action='store_true',
-                        help='Display links in markdown inline format e.g. [label](URL).')
+    parser.add_argument('language1', help='The desired language, one of: CSharp, Cxx, Java, Python.')
+    parser.add_argument('language2', help='The desired language, one of: CSharp, Cxx, Java, Python.')
     parser.add_argument('-j', '--json_xref_url',
                         default='https://raw.githubusercontent.com/Kitware/vtk-examples/gh-pages/src/Coverage/vtk_vtk-examples_xref.json',
                         help='The URL for the JSON cross-reference file.')
-    parser.add_argument('-o', '--overwrite', action="store_true",
+    parser.add_argument('-o', '--overwrite', action='store_true',
                         help='Force an initial download of the JSON cross-reference file.')
+    parser.add_argument('-f', '--file', default=None,
+                        help='The file name to write the markdown file too.')
 
     args = parser.parse_args()
-    return args.vtk_class, args.language, args.all_values, args.md, args.number, args.json_xref_url, args.overwrite
+    return args.language1, args.language2, args.json_xref_url, args.overwrite, args.file
 
 
 def download_file(dl_path, dl_url, overwrite=False):
@@ -69,35 +64,51 @@ def download_file(dl_path, dl_url, overwrite=False):
     return path
 
 
-def get_examples(d, vtk_class, lang, all_values=False, number=5, md_fmt=False):
+def get_examples(d, lang1, lang2):
     """
-    For the VTK Class and language return the
-     total number of examples and a list of examples.
+    Classes/examples in lang1 but not in lang2.
 
     :param d: The dictionary.
-    :param vtk_class: The VTK Class e.g. vtkActor.
-    :param lang: The language, e.g. Cxx.
-    :param all_values: True if all examples are needed.
-    :param number: The number of values.
-    :param md_fmt: Use Markdown format with label and URL defined together.
-    :return: Total number of examples and a list of examples.
+    :param lang1: The first language e.g. Python.
+    :param lang2: The second language e.g. PythonicAPI.
+    :return: Classes/examples in lang1 but not in lang2.
     """
-    try:
-        kv = d[vtk_class][lang].items()
-    except KeyError:
-        return None, None
-    if len(kv) > number:
-        if all_values:
-            samples = list(kv)
-        else:
-            samples = random.sample(list(kv), number)
-    else:
-        samples = kv
-    if md_fmt:
-        links = [f'[{s.rsplit("/", 1)[1]}]({s})' for s in sorted(map(itemgetter(1), samples))]
-    else:
-        links = sorted(map(itemgetter(1), samples))
-    return len(links), links
+    # Select all classes for each language.
+    d1 = dict()
+    d2 = dict()
+    for k, v in d.items():
+        for kk, vv in v.items():
+            if lang1 == kk:
+                d1[k] = vv
+            if lang2 == kk:
+                d2[k] = vv
+    k1 = d1.keys()
+    k2 = d2.keys()
+    # Keys in k1 but not in k2.
+    wanted_keys = k1 - k2
+
+    # Get the corresponding examples in d1.
+
+    def dict_filter(src_dict, wk):
+        """
+        Create a dictionary from an existing dictionary
+         using a set of wanted keys.
+
+        :param src_dict: The source dictionary.
+        :param wk: The wanted keys.
+        :return: A dictionary with the wanted keys.
+        """
+        return dict([(i, src_dict[i]) for i in src_dict if i in set(wk)])
+
+    d12 = dict_filter(d1, wanted_keys)
+    keys = sorted(d12.keys())
+    s = f'### Classes in {lang1} but not in {lang2}\n'
+    for k in keys:
+        s += f'\n#### {k}\n\n'
+        for k1, v1 in d12[k].items():
+            s += f'  [{k1}]({v1})\n'
+    s += '\n'
+    return s
 
 
 def get_crossref_dict(ref_dir, xref_url, overwrite=False):
@@ -124,34 +135,42 @@ def get_crossref_dict(ref_dir, xref_url, overwrite=False):
 
 
 def main():
-    vtk_class, language, all_values, md, number, xref_url, overwrite = get_program_parameters()
-    language = language.lower()
+    language1, language2, xref_url, overwrite, file_name = get_program_parameters()
+    language1 = language1.lower()
     available_languages = {k.lower(): k for k in ['CSharp', 'Cxx', 'Java', 'Python', 'PythonicAPI']}
     available_languages.update({'cpp': 'Cxx', 'c++': 'Cxx', 'c#': 'CSharp'})
-    if language not in available_languages:
-        print(f'The language: {language} is not available.')
+    if language1 not in available_languages:
+        print(f'The language: {language1} is not available.')
         tmp = ', '.join(sorted([lang for lang in set(available_languages.values())]))
         print(f'Choose one of these: {tmp}.')
         return
     else:
-        language = available_languages[language]
+        language1 = available_languages[language1]
+    language2 = language2.lower()
+    if language2 not in available_languages:
+        print(f'The language: {language2} is not available.')
+        tmp = ', '.join(sorted([lang for lang in set(available_languages.values())]))
+        print(f'Choose one of these: {tmp}.')
+        return
+    else:
+        language2 = available_languages[language2]
     xref_dict = get_crossref_dict(tempfile.gettempdir(), xref_url, overwrite)
     if xref_dict is None:
         print('The dictionary cross-referencing vtk classes to examples was not downloaded.')
         return
 
-    total_number, examples = get_examples(xref_dict, vtk_class, language, all_values=all_values, number=number,
-                                          md_fmt=md)
-    if examples:
-        if total_number <= number or all_values:
-            print(f'VTK Class: {vtk_class}, language: {language}\n'
-                  f'Number of example(s): {total_number}.')
+    res = get_examples(xref_dict, language1, language2)
+    if res:
+        if file_name:
+            fn = Path(file_name).with_suffix('.md')
+            if fn.is_file():
+                print('Cannot overwrite {fn}, please select a new file name.')
+                return
+            else:
+                with fn.open(mode='w'):
+                    fn.write_text(res)
         else:
-            print(f'VTK Class: {vtk_class}, language: {language}\n'
-                  f'Number of example(s): {total_number} with {number} random sample(s) shown.')
-        print('\n'.join(examples))
-    else:
-        print(f'No examples for the VTK Class: {vtk_class} and language: {language}')
+            print(res)
 
 
 if __name__ == '__main__':

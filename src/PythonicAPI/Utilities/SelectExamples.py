@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import os
@@ -33,7 +33,7 @@ Here is the URL for an alternative site for testing:
     parser.add_argument('-a', '--all_values', action="store_true",
                         help='All examples (Warning: Can be a very long list).')
     parser.add_argument('-n', '--number', type=int, default=5, help='The maximum number of examples.')
-    parser.add_argument('-m', '--md', action="store_true",
+    parser.add_argument('-m', '--md', action='store_true',
                         help='Display links in markdown inline format e.g. [label](URL).')
     parser.add_argument('-j', '--json_xref_url',
                         default='https://raw.githubusercontent.com/Kitware/vtk-examples/gh-pages/src/Coverage/vtk_vtk-examples_xref.json',
