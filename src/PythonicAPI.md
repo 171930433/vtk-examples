@@ -209,6 +209,7 @@ This section includes ?vtkUnstructuredGrid?.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [CheckVTKVersion](/PythonicAPI/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
+[ClassesInLang1NotInLang2](/PythonicAPI/Utilities/ClassesInLang1NotInLang2) | Select VTK classes with corresponding examples in one language but not in another.
 [ColorMapToLUT_JSON](/PythonicAPI/Utilities/ColorMapToLUT_JSON) | Take a JSON description of a colormap and convert it to a VTK colormap.
 [ColorMapToLUT_XML](/PythonicAPI/Utilities/ColorMapToLUT_XML) | Take an XML description of a colormap and convert it to a VTK colormap.
 [ColorMapToLUT](/PythonicAPI/Utilities/ColorMapToLUT) | Use vtkDiscretizableColorTransferFunction to generate a VTK colormap.

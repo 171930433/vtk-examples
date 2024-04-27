@@ -102,13 +102,19 @@ def get_examples(d, lang1, lang2):
 
     d12 = dict_filter(d1, wanted_keys)
     keys = sorted(d12.keys())
-    s = f'### Classes in {lang1} but not in {lang2}\n'
+    res = list()
+    res.append(f'### VTK Classes in {lang1} but not in {lang2}')
+    number_of_examples = 0
     for k in keys:
-        s += f'\n#### {k}\n\n'
-        for k1, v1 in d12[k].items():
-            s += f'  [{k1}]({v1})\n'
-    s += '\n'
-    return s
+        res.append(f'\n#### {k}\n')
+        k1 = sorted(d12[k].keys())
+        for kk1 in k1:
+            res.append(f'  [{kk1}]({d12[k][kk1]})')
+            number_of_examples += 1
+    res.append(f'\nCount of VTK Classes :{len(wanted_keys):6}')
+    res.append(f'             Examples:{number_of_examples:6}')
+    res.append('')
+    return res
 
 
 def get_crossref_dict(ref_dir, xref_url, overwrite=False):
@@ -164,11 +170,11 @@ def main():
         if file_name:
             fn = Path(file_name).with_suffix('.md')
             if fn.is_file():
-                print('Cannot overwrite {fn}, please select a new file name.')
+                print(f'Cannot overwrite {fn}, please select a new file name.')
                 return
             else:
                 with fn.open(mode='w'):
-                    fn.write_text(res)
+                    fn.write_text('\n'.join(res))
         else:
             print(res)
 
