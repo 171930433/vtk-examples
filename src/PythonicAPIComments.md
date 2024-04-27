@@ -1,5 +1,18 @@
 # Python API Comments
 
+## Introduction
+
+!!! Warning
+    These examples only work with VTK Version: 9.3.20240428 or greater.
+
+VTK documentation regarding the new interface can be found here:
+
+- [Add properties for python wrappers](https://gitlab.kitware.com/vtk/vtk/-/blob/master/Documentation/release/dev/add-properties-for-python-wrappers.md?ref_type=heads)
+- [Accept keyword arguments in constructor for python wrapped VTK classes](https://gitlab.kitware.com/vtk/vtk/-/blob/master/Documentation/release/dev/add-property-initialization-for-vtk-class-from-python-constructor.md?ref_type=heads)
+- [Added new Python API for connecting pipelines](https://gitlab.kitware.com/vtk/vtk/-/blob/master/Documentation/release/dev/new-python-api-for-pipelines.md?ref_type=heads)
+
+The following sections provide you with further comments and links to examples illustrating the new interface.
+
 ## Initializing a VTK Class
 
 You can initialize the properties of a wrapped VTK class by specifying keyword arguments in the constructor.

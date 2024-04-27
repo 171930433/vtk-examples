@@ -1,10 +1,17 @@
 # PythonicAPI Examples
 
-These examples use the improved VTK Python interface. Some information about the improved Python interface can be found [here](../PythonicAPIComments/)
+!!! Warning
+    These examples only work with VTK Version: 9.3.20240428 or greater.
 
-The examples here are either newly crafted ones or upgraded existing Python examples using the improved VTK Python interface.
+These examples:
 
-See [More Pythonic VTK wrapping](https://discourse.vtk.org/t/more-pythonic-vtk-wrapping/13092) for the VTK Discourse discussion and [Wrap VTK properties to pythonic properties with snake_case names](https://gitlab.kitware.com/vtk/vtk/-/merge_requests/10820) for the merge request.
+- Use the improved VTK Python interface. Some information about the improved Python interface can be found [here](../PythonicAPIComments/)
+- Are either newly crafted examples or upgrades of existing Python examples
+
+See:
+
+- [More Pythonic VTK wrapping](https://discourse.vtk.org/t/more-pythonic-vtk-wrapping/13092) for the VTK Discourse discussion
+- [Wrap VTK properties to pythonic properties with snake_case names](https://gitlab.kitware.com/vtk/vtk/-/merge_requests/10820) for the merge request
 
 ## Upgrading an existing example to use the improved VTK Python interface
 
@@ -291,7 +298,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | -------------- | ------------- | ------- |
 [AnnotatedCubeActor](/PythonicAPI/Visualization/AnnotatedCubeActor) | Annotated cube.
 [AssignCellColorsFromLUT](/PythonicAPI/Visualization/AssignCellColorsFromLUT) | Demonstrates how to assign colors to cells in a vtkPolyData structure using lookup tables.
-[ColoredAnnotatedCube](/PythPythonicAPIon/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
+[ColoredAnnotatedCube](/PythonicAPI/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.
