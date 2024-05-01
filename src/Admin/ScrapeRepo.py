@@ -482,12 +482,17 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
     """
     from_path = src_path / from_file
     to_path = doc_path / to_file
-    # We need to treat [Lang]HowTo.md files, e.g. CxxHowTo.md, in a special way
-    has_how_to = False
+    # We need to treat [Lang]HowTo.md and [Lang]Comments.md files, in a special way.
+    # Essentially we need to make the language link relative to the language src folder.
+    has_relative_lang_link = False
     if 'HowTo' in from_file:
         lang = re.split('HowTo', from_file)[0]
-        has_how_to = True
-    with open(from_path, 'r') as md_file:
+        has_relative_lang_link = True
+    # Similarly for [Lang]Comments.md files, e.g. PythonicAPIComments
+    if 'Comments' in from_file:
+        lang = re.split('Comments', from_file)[0]
+        has_relative_lang_link = True
+    with (open(from_path, 'r') as md_file):
         lines = dict()
         line_count = 0
         x = []
@@ -511,7 +516,7 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
             x = []
         add_image_link(test_images, lines, stats)
         if from_file != 'VTKBookFigures.md':
-            if not has_how_to:
+            if not has_relative_lang_link:
                 for k, v in lines.items():
                     line_changed = False
                     if v[1] != '':
@@ -520,7 +525,8 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
                             v[1] = re.sub(r'][ ]*\([ ]*/', r'](', v[1])
                             v[1] = v[1].replace('.md', '')
                             line_changed = True
-                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
+                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] \
+                                or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
                             # Make the language link relative, also drop off the language.
                             v[1] = re.sub(r'][ ]*\([ ]*/\w+/', r'](', v[1])
                             line_changed = True
@@ -530,11 +536,13 @@ def add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_path, te
                 for k, v in lines.items():
                     line_changed = False
                     if v[1] != '':
-                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
+                        if '/CSharp/' in v[1] or '/Cxx/' in v[1] or '/Java/' in v[1] \
+                                or '/Python/' in v[1] or '/PythonicAPI/' in v[1]:
                             # Make the language link relative to the src folder.
                             link_head = r'](' + r'../' + lang + r'/'
                             if '.md' in v[1]:
                                 v[1] = v[1].replace('.md', '')
+                            # Then add in the updated language path element.
                             v[1] = re.sub(r'][ ]*\([ ]*/\w+/', link_head, v[1])
                             line_changed = True
                     if line_changed:
@@ -643,12 +651,14 @@ def get_example_paths(src_path, available_languages, example_paths):
                 if vv in example_paths[lang]:
                     example_paths[lang].pop(vv)
 
+
 # check if example is excluded
 def check_excluded(exclusion_list, example_name):
     for elem in exclusion_list:
         if elem == example_name + '\n':
             return True
     return False
+
 
 def make_markdown_example_page(example_paths, available_languages, src_path, doc_path,
                                repo_name, web_repo_url, vtk_modules_cache,
@@ -677,7 +687,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
     cmake_template = src_path / '/'.join(['Admin', 'VTKCMakeLists'])
     module_prefix = 'VTK::'
 
-    #parse WASM exclusion list
+    # parse WASM exclusion list
     with open(src_path / '/'.join(['Admin', 'WASM', 'exclude_wasm.txt']), 'r') as exclude:
         excluded_examples = exclude.readlines()
 
@@ -734,7 +744,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                           img.style.display = "none";
                                           wasm.style.display = "block";
                                           frame.src = \'https://vtk.org/files/examples/'''
-                                                + source_path.stem + '''/index.html\',\'_blank\';
+                                      + source_path.stem + '''/index.html\',\'_blank\';
                                           btn_screenshot.disabled = false;
                                           btn_wasm.disabled = true;
                                       }
@@ -743,7 +753,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                       }
                                       btn_open.onclick = function(){
                                         window.open(\'https://vtk.org/files/examples/'''
-                                              + source_path.stem + '''/index.html\', "_blank");
+                                      + source_path.stem + '''/index.html\', "_blank");
                                         img.style.display = "block";
                                         wasm.style.display = "none";
                                         frame.src = "about:blank";
@@ -915,8 +925,9 @@ def make_instruction_pages(web_repo_url, web_site_url, site_repo_url, src_path, 
         for line in lines:
             ofh.write(line)
 
+
 def make_wasm_instruction_pages(web_repo_url, web_site_url, site_repo_url, src_path, doc_path, from_file,
-                           to_file):
+                                to_file):
     """
     Make the instruction pages. The keys in the dictionary patterns are used to replace the
     corresponding keys in the instructions.
@@ -960,6 +971,7 @@ def make_wasm_instruction_pages(web_repo_url, web_site_url, site_repo_url, src_p
     with open(dest, 'w') as ofh:
         for line in lines:
             ofh.write(line)
+
 
 def make_examples_sources_html(example_paths, src_path, doc_path, web_repo_url, web_site_url):
     """
@@ -1515,25 +1527,33 @@ def main():
         print(f'{src} is missing.\nPlease run VTKClassesUsedInExamples.py to generate this file.')
         return
 
-    # Create Snippets directories for Cxx, Python and Java
+    # Create the Snippets directories.
     (doc_path / 'Cxx/Snippets').mkdir(parents=True, exist_ok=True)
+    (doc_path / 'PythonicAPI/Snippets').mkdir(parents=True, exist_ok=True)
     (doc_path / 'Python/Snippets').mkdir(parents=True, exist_ok=True)
     (doc_path / 'Java/Snippets').mkdir(parents=True, exist_ok=True)
 
-    # Add thumbnails and language links to each of the language summary pages, Snippets and Book figures
+    # Add thumbnails and language links to each of the language summary pages.
+    # Note: If there are links in HowTos, and Comments please check
+    #       add_thumbnails_and_links(...) to ensure that
+    #       [Lang]HowTo.md and [Lang]Comments.md files are treated in a special way.
+    #       Essentially we need to make the language link relative to the language src folder.
     pages = ['Cxx.md', 'CxxHowTo.md',
              'Python.md', 'PythonHowTo.md',
-             'PythonicAPI.md',
+             'PythonicAPI.md', 'PythonicAPIComments.md',
              'CSharp.md', 'CSharpHowTo.md',
              'Java.md', 'JavaHowTo.md',
              'JavaScript.md',
-             'Cxx/Snippets.md', 'Python/Snippets.md', 'Java/Snippets.md',
+             'Cxx/Snippets.md',
+             'Python/Snippets.md',
+             'PythonicAPI/Snippets.md',
+             'Java/Snippets.md',
              'VTKBookFigures.md', 'VTKFileFormats.md']
     for p in pages:
         add_thumbnails_and_links(web_repo_url, src_path, doc_path, baseline_src_path, test_images_dict, p, p,
                                  vtk_classes, stats)
 
-    snippets = ['Cxx/Snippets', 'Python/Snippets', 'Java/Snippets']
+    snippets = ['Cxx/Snippets', 'Python/Snippets', 'PythonicAPI/Snippets', 'Java/Snippets']
     for snippet in snippets:
         src = src_path / snippet
         dest = doc_path / snippet
@@ -1549,7 +1569,7 @@ def main():
     p = src.glob('*.md')
     files = [x for x in p if x.is_file()]
     for f in files:
-            shutil.copy(f, dest)
+        shutil.copy(f, dest)
 
     # Copy favicon.png
     dest = doc_path / 'assets/images'
