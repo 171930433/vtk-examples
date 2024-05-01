@@ -133,7 +133,7 @@ def main():
 
     render_window.Render()
 
-    for i in range(0, len(source_objects)):
+    for i in range(0, len(text_widgets)):
         text_widgets[i].On()
 
     interactor.Start()

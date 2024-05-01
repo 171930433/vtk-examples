@@ -58,8 +58,13 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [ReadAllPolyDataTypesDemo](/PythonicAPI/IO/ReadAllPolyDataTypesDemo) | Read all VTK polydata file types.
 [ReadExodusData](/PythonicAPI/IO/ReadExodusData) | A simple script for reading and viewing ExodusII data interactively.
+[TransientHDFReader](/PythonicAPI/IO/TransientHDFReader) | Read transient data written inside a vtkhdf file.
 
 ###### Importers
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[3DSImporter](/PythonicAPI/IO/3DSImporter) | Import a 3D Studio scene that includes multiple actors.
 
 ##### Output
 
@@ -97,7 +102,15 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 ### Sources
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[TessellatedBoxSource](/PythonicAPI/GeometricObjects/TessellatedBoxSource) | Generate a box with tessellated sides.
+
 ### Non Linear
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[IsoparametricCellsDemo](/PythonicAPI/GeometricObjects/IsoparametricCellsDemo) | Nonlinear isoparametric cell types in VTK.
 
 ### Parametric Objects
 
@@ -117,7 +130,6 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [ImplicitSphere1](/PythonicAPI/ImplicitFunctions/ImplicitSphere1) | Demonstrate sampling of a sphere implicit function
 [SampleFunction](/PythonicAPI/ImplicitFunctions/SampleFunction) | Sample and visualize an implicit function.
 [SmoothDiscreteFlyingEdges3D](/PythonicAPI/Modelling/SmoothDiscreteFlyingEdges3D) | Generate smooth surfaces from labeled data.
-
 
 ## Working with 3D Data
 
@@ -152,7 +164,6 @@ This section includes examples of manipulating meshes.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [DelaunayMesh](/PythonicAPI/Modelling/DelaunayMesh) | Two-dimensional Delaunay triangulation of a random set of points. Points and edges are shown highlighted with sphere glyphs and tubes.
-
 
 #### Clipping
 
@@ -337,9 +348,14 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [Attenuation](/PythonicAPI/ImageProcessing/Attenuation) | This MRI image illustrates attenuation that can occur due to sensor position.  The artifact is removed by dividing by the attenuation profile determined manually.
 [EnhanceEdges](/PythonicAPI/ImageProcessing/EnhanceEdges) | High-pass filters can extract and enhance edges in an image. Subtraction of the Laplacian (middle) from the original image (left) results in edge enhancement or a sharpening operation (right).
 [GaussianSmooth](/PythonicAPI/ImageProcessing/GaussianSmooth) | Low-pass filters can be implemented as convolution with a Gaussian kernel.
+[ImageWarp](/PythonicAPI/Images/ImageWarp) | Combine the imaging and visualization pipelines to deform an image in the z-direction. The vtkMergeFilter is used to combine the warped surface with the original color data.
 [VTKSpectrum](/PythonicAPI/ImageProcessing/VTKSpectrum) | The discrete Fourier transform changes an image from the spatial domain into the frequency domain, where each pixel represents a sinusoidal function. This figure shows an image and its power spectrum displayed using a logarithmic transfer function.
 
 ## Widgets
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[BalloonWidget](/PythonicAPI/Widgets/BalloonWidget) | Uses a vtkBalloonWidget to draw labels when the mouse stays above an actor.
 
 ## Plotting
 
