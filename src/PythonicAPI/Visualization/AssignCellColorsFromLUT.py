@@ -58,16 +58,16 @@ def make_lut(table_size):
     lut.Build()
 
     # Fill in a few known colors, the rest will be generated if needed.
-    lut.table_value = (0, nc.GetColor4d('Black'))
-    lut.table_value = (1, nc.GetColor4d('Banana'))
-    lut.table_value = (2, nc.GetColor4d('Tomato'))
-    lut.table_value = (3, nc.GetColor4d('Wheat'))
-    lut.table_value = (4, nc.GetColor4d('Lavender'))
-    lut.table_value = (5, nc.GetColor4d('Flesh'))
-    lut.table_value = (6, nc.GetColor4d('Raspberry'))
-    lut.table_value = (7, nc.GetColor4d('Salmon'))
-    lut.table_value = (8, nc.GetColor4d('Mint'))
-    lut.table_value = (9, nc.GetColor4d('Peacock'))
+    lut.SetTableValue(0, nc.GetColor4d('Black'))
+    lut.SetTableValue(1, nc.GetColor4d('Banana'))
+    lut.SetTableValue(2, nc.GetColor4d('Tomato'))
+    lut.SetTableValue(3, nc.GetColor4d('Wheat'))
+    lut.SetTableValue(4, nc.GetColor4d('Lavender'))
+    lut.SetTableValue(5, nc.GetColor4d('Flesh'))
+    lut.SetTableValue(6, nc.GetColor4d('Raspberry'))
+    lut.SetTableValue(7, nc.GetColor4d('Salmon'))
+    lut.SetTableValue(8, nc.GetColor4d('Mint'))
+    lut.SetTableValue(9, nc.GetColor4d('Peacock'))
 
     return lut
 
@@ -91,7 +91,7 @@ def make_lut_from_ctf(table_size):
 
     for i in range(0, table_size):
         rgba = (*ctf.GetColor(float(i) / table_size), 1.0)
-        lut.table_value = (i, rgba)
+        lut.SetTableValue(i, rgba)
 
     return lut
 

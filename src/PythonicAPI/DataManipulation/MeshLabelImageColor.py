@@ -159,7 +159,7 @@ def get_diverging_lut(ct=0):
     for i in range(0, table_size):
         rgba = list(ctf.GetColor(float(i) / table_size))
         rgba.append(1)
-        lut.table_value = (i, rgba)
+        lut.SetTableValue(i, rgba)
 
     return lut
 
