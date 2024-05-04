@@ -100,6 +100,10 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 ### Cells
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[CellTypeSource](/PythonicAPI/GeometricObjects/CellTypeSource) | Generate tessellated cells.
+
 ### Sources
 
 | Example Name | Description | Image |
@@ -309,6 +313,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | -------------- | ------------- | ------- |
 [AnnotatedCubeActor](/PythonicAPI/Visualization/AnnotatedCubeActor) | Annotated cube.
 [AssignCellColorsFromLUT](/PythonicAPI/Visualization/AssignCellColorsFromLUT) | Demonstrates how to assign colors to cells in a vtkPolyData structure using lookup tables.
+[BillboardTextActor3D](/PythonicAPI/Visualization/BillboardTextActor3D) | Label points with billboards.
 [ColoredAnnotatedCube](/PythonicAPI/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
