@@ -146,7 +146,7 @@ def main(argv):
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
     style = vtkInteractorStyleTrackballCamera()
-    iren.SetInteractorStyle(style)
+    iren.interactor_style = style
 
     renderers = list()
     contour_widgets = dict()

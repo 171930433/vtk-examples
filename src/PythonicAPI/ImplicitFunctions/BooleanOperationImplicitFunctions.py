@@ -32,7 +32,7 @@ def main():
 
     # Combine the two implicit functions.
     # You can also experiment with operation types of VTK_UNION or VTK_INTERSECTION.
-    boolean = vtkImplicitBoolean(operation_type=vtkImplicitBoolean().VTK_DIFFERENCE)
+    boolean = vtkImplicitBoolean(operation_type=vtkImplicitBoolean.VTK_DIFFERENCE)
     boolean.AddFunction(box)
     boolean.AddFunction(sphere)
 
