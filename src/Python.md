@@ -120,7 +120,7 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 | -------------- | ------------- | ------- |
 [Cell3DDemonstration](/Python/GeometricObjects/Cell3DDemonstration) | Sample objects are generated from the classes derived from vtkCell3D and displayed.
 [CellTypeSource](/Python/GeometricObjects/CellTypeSource) | Generate tessellated cells.
-[ConvexPointSet](/Python/GeometricObjects/ConvexPointSet) | Generate a ConvexPointSetCell.
+[ConvexPointSet](/Python/GeometricObjects/ConvexPointSet) | Generate a ConvexPointSet cell.
 [Hexahedron](/Python/GeometricObjects/Hexahedron) |
 [LinearCellDemo](/Python/GeometricObjects/LinearCellDemo) | Linear cell types found in VTK. Numbers define ordering of the defining points.
 [LongLine](/Python/GeometricObjects/LongLine) | Manually create a polyline.
@@ -368,8 +368,7 @@ This section includes vtkUnstructuredGrid.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [CheckVTKVersion](/Python/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
-[ColorMapToLUT_JSON](/Python/Utilities/ColorMapToLUT_JSON) | Take an JSON description of a colormap and convert it to a VTK colormap.
-[ColorMapToLUT_XML](/Python/Utilities/ColorMapToLUT_XML) | Take an XML description of a colormap and convert it to a VTK colormap.
+[JSONColorMapToLUT](/Python/Utilities/JSONColorMapToLUT) | Take a JSON description of a colormap and convert it to a VTK colormap.
 [ColorMapToLUT](/Python/Utilities/ColorMapToLUT) | Use vtkDiscretizableColorTransferFunction to generate a VTK colormap.
 [ConstrainedDelaunay2D](/Python/Filtering/ConstrainedDelaunay2D) | Perform a 2D Delaunay triangulation on a point set respecting a specified boundary.
 [Delaunay2D](/Python/Filtering/Delaunay2D) |
@@ -387,6 +386,8 @@ This section includes vtkUnstructuredGrid.
 [VTKModulesForCxx](/Python/Utilities/VTKModulesForCxx) | Generate a find_package(VTK COMPONENTS ...) command for CMake.
 [VTKWithNumpy](/Python/Utilities/VTKWithNumpy) |
 [Variant](/Python/Utilities/Variant) |
+[XMLColorMapToLUT](/Python/Utilities/XMLColorMapToLUT) | Take an XML description of a 
+colormap and convert it to a VTK colormap.
 
 ### Arrays
 
@@ -590,7 +591,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [PineRootConnectivityA](/Python/VisualizationAlgorithms/PineRootConnectivityA) | The isosurface, with no connectivity filter applied.
 [PineRootDecimation](/Python/VisualizationAlgorithms/PineRootDecimation) | Applying the decimation and connectivity filters to remove noisy isosurfaces and reduce data size.
 [PlateVibration](/Python/VisualizationAlgorithms/PlateVibration) | Demonstrates the motion of a vibrating beam.
-[PointDataSubdivision](/Python/Visualization/PointDataSubdivision) | Vary the shapes of glyphed points using a programmable glyph filter
+[PointDataSubdivision](/Python/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
 [PointSize](/Python/Visualization/PointSize) |
 [ProbeCombustor](/Python/VisualizationAlgorithms/ProbeCombustor) | Probing data in a combustor.  Probes are regular arrays of 50 by 50 points that are then passed through a contouring filter.
 [ProgrammableGlyphFilter](/Python/Visualization/ProgrammableGlyphFilter) | Generate a custom glyph at each point.
