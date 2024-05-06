@@ -236,8 +236,7 @@ This section includes ?vtkUnstructuredGrid?.
 | -------------- | ------------- | ------- |
 [CheckVTKVersion](/PythonicAPI/Utilities/CheckVTKVersion) | Check the VTK version and provide alternatives for different VTK versions.
 [ClassesInLang1NotInLang2](/PythonicAPI/Utilities/ClassesInLang1NotInLang2) | Select VTK classes with corresponding examples in one language but not in another.
-[ColorMapToLUT_JSON](/PythonicAPI/Utilities/ColorMapToLUT_JSON) | Take a JSON description of a colormap and convert it to a VTK colormap.
-[ColorMapToLUT_XML](/PythonicAPI/Utilities/ColorMapToLUT_XML) | Take an XML description of a colormap and convert it to a VTK colormap.
+[JSONColorMapToLUT](/PythonicAPI/Utilities/JSONColorMapToLUT) | Take a JSON description of a colormap and convert it to a VTK colormap.
 [ColorMapToLUT](/PythonicAPI/Utilities/ColorMapToLUT) | Use vtkDiscretizableColorTransferFunction to generate a VTK colormap.
 [RescaleReverseLUT](/PythonicAPI/Utilities/RescaleReverseLUT) | Demonstrate how to adjust a colormap so that the colormap scalar range matches the scalar range on the object. You can optionally reverse the colors.
 [ResetCameraOrientation](/PythonicAPI/Utilities/ResetCameraOrientation) | Reset camera orientation to a previously saved orientation.
@@ -247,6 +246,7 @@ This section includes ?vtkUnstructuredGrid?.
 [SelectExamples](/PythonicAPI/Utilities/SelectExamples) | Given a VTK Class and a language, select the matching examples.
 [ShareCamera](/PythonicAPI/Utilities/ShareCamera) | Share a camera between multiple renderers.
 [VTKWithNumpy](/PythonicAPI/Utilities/VTKWithNumpy) |
+[XMLColorMapToLUT](/PythonicAPI/Utilities/XMLColorMapToLUT) | Take an XML description of a colormap and convert it to a VTK colormap.
 
 ### Arrays
 
