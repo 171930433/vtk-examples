@@ -102,7 +102,6 @@ class ColorTransferFunction:
         VTK_CTF_LINEAR: int = 0
         VTK_CTF_LOG10: int = 1
 
-
 ```
 
 ### ConnectivityFilter
@@ -118,7 +117,6 @@ class ConnectivityFilter:
         VTK_EXTRACT_LARGEST_REGION: int = 4
         VTK_EXTRACT_ALL_REGIONS: int = 5
         VTK_EXTRACT_CLOSEST_POINT_REGION: int = 6
-
 
 ```
 
@@ -138,7 +136,6 @@ class Coordinate:
         VTK_WORLD: int = 6
         VTK_USERDEFINED: int = 7
 
-
 ```
 
 ### Curvatures
@@ -152,7 +149,6 @@ class Curvatures:
         VTK_CURVATURE_MEAN: int = 1
         VTK_CURVATURE_MAXIMUM: int = 2
         VTK_CURVATURE_MINIMUM: int = 3
-
 
 ```
 
@@ -187,7 +183,6 @@ class Glyph3D:
         VTK_VECTOR_ROTATION_OFF: int = 2
         VTK_FOLLOW_CAMERA_DIRECTION: int = 3
 
-
 ```
 
 ### ImageCanvasSource2D
@@ -207,7 +202,6 @@ class ImageCanvasSource2D:
         VTK_UNSIGNED_LONG: int = 9
         VTK_FLOAT: int = 10
         VTK_DOUBLE: int = 11
-
 
 ```
 
@@ -277,7 +271,6 @@ class ImageMathematics:
         VTK_COMPLEX_MULTIPLY: int = 19
         VTK_REPLACECBYK: int = 20
 
-
 ```
 
 ### LandmarkTransform
@@ -291,7 +284,6 @@ class LandmarkTransform:
         VTK_LANDMARK_SIMILARITY: int = 7
         VTK_LANDMARK_AFFINE: int = 12
 
-
 ```
 
 ### LookupTable
@@ -303,7 +295,6 @@ class LookupTable:
     class Scale:
         VTK_SCALE_LINEAR: int = 0
         VTK_SCALE_LOG10: int = 1
-
 
 ```
 
@@ -333,7 +324,6 @@ class Mapper:
         VTK_SCALAR_MODE_USE_CELL_FIELD_DATA: int = 4
         VTK_SCALAR_MODE_USE_FIELD_DATA: int = 5
 
-
 ```
 
 ### Property
@@ -354,7 +344,6 @@ class Property:
         VTK_WIREFRAME: int = 1
         VTK_SURFACE: int = 2
 
-
 ```
 
 ### SpiderPlotActor
@@ -366,7 +355,6 @@ class SpiderPlotActor:
     class IndependentVariables:
         VTK_IV_COLUMN: int = 0
         VTK_IV_ROW: int = 1
-
 
 ```
 
@@ -387,7 +375,6 @@ class TextProperty:
         VTK_TEXT_CENTERED: int = 1
         VTK_TEXT_TOP: int = 2
 
-
 ```
 
 ### Texture
@@ -406,7 +393,6 @@ class Texture:
         VTK_COLOR_MODE_DEFAULT: int = 0
         VTK_COLOR_MODE_MAP_SCALARS: int = 1
         VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
-
 
 ```
 

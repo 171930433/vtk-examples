@@ -191,7 +191,7 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 | -------------- | ------------- | ------- |
 [Cell3DDemonstration](/Cxx/GeometricObjects/Cell3DDemonstration) | Demonstrate the use of vtkCell3D to construct geometric objects. Sample objects are generated from the classes derived from vtkCell3D and displayed.
 [CellTypeSource](/Cxx/GeometricObjects/CellTypeSource) | Generate tessellated cells.
-[ConvexPointSet](/Cxx/GeometricObjects/ConvexPointSet) | Generate a ConvexPointSetCell.
+[ConvexPointSet](/Cxx/GeometricObjects/ConvexPointSet) | Generate a ConvexPointSet cell.
 [Hexahedron](/Cxx/GeometricObjects/Hexahedron) |
 [LinearCellDemo](/Cxx/GeometricObjects/LinearCellDemo) | Linear cell types found in VTK. Numbers define ordering of the defining points.
 [LongLine](/Cxx/GeometricObjects/LongLine) | Manually create a polyline.
@@ -1091,7 +1091,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [PineRootConnectivityA](/Cxx/VisualizationAlgorithms/PineRootConnectivityA) | The isosurface, with no connectivity filter applied.
 [PineRootDecimation](/Cxx/VisualizationAlgorithms/PineRootDecimation) | Applying the decimation and connectivity filters to remove noisy isosurfaces and reduce data size.
 [PlateVibration](/Cxx/VisualizationAlgorithms/PlateVibration) | Demonstrates the motion of a vibrating beam.
-[PointDataSubdivision](/Cxx/Visualization/PointDataSubdivision) | Demonstrates the effect of applying these filters on various sources.
+[PointDataSubdivision](/Cxx/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
 [PointSize](/Cxx/Visualization/PointSize) |
 [ProbeCombustor](/Cxx/VisualizationAlgorithms/ProbeCombustor) | Probing data in a combustor.  Probes are regular arrays of 50 by 50 points that are then passed through a contouring filter.
 [ProgrammableGlyphFilter](/Cxx/Visualization/ProgrammableGlyphFilter) | Generate a custom glyph at each point.

@@ -100,6 +100,11 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 ### Cells
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[CellTypeSource](/PythonicAPI/GeometricObjects/CellTypeSource) | Generate tessellated cells.
+[ConvexPointSet](/PythonicAPI/GeometricObjects/ConvexPointSet) | Generate a ConvexPointSet cell.
+
 ### Sources
 
 | Example Name | Description | Image |
@@ -124,7 +129,9 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [BooleanOperationImplicitFunctions](/PythonicAPI/ImplicitFunctions/BooleanOperationImplicitFunctions) | Demonstrate booleans of two different implicit functions
+[ContourTriangulator](/PythonicAPI/Modelling/ContourTriangulator) | Create a contour from a structured point set (image) and triangulate it.
 [DiscreteFlyingEdges3D](/PythonicAPI/Modelling/DiscreteFlyingEdges3D) | Generate surfaces from labeled data.
+[IceCream](/PythonicAPI/VisualizationAlgorithms/IceCream) | How to use boolean combinations of implicit functions to create a model of an ice cream cone.
 [ImplicitQuadric](/PythonicAPI/ImplicitFunctions/ImplicitQuadric) | Create an ellipsoid using an implicit quadric
 [ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
 [ImplicitSphere1](/PythonicAPI/ImplicitFunctions/ImplicitSphere1) | Demonstrate sampling of a sphere implicit function
@@ -151,6 +158,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[CompositePolyDataMapper](/PythonicAPI/CompositeData/CompositePolyDataMapper) |
 [OverlappingAMR](/PythonicAPI/CompositeData/OverlappingAMR) | Demonstrates how to create and populate  VTK's Overlapping AMR Grid type with data.
 
 ### Data Type Conversions
@@ -251,6 +259,7 @@ This section includes ?vtkUnstructuredGrid?.
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [SideBySideGraphs](/PythonicAPI/Graphs/SideBySideGraphs) | Display two graphs side by side.
+[LabelVerticesAndEdges](/PythonicAPI/Graphs/LabelVerticesAndEdges) | Label vertices and edges.
 
 ### Graph Conversions
 
@@ -309,8 +318,11 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | -------------- | ------------- | ------- |
 [AnnotatedCubeActor](/PythonicAPI/Visualization/AnnotatedCubeActor) | Annotated cube.
 [AssignCellColorsFromLUT](/PythonicAPI/Visualization/AssignCellColorsFromLUT) | Demonstrates how to assign colors to cells in a vtkPolyData structure using lookup tables.
+[BillboardTextActor3D](/PythonicAPI/Visualization/BillboardTextActor3D) | Label points with billboards.
 [ColoredAnnotatedCube](/PythonicAPI/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
-[CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
+[CollisionDetection](/PythonicAPI/Visualization/CollisionDetection) | Collison between two spheres.
+[CubeAxesActor](/PythonicAPI/Visualization/CubeAxesActor) | Display three orthogonal axes with [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
+[PointDataSubdivision](/PythonicAPI/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.
 
@@ -356,6 +368,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [BalloonWidget](/PythonicAPI/Widgets/BalloonWidget) | Uses a vtkBalloonWidget to draw labels when the mouse stays above an actor.
+[CompassWidget](/PythonicAPI/Widgets/CompassWidget) | Draws an interactive compass.
+[ContourWidget](/PythonicAPI/Widgets/ContourWidget) | Draw a contour (line) which can be deformed by the user.
 
 ## Plotting
 
@@ -364,6 +378,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [MultiplePlots](/PythonicAPI/Plotting/MultiplePlots) | Display multiple plots by using viewports in a single render window.
 [ScatterPlot](/PythonicAPI/Plotting/ScatterPlot) | Scatter plot.
 [SpiderPlot](/PythonicAPI/Plotting/SpiderPlot) | Spider plot.
+[SurfacePlot](/PythonicAPI/Plotting/SurfacePlot) | Surface plot.
 
 ## Animation
 

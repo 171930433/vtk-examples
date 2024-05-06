@@ -196,8 +196,8 @@ def make_axes_actor(scale, total_length, xyz_labels):
 
     # Set the font properties.
     tprop = axes.x_axis_caption_actor2d.caption_text_property
-    tprop.ItalicOn()
-    tprop.ShadowOn()
+    tprop.italic = True
+    tprop.shadow = True
     tprop.SetFontFamilyToTimes()
 
     # Use the same text properties on the other two axes.

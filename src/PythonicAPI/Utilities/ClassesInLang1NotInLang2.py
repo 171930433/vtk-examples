@@ -176,7 +176,7 @@ def main():
                 with fn.open(mode='w'):
                     fn.write_text('\n'.join(res))
         else:
-            print(res)
+            print('\n'.join(res))
 
 
 if __name__ == '__main__':

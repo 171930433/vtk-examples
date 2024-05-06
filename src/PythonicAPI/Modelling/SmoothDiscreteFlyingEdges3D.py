@@ -57,7 +57,7 @@ def main():
     ren_win.AddRenderer(ren)
 
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     n = 20
     radius = 8

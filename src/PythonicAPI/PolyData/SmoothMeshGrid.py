@@ -138,7 +138,7 @@ def main():
 
     render_window = vtkRenderWindow(size=(900, 300))
     render_window_interactor = vtkRenderWindowInteractor()
-    render_window_interactor.SetRenderWindow(render_window)
+    render_window_interactor.render_window = render_window
 
     text = {0: 'Initial Terrain', 1: 'Loop Subdivision', 2: 'Butterfly Subdivision'}
 
@@ -151,7 +151,8 @@ def main():
     # Build the renderers and add them to the render window.
     renderers = list()
     for k in text.keys():
-        renderers.append(vtkRenderer(background=nc.GetColor3d('Cornsilk')))
+        renderers.append(vtkRenderer(background=nc.GetColor3d('Cornsilk'),
+                                     viewport=viewports[k]))
 
         # Add the actors.
         if k == 0:
@@ -167,7 +168,6 @@ def main():
         else:
             renderers[k].SetActiveCamera(camera)
 
-        renderers[k].SetViewport(*viewports[k])
         renderers[k].ResetCamera()
         camera.Zoom(1.2)
 
