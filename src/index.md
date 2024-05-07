@@ -9,7 +9,9 @@ We are now using [github pages](https://pages.github.com/) to provide examples t
 
 Over time we hope that the examples will answer many of the users' questions. Some questions won't have a solution in the current example repertoire. For those questions, we encourage the user to create a simple example that illustrates either a dilemma or a new solution.
 
-## Examples are available for the following programming languages:
+## Available Languages
+
+Examples are available for the following programming languages:
 
 * [C++](Cxx/)
 * [The new Python interface for VTK](PythonicAPI/)
@@ -20,7 +22,18 @@ Over time we hope that the examples will answer many of the users' questions. So
 
 The above examples demonstrate how to *use* VTK functionalities. There are also examples specifically to demonstrate how to write code as a VTK filter using VTK techniques. This is helpful so that your custom code can be called in a fashion that other people are already familiar with. It is also necessary if you plan to contribute your classes to VTK.
 
-## Examples for visualising:
+### Test Data
+
+Many of these examples require data in order to run. For most of the Python and C++ examples the required files will be specified in the source code or the description.
+
+If you have checked out the **vtk-examples** repository, these data files are found in the folder `src/Testing/Data`. Otherwise individual data files can be downloaded from [here](https://gitlab.kitware.com/vtk/vtk-examples/-/tree/master/src/Testing/Data?ref_type=heads).
+
+Be aware:
+
+* For some examples, one or more subfolders in `src/Testing/Data` are needed. In this case you must download each individual file in the subfolder or, more simply, just checkout the whole repository.
+* If there is no indication of the names of the data files and there is a C++ example then look in the relevant `CMakeLists.txt` file starting from `src/Cxx` or [here](https://gitlab.kitware.com/vtk/vtk-examples/-/tree/master/src/Cxx?ref_type=heads)
+
+## Trame
 
 * [Trame](Trame/)
 
