@@ -41,7 +41,8 @@ def main(argv):
     selection = vtkSelection()
     selection.AddNode(selection_node)
 
-    extract_selection = vtkExtractSelection(input_data=(1, selection))
+    extract_selection = vtkExtractSelection()
+    extract_selection.SetInputData(1, selection)
     point_source.output >> extract_selection
 
     # In selection.
@@ -59,21 +60,19 @@ def main(argv):
     print(f'There are {not_selected.number_of_points} points'
           f' and {not_selected.number_of_cells} cells NOT in the selection.')
 
-    property = vtkProperty()
-    property.color = colors.GetColor3d('MidnightBlue')
-    property.point_size = 5
+    point_property = vtkProperty(color=colors.GetColor3d('MidnightBlue'), point_size=5)
 
     input_mapper = vtkDataSetMapper()
     point_source.output >> input_mapper
-    input_actor = vtkActor(mapper=input_mapper, property=property)
+    input_actor = vtkActor(mapper=input_mapper, property=point_property)
 
     selected_mapper = vtkDataSetMapper()
     selected >> selected_mapper
-    selected_actor = vtkActor(mapper=selected_mapper, property=property)
+    selected_actor = vtkActor(mapper=selected_mapper, property=point_property)
 
     not_selected_mapper = vtkDataSetMapper()
     not_selected >> not_selected_mapper
-    not_selected_actor = vtkActor(mapper=not_selected_mapper, property=property)
+    not_selected_actor = vtkActor(mapper=not_selected_mapper, property=point_property)
 
     # There will be one render window.
     render_window = vtkRenderWindow()

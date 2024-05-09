@@ -52,7 +52,8 @@ def main():
     selection = vtkSelection()
     selection.AddNode(selection_node)
 
-    extract_selection = vtkExtractSelection(input_data=(1, selection))
+    extract_selection = vtkExtractSelection()
+    extract_selection.SetInputData(1, selection)
     sphere_source.output >> extract_selection
 
     # In selection.
@@ -61,7 +62,6 @@ def main():
 
     # Get points that are NOT in the selection.
     selection_node.properties.Set(vtkSelectionNode().INVERSE(), 1)  # invert the selection.
-    # extract_selection.update()
 
     not_selected = vtkUnstructuredGrid()
     not_selected.ShallowCopy(extract_selection.update().output)
@@ -72,22 +72,20 @@ def main():
     print(f'There are {not_selected.number_of_points} points'
           f' and {not_selected.number_of_cells} cells NOT in the selection.')
 
-    property = vtkProperty()
-    property.color = colors.GetColor3d('MistyRose')
-    backfaces = vtkProperty()
-    backfaces.color = colors.GetColor3d('Gold')
+    sphere_property = vtkProperty(color=colors.GetColor3d('MistyRose'))
+    backfaces = vtkProperty(color=colors.GetColor3d('Gold'))
 
     input_mapper = vtkDataSetMapper()
     sphere_source.output >> input_mapper
-    input_actor = vtkActor(mapper=input_mapper, property=property, backface_property=backfaces)
+    input_actor = vtkActor(mapper=input_mapper, property=sphere_property, backface_property=backfaces)
 
     selected_mapper = vtkDataSetMapper()
     selected >> selected_mapper
-    selected_actor = vtkActor(mapper=selected_mapper, property=property, backface_property=backfaces)
+    selected_actor = vtkActor(mapper=selected_mapper, property=sphere_property, backface_property=backfaces)
 
     not_selected_mapper = vtkDataSetMapper()
     not_selected >> not_selected_mapper
-    not_selected_actor = vtkActor(mapper=not_selected_mapper, property=property, backface_property=backfaces)
+    not_selected_actor = vtkActor(mapper=not_selected_mapper, property=sphere_property, backface_property=backfaces)
 
     # There will be one render window
     render_window = vtkRenderWindow()

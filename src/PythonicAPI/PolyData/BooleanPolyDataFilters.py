@@ -131,8 +131,8 @@ def main():
             print('Unknown operation:', operation)
             return
 
-    boolean_operation.input_data = (0, input1)
-    boolean_operation.input_data = (1, input2)
+    boolean_operation.SetInputData(0, input1)
+    boolean_operation.SetInputData(1, input2)
 
     boolean_operation_mapper = vtkPolyDataMapper(scalar_visibility=False)
     boolean_operation_actor = vtkActor(mapper=boolean_operation_mapper)

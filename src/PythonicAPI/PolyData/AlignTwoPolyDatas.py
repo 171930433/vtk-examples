@@ -105,8 +105,8 @@ def main():
     p = (target_polydata >> tpd).update().output
 
     distance = vtkHausdorffDistancePointSetFilter()
-    distance.input_data = (0, p)
-    distance.input_data = (1, source_polydata)
+    distance.SetInputData(0, p)
+    distance.SetInputData(1, source_polydata)
     distance.update()
 
     distance_before_align = distance.GetOutput(0).field_data.GetArray('HausdorffDistance').GetComponent(0, 0)
@@ -114,8 +114,8 @@ def main():
     # Get initial alignment using oriented bounding boxes.
     align_bounding_boxes(source_polydata, tpd.output)
 
-    distance.input_data = (0, p)
-    distance.input_data = (1, source_polydata)
+    distance.SetInputData(0, p)
+    distance.SetInputData(1, source_polydata)
     distance.update()
 
     distance_after_align = distance.GetOutput(0).field_data.GetArray('HausdorffDistance').GetComponent(0, 0)
@@ -138,8 +138,8 @@ def main():
     # transform = vtkTransformPolyDataFilter(transform=icp.landmark_transform, input_data=source_polydata)
     transform = vtkTransformPolyDataFilter(transform=icp, input_data=source_polydata)
 
-    distance.input_data = (0, p)
-    distance.input_data = (1, transform.update().output)
+    distance.SetInputData(0, p)
+    distance.SetInputData(1, transform.update().output)
     distance.update()
 
     # Note: If there is an error extracting eigenfunctions, then this will be zero.
@@ -326,8 +326,8 @@ def best_bounding_box(axis, target, source, target_landmarks, source_landmarks, 
         lm_transform_pd.input_data = source
         lm_transform_pd.transform = lm_transform
 
-        distance.input_data = (0, target)
-        distance.input_data = (1, lm_transform_pd.update().output)
+        distance.SetInputData(0, target)
+        distance.SetInputData(1, lm_transform_pd.update().output)
         distance.update()
 
         test_distance = distance.GetOutput(0).field_data.GetArray('HausdorffDistance').GetComponent(0, 0)
