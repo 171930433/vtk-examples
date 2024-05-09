@@ -49,9 +49,11 @@ def main():
     # An isosurface, or contour value of 500 is known to correspond to the
     # skin of the patient.
     if use_flying_edges:
-        skin_extractor = vtkFlyingEdges3D(value=(0, 500))
+        skin_extractor = vtkFlyingEdges3D()
+        skin_extractor.SetValue(0, 500)
     else:
-        skin_extractor = vtkMarchingCubes(value=(0, 500))
+        skin_extractor = vtkMarchingCubes()
+        skin_extractor.SetValue(0, 500)
 
     skin_mapper = vtkPolyDataMapper(scalar_visibility=False)
     reader >> skin_extractor >> skin_mapper

@@ -42,7 +42,8 @@ def main():
         print('Error: Could not read', file_name)
         return
 
-    iso = vtkMarchingSquares(value=(0, iso_value))
+    iso = vtkMarchingSquares()
+    iso.SetValue(0, iso_value)
     reader >> iso
 
     iso_mapper = vtkDataSetMapper(scalar_visibility=False)

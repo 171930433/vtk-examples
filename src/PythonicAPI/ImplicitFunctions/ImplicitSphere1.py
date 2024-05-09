@@ -28,7 +28,8 @@ def main():
                                sample_dimensions=(20, 20, 20), compute_normals=False)
 
     # Contour
-    surface = vtkContourFilter(value=(0, 0.0))
+    surface = vtkContourFilter()
+    surface.SetValue(0, 0.0)
 
     # Mapper
     mapper = vtkPolyDataMapper(scalar_visibility=False)

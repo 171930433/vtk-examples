@@ -44,7 +44,8 @@ def main():
     vol = vtkStructuredPoints(dimensions=(26, 26, 26),origin=(-0.5, -0.5, -0.5),spacing=(sp,)*3)
     vol.point_data.SetScalars(scalars)
 
-    contour = vtkContourFilter(value=(0, 0.0))
+    contour = vtkContourFilter()
+    contour.SetValue(0, 0.0)
     contour.SetInputData(vol)
 
     vol_mapper = vtkPolyDataMapper(scalar_visibility=False)

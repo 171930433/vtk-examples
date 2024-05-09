@@ -63,7 +63,8 @@ def main():
                                         sample_dimensions=(128, 128, 128),
                                         compute_normals=False)
 
-    the_cone_surface = vtkContourFilter(value=(0, 0.0))
+    the_cone_surface = vtkContourFilter()
+    the_cone_surface.SetValue(0, 0.0)
 
     cone_mapper = vtkPolyDataMapper(scalar_visibility=False)
     the_cone_sample >> the_cone_surface >> cone_mapper
@@ -78,7 +79,8 @@ def main():
                                          sample_dimensions=(128, 128, 128),
                                          compute_normals=False)
 
-    the_cream_surface = vtkContourFilter(value=(0, 0.0))
+    the_cream_surface = vtkContourFilter()
+    the_cream_surface.SetValue(0, 0.0)
 
     cream_mapper = vtkPolyDataMapper(scalar_visibility=False)
     the_cream_sample >> the_cream_surface >> cream_mapper

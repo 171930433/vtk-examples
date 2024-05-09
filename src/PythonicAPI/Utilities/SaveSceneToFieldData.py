@@ -132,7 +132,7 @@ def save_scene_to_field_data(data, actor, camera):
     # SetNumberOfValues() actually is a function that returns True or False.
     camera_array.SetNumberOfValues(1)
     # This has to occur after SetNumberOfValues().
-    camera_array.value = (0, buffer)
+    camera_array.SetValue(0, buffer)
     data.field_data.AddArray(camera_array)
 
 

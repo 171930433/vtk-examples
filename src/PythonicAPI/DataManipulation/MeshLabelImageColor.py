@@ -60,7 +60,8 @@ def main():
     # Prepare surface generation.
     # For label images.
     if use_flying_edges:
-        contour = vtkDiscreteFlyingEdges3D(value=(0, index))
+        contour = vtkDiscreteFlyingEdges3D()
+        contour.SetValue(0, index)
     else:
         contour = vtkDiscreteMarchingCubes()
 
