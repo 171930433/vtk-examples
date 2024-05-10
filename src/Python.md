@@ -545,7 +545,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [ContourQuadric](/Python/VisualizationAlgorithms/ContourQuadric) | Contouring a quadric function.
 [CreateBFont](/Python/VisualizationAlgorithms/CreateBFont) | A scanned image clipped with a scalar value of 1/2 its maximum intensity produces a mixture of quadrilaterals and triangles.
 [CreateColorSeriesDemo](/Python/Visualization/CreateColorSeriesDemo) | Create a custom vtkColorSeries.
-[CubeAxesActor](/Python/Visualization/CubeAxesActor) | Display three orthogonal axes with labels.FWorking with 3D
+[CubeAxesActor](/Python/Visualization/CubeAxesActor) | Display three orthogonal axes with labels.
 [CurvatureBandsWithGlyphs](/Python/Visualization/CurvatureBandsWithGlyphs) | Demonstrates the coloring of a surface by partitioning the gaussian curvature of a surface into bands and using arrows to display the normals on the surface.
 [CutStructuredGrid](/Python/VisualizationAlgorithms/CutStructuredGrid) | Cut through structured grid with plane. The cut plane is shown solid shaded. A computational plane of constant k value is shown in wireframe for comparison. The colors correspond to flow density. Cutting surfaces are not necessarily planes: implicit functions such as spheres, cylinders, and quadrics can also be used.
 [Cutter](/Python/VisualizationAlgorithms/Cutter) | How to use vtkCutter by cutting through a cube.
