@@ -136,7 +136,7 @@ def main(argv):
     iren = vtkRenderWindowInteractor()
     iren.render_window = ren_win
     # Important: The interactor must be set prior to enabling the widget.
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     text_property = vtkTextProperty(color=colors.GetColor3d('AliceBlue'), bold=True, italic=True, shadow=True,
                                     font_size=16,

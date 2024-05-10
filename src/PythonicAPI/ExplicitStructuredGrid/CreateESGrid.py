@@ -126,15 +126,15 @@ def main():
     window.Render()
 
     camera = renderer.GetActiveCamera()
-    camera.SetPosition(8.383354, -72.468670, 94.262605)
-    camera.SetFocalPoint(42.295234, 21.111537, -0.863606)
-    camera.SetViewUp(0.152863, 0.676710, 0.720206)
-    camera.SetDistance(137.681759)
-    camera.SetClippingRange(78.173985, 211.583658)
+    camera.position = (8.383354, -72.468670, 94.262605)
+    camera.focal_point = (42.295234, 21.111537, -0.863606)
+    camera.view_up = (0.152863, 0.676710, 0.720206)
+    camera.distance = 137.681759
+    camera.clipping_range = (78.173985, 211.583658)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(window)
-    interactor.SetInteractorStyle(vtkInteractorStyleRubberBandPick())
+    interactor.render_window = window
+    interactor.interactor_stype = vtkInteractorStyleRubberBandPick()
     window.Render()
     interactor.Start()
 

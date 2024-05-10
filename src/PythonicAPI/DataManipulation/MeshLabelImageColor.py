@@ -113,7 +113,7 @@ def main():
 
     # Set a user interface interactor for the render window.
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     # Start the initialization and rendering.
     iren.Initialize()

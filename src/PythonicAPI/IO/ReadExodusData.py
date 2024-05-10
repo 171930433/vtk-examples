@@ -63,17 +63,17 @@ def main():
     renderer = vtkRenderer(background=colors.GetColor3d('DimGray'))
     renderer.AddViewProp(actor)
 
-    renderer.GetActiveCamera().SetPosition(9.0, 9.0, 7.0)
-    renderer.GetActiveCamera().SetFocalPoint(0, 0, 0)
-    renderer.GetActiveCamera().SetViewUp(0.2, -0.7, 0.7)
-    renderer.GetActiveCamera().SetDistance(14.5)
+    renderer.active_camera.position = (9.0, 9.0, 7.0)
+    renderer.active_camera.FocalPoint = (0, 0, 0)
+    renderer.active_camera.ViewUp = (0.2, -0.7, 0.7)
+    renderer.active_camera.distance = 14.5
 
     # Window and Interactor
     window = vtkRenderWindow(size=(600, 600), window_name='ReadExodusData')
     window.AddRenderer(renderer)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(window)
+    interactor.render_window = window
     interactor.Initialize()
 
     # Show the result

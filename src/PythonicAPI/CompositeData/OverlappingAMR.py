@@ -108,7 +108,7 @@ def main():
     ren_win.AddRenderer(ren)
 
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     # Start handling events.
     ren_win.Render()

@@ -29,10 +29,10 @@ def main():
 
     # Create a render window interactor.
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     style = vtkInteractorStyleTrackballCamera()
-    iren.SetInteractorStyle(style)
+    iren.interactor_style = style
 
     # Create the source, mapper and actor.
     src = vtkPointSource(center=(0, 0, 0), number_of_points=50, radius=5)

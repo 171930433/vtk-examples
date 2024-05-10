@@ -92,7 +92,7 @@ def main():
     ren_win = vtkRenderWindow(size=(600, 500), window_name='SpiderPlot')
     ren_win.AddRenderer(ren)
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
     ren.AddActor(actor)
 
     iren.Initialize()

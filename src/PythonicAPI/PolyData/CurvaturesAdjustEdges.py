@@ -129,9 +129,9 @@ def main(argv):
 
     ren_win = vtkRenderWindow(size=(window_width, window_height), window_name='CurvaturesAdjustEdges')
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
     style = vtkInteractorStyleTrackballCamera()
-    iren.SetInteractorStyle(style)
+    iren.interactor_style = style
 
     # Define viewport ranges [x_min, y_min, x_max, y_max]
     viewports = dict()

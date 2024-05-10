@@ -96,7 +96,7 @@ def main():
     ren_win = vtkRenderWindow(size=(512, 512), window_name='DelaunayMesh')
     ren_win.AddRenderer(ren)
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     # Add the actors to the renderer, set the background and size.
     ren.AddActor(ball_actor)

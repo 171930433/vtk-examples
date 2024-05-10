@@ -77,7 +77,7 @@ def main():
     render_window.AddRenderer(renderer)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
 
     # Interact with the data.
     interactor.Start()

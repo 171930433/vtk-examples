@@ -46,7 +46,7 @@ def main():
     ren_window = vtkRenderWindow(window_name='ConnectivityFilter')
     ren_window.AddRenderer(renderer)
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_window)
+    iren.render_window = ren_window
 
     ren_window.Render()
     renderer.active_camera.Zoom(0.9)

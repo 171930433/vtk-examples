@@ -81,7 +81,7 @@ def main(argv):
 
     # And one interactor.
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
 
     # Define viewport ranges.
     # (xmin, ymin, xmax, ymax)

@@ -152,7 +152,7 @@ def main():
     render_window.window_name = 'ReadLegacyUnstructuredGrid'
 
     render_window_interactor = vtkRenderWindowInteractor()
-    render_window_interactor.SetRenderWindow(render_window)
+    render_window_interactor.render_window = render_window
 
     renderer.AddActor(geometry_actor)
     renderer.AddActor(label_actor)

@@ -144,7 +144,7 @@ def main(argv):
     # --------------------------------------------------
     ren_win = vtkRenderWindow(size=(window_width, window_height), window_name='CurvaturesNormalsElevations')
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
     style = vtkInteractorStyleTrackballCamera()
     iren.interactor_style = style
 

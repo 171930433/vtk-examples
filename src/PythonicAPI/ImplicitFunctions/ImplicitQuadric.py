@@ -52,7 +52,7 @@ def main():
 
     # An interactor.
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(renwin)
+    interactor.render_window = renwin
 
     # Start
     interactor.Initialize()

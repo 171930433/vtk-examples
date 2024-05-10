@@ -73,10 +73,9 @@ def main():
 
     render_window_interactor = vtkRenderWindowInteractor()
     style = vtkInteractorStyleImage()
+    render_window_interactor.interactor_style = style
+    render_window_interactor.render_window = render_window
 
-    render_window_interactor.SetInteractorStyle(style)
-
-    render_window_interactor.SetRenderWindow(render_window)
     render_window_interactor.Initialize()
 
     render_window_interactor.Start()

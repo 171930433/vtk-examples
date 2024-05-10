@@ -95,7 +95,7 @@ def main():
     render_win = vtkRenderWindow(size=(400, 400), window_name='VTKWithNumpy')
     render_win.AddRenderer(renderer)
     render_interactor = vtkRenderWindowInteractor()
-    render_interactor.SetRenderWindow(render_win)
+    render_interactor.render_window = render_win
 
     # We add the volume to the renderer ...
     renderer.AddVolume(volume)

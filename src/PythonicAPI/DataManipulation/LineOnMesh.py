@@ -160,7 +160,7 @@ def main():
     render_window = vtkRenderWindow(size=(800, 800), window_name='LineOnMesh')
     render_window.AddRenderer(renderer)
     render_window_interactor = vtkRenderWindowInteractor()
-    render_window_interactor.SetRenderWindow(render_window)
+    render_window_interactor.render_window = render_window
 
     # Add actors and render
     renderer.AddActor(actor)

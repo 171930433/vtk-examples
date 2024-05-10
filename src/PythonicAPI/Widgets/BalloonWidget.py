@@ -51,7 +51,7 @@ def main():
 
     # An interactor.
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     # Create the widget.
     # Do not set the justification.

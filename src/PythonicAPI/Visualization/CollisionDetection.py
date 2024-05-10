@@ -108,7 +108,7 @@ def main():
     render_window.AddRenderer(renderer)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
 
     # Move the first object
     num_steps = 100

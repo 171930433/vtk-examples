@@ -42,7 +42,7 @@ def main():
     ren_win.AddRenderer(ren)
 
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
 
     reader = vtkMetaImageReader(file_name=file_name)
 
