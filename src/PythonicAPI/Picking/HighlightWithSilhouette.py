@@ -48,7 +48,6 @@ def main():
     # Add the custom style.
     style = MouseInteractorHighLightActor()
     style.default_renderer = renderer
-    interactor.interactor_style = style
 
     random_sequence = vtkMinimalStandardRandomSequence()
     # random_sequence.SetSeed(1043618065)
@@ -109,7 +108,7 @@ def main():
 
     # Start
     interactor.Initialize()
-    interactor.SetInteractorStyle(style)
+    interactor.interactor_style = style
 
     render_window.Render()
 

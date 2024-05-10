@@ -169,9 +169,9 @@ def main(fn):
     ren_win = vtkRenderWindow(size=(width, height), window_name='GradientBackground')
 
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
     style = vtkInteractorStyleTrackballCamera()
-    iren.SetInteractorStyle(style)
+    iren.interactor_style = style
 
     text_widgets = list()
     for i, viewport_title in enumerate(viewport_titles):
@@ -321,7 +321,7 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
             i += 1
 
         lines = vtkPolyLine()
-        lines.point_ids.number_of_ids = number_of_points
+        lines.point_ids.SetNumberOfIds(number_of_points)
         for i in range(0, number_of_points):
             lines.point_ids.id = (i, i)
 

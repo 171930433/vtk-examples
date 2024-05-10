@@ -55,7 +55,7 @@ def main():
     renderer.AddActor(contour_actor)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
 
     render_window.Render()
     interactor.Start()

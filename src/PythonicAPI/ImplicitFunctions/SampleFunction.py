@@ -50,7 +50,6 @@ def main():
 
     # Create outline.
     outline = vtkOutlineFilter()
-    # outline.SetInputConnection(sample.GetOutputPort())
 
     # Map it to graphics primitives.
     outline_mapper = vtkPolyDataMapper()
@@ -66,7 +65,7 @@ def main():
     render_window.AddRenderer(renderer)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
 
     renderer.AddActor(contour_actor)
     renderer.AddActor(outline_actor)

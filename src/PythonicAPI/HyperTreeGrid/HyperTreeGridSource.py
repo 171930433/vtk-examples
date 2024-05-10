@@ -63,7 +63,7 @@ def main():
     render_window = vtkRenderWindow(size=(640, 480), window_name='HyperTreeGridSource')
     render_window.AddRenderer(renderer)
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
 
     renderer.AddActor(actor)
     renderer.ResetCamera()

@@ -70,7 +70,7 @@ def main():
     iren.CreateRepeatingTimer(50)
 
     i_style = vtkInteractorStyleTrackballCamera()
-    iren.SetInteractorStyle(i_style)
+    iren.interactor_style = i_style
 
     iren.Start()
 

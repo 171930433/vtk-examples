@@ -54,7 +54,7 @@ def main():
 
     interactor = vtkRenderWindowInteractor()
     interactor.interactor_style = MyInteractorStyle()
-    interactor.SetRenderWindow(renwin)
+    interactor.render_window = renwin
 
     interactor.Initialize()
     renwin.Render()

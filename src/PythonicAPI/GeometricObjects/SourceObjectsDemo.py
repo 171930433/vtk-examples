@@ -61,9 +61,9 @@ def main():
     render_window = vtkRenderWindow(size=size, window_name='SourceObjectsDemo')
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(render_window)
+    interactor.render_window = render_window
     style = vtkInteractorStyleTrackballCamera()
-    interactor.SetInteractorStyle(style)
+    interactor.interactor_style = style
 
     # Create one text property for all.
     text_property = vtkTextProperty(color=colors.GetColor3d('LightGoldenrodYellow'), bold=True, italic=True,

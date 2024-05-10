@@ -53,26 +53,23 @@ def main(fn):
 
     colors = vtkNamedColors()
 
-    renderer = vtkRenderer()
+    renderer = vtkRenderer(background=colors.GetColor3d('DimGray'))
     renderer.AddActor(actor)
-    renderer.SetBackground(colors.GetColor3d('DimGray'))
 
-    window = vtkRenderWindow()
+    window = vtkRenderWindow(size=(1024, 768),window_name='LoadESGrid')
     window.AddRenderer(renderer)
-    window.SetWindowName('LoadESGrid')
-    window.SetSize(1024, 768)
     window.Render()
 
     camera = renderer.GetActiveCamera()
-    camera.SetPosition(312452.407650, 7474760.406373, 3507.364723)
-    camera.SetFocalPoint(314388.388434, 7481520.509575, -2287.477388)
-    camera.SetViewUp(0.089920, 0.633216, 0.768734)
-    camera.SetDistance(9111.926908)
-    camera.SetClippingRange(595.217338, 19595.429475)
+    camera.position = (312452.407650, 7474760.406373, 3507.364723)
+    camera.focal_point = (314388.388434, 7481520.509575, -2287.477388)
+    camera.view_up = (0.089920, 0.633216, 0.768734)
+    camera.distance = 9111.926908
+    camera.clipping_range = (595.217338, 19595.429475)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetRenderWindow(window)
-    interactor.SetInteractorStyle(vtkInteractorStyleRubberBandPick())
+    interactor.render_window = window
+    interactor.interactor_stype = vtkInteractorStyleRubberBandPick()
     window.Render()
     interactor.Start()
 

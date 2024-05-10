@@ -132,9 +132,9 @@ def main():
 
     ren_win = vtkRenderWindow(size=size, window_name='ParametricObjectsDemo')
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
     style = vtkInteractorStyleTrackballCamera()
-    iren.SetInteractorStyle(style)
+    iren.interactor_style = style
 
     colors = vtkNamedColors()
 

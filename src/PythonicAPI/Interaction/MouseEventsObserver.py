@@ -35,8 +35,8 @@ def main():
     renwin.AddRenderer(renderer)
 
     interactor = vtkRenderWindowInteractor()
-    interactor.SetInteractorStyle(vtkInteractorStyleTrackballCamera())
-    interactor.SetRenderWindow(renwin)
+    interactor.interactor_style = vtkInteractorStyleTrackballCamera()
+    interactor.render_window = renwin
 
     def dummy_func1(obj, ev):
         print('Before Event')

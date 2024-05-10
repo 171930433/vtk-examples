@@ -109,6 +109,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[EarthSource](/PythonicAPI/GeometricObjects/EarthSource) | Create the Earth.
 [TessellatedBoxSource](/PythonicAPI/GeometricObjects/TessellatedBoxSource) | Generate a box with tessellated sides.
 
 ### Non Linear
@@ -131,6 +132,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [BooleanOperationImplicitFunctions](/PythonicAPI/ImplicitFunctions/BooleanOperationImplicitFunctions) | Demonstrate booleans of two different implicit functions
 [ContourTriangulator](/PythonicAPI/Modelling/ContourTriangulator) | Create a contour from a structured point set (image) and triangulate it.
 [DiscreteFlyingEdges3D](/PythonicAPI/Modelling/DiscreteFlyingEdges3D) | Generate surfaces from labeled data.
+[ExtractData](/src/Python/VisualizationAlgorithms/ExtractData.md) | Implicit functions used to select data: Two ellipsoids are combined using the union operation used to select voxels from a volume. Voxels are shrunk 50 percent.
 [IceCream](/PythonicAPI/VisualizationAlgorithms/IceCream) | How to use boolean combinations of implicit functions to create a model of an ice cream cone.
 [ImplicitQuadric](/PythonicAPI/ImplicitFunctions/ImplicitQuadric) | Create an ellipsoid using an implicit quadric
 [ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
@@ -150,6 +152,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [ExtractPolyLinesFromPolyData](/PythonicAPI/PolyData/ExtractPolyLinesFromPolyData) | Extract polylines from polydata.
 [ExtractSelection](/PythonicAPI/PolyData/ExtractSelection) |Extract selected points.
 [ExtractSelectionCells](/PythonicAPI/PolyData/ExtractSelectionCells) | Extract cell, select cell.
+[Finance](/PythonicAPI/Modelling/Finance) | Visualization of multidimensional financial data. The gray/wireframe surface represents the total data population. The red surface represents data points delinquent on loan payment.
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
@@ -171,6 +174,7 @@ This section includes examples of manipulating meshes.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[DeformPointSet](/PythonicAPI/Meshes/DeformPointSet) | Use the vtkDeformPointSet filter to deform a vtkSphereSource with arbitrary polydata.
 [DelaunayMesh](/PythonicAPI/Modelling/DelaunayMesh) | Two-dimensional Delaunay triangulation of a random set of points. Points and edges are shown highlighted with sphere glyphs and tubes.
 
 #### Clipping
@@ -322,6 +326,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [ColoredAnnotatedCube](/PythonicAPI/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
 [CollisionDetection](/PythonicAPI/Visualization/CollisionDetection) | Collison between two spheres.
 [CubeAxesActor](/PythonicAPI/Visualization/CubeAxesActor) | Display three orthogonal axes with [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
+[DataSetSurface](/PythonicAPI/VisualizationAlgorithms/DataSetSurface) | Cutting a hexahedron with a plane. The red line on the surface shows the cut.
 [PointDataSubdivision](/PythonicAPI/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
 [WarpCombustor](/PythonicAPI/VisualizationAlgorithms/WarpCombustor) | Carpet plots of combustor flow energy in a structured grid. Colors and plane displacement represent energy values.

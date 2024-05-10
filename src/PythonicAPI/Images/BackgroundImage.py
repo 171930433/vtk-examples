@@ -90,7 +90,7 @@ def main():
     render_window.SetWindowName('BackgroundImage')
 
     render_window_interactor = vtkRenderWindowInteractor()
-    render_window_interactor.SetRenderWindow(render_window)
+    render_window_interactor.render_window = render_window
 
     # Render once to figure out where the background camera will be.
     render_window.Render()
