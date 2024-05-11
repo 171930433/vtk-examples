@@ -41,35 +41,32 @@ def main():
     earth_source.update()
     r = earth_source.GetRadius()
 
-    # Transform to geographic coordinates.
+    # Transform to geographic coordinates:
+    # (x, y, z)->(λ, φ), +λ is East, +φ is North.
+    # +x-axis -> 90°λ, +y-axis -> 90°φ, +z-axis -> 0°λ
+    # This corresponds to RotateX(-90.0) followed by RotateZ(-90.0).
+    # The homogenous matrix for the transform is:
+    m = [[0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0], [0, 0, 0, 1]]
     transform = vtkTransform()
-    transform.RotateZ(-180.0)
-    transform.RotateX(90.0)
-    transform.RotateZ(90.0)
+    # We need to flatten the matrix.
+    transform.matrix = [x for ms in m for x in ms]
 
-    transform_filter = vtkTransformPolyDataFilter(transform=transform)
-
-    # earth_source >>  transform_filter
+    earth_transform = vtkTransformPolyDataFilter(transform=transform)
+    sphere_transform = vtkTransformPolyDataFilter(transform=transform)
 
     # Create a sphere
     sphere = vtkSphereSource(theta_resolution=100, phi_resolution=100, radius=r)
 
     # Create a mapper and actor
     mapper = vtkPolyDataMapper()
-    earth_source >> transform_filter >> mapper
-    # mapper.SetInputConnection(earth_source.GetOutputPort())
-
+    earth_source >> earth_transform >> mapper
     actor = vtkActor(mapper=mapper)
-    # actor.SetMapper(mapper)
     actor.property.color = colors.GetColor3d('Black')
     actor.property.line_width = 2.0
 
     sphere_mapper = vtkPolyDataMapper()
-    sphere >> sphere_mapper
-    # sphere_mapper.SetInputConnection(sphere.GetOutputPort())
-
+    sphere >> sphere_transform >> sphere_mapper
     sphere_actor = vtkActor(mapper=sphere_mapper)
-    # sphere_actor.SetMapper(sphere_mapper)
     sphere_actor.property.color = colors.GetColor3d('PeachPuff')
 
     # Create a renderer, render window, and interactor
@@ -113,24 +110,24 @@ def main():
 
 
 def make_annotated_cube_actor():
+    colors = vtkNamedColors()
+
     annotated_cube = vtkAnnotatedCubeActor(face_text_scale=1.0 / 4.0,
                                            x_plus_face_text='90°E', x_minus_face_text='90°W',
                                            y_plus_face_text='90°N', y_minus_face_text='90°S',
                                            z_plus_face_text='0°E', z_minus_face_text='180°E'
                                            )
 
-    colors = vtkNamedColors()
-
     # Change the vector text colors.
     annotated_cube.text_edges_property.color = colors.GetColor3d('Black')
     annotated_cube.text_edges_property.line_width = 1
 
-    annotated_cube.x_plus_face_property.color = colors.GetColor3d('Turquoise')
-    annotated_cube.x_minus_face_property.color = colors.GetColor3d('Turquoise')
-    annotated_cube.y_plus_face_property.color = colors.GetColor3d('Mint')
-    annotated_cube.y_minus_face_property.color = colors.GetColor3d('Mint')
-    annotated_cube.z_plus_face_property.color = colors.GetColor3d('Tomato')
-    annotated_cube.z_minus_face_property.color = colors.GetColor3d('Tomato')
+    annotated_cube.x_plus_face_property.color = colors.GetColor3d('Mint')
+    annotated_cube.x_minus_face_property.color = colors.GetColor3d('Mint')
+    annotated_cube.y_plus_face_property.color = colors.GetColor3d('Tomato')
+    annotated_cube.y_minus_face_property.color = colors.GetColor3d('Tomato')
+    annotated_cube.z_plus_face_property.color = colors.GetColor3d('Turquoise')
+    annotated_cube.z_minus_face_property.color = colors.GetColor3d('Turquoise')
 
     annotated_cube.x_face_text_rotation = -90
     annotated_cube.y_face_text_rotation = 180
@@ -141,12 +138,12 @@ def make_annotated_cube_actor():
     # Colored faces for the cube.
     face_colors = vtkUnsignedCharArray()
     face_colors.SetNumberOfComponents(3)
-    face_x_plus = colors.GetColor3ub('FireBrick')
-    face_x_minus = colors.GetColor3ub('FireBrick')
-    face_y_plus = colors.GetColor3ub('DarkGreen')
-    face_y_minus = colors.GetColor3ub('DarkGreen')
-    face_z_plus = colors.GetColor3ub('DarkBlue')
-    face_z_minus = colors.GetColor3ub('DarkBlue')
+    face_x_plus = colors.GetColor3ub('DarkGreen')
+    face_x_minus = colors.GetColor3ub('DarkGreen')
+    face_y_plus = colors.GetColor3ub('DarkBlue')
+    face_y_minus = colors.GetColor3ub('DarkBlue')
+    face_z_plus = colors.GetColor3ub('FireBrick')
+    face_z_minus = colors.GetColor3ub('FireBrick')
     face_colors.InsertNextTypedTuple(face_x_minus)
     face_colors.InsertNextTypedTuple(face_x_plus)
     face_colors.InsertNextTypedTuple(face_y_minus)
@@ -171,6 +168,8 @@ def make_annotated_cube_actor():
 
 
 def make_axes_actor(scale, total_length, xyz_labels):
+    colors = vtkNamedColors()
+
     axes = vtkAxesActor(shaft_type=vtkAxesActor.CYLINDER_SHAFT, tip_type=vtkAxesActor.CONE_TIP,
                         x_axis_label_text=xyz_labels[0], y_axis_label_text=xyz_labels[1],
                         z_axis_label_text=xyz_labels[2],
@@ -190,11 +189,19 @@ def make_axes_actor(scale, total_length, xyz_labels):
     axes.y_axis_caption_actor2d.caption_text_property.ShallowCopy(tprop)
     axes.z_axis_caption_actor2d.caption_text_property.ShallowCopy(tprop)
 
+    # Now color the axes.
+    axes.x_axis_tip_property.color = colors.GetColor3d('LimeGreen')
+    axes.x_axis_shaft_property.color = colors.GetColor3d('LimeGreen')
+    axes.y_axis_tip_property.color = colors.GetColor3d('Blue')
+    axes.y_axis_shaft_property.color = colors.GetColor3d('Blue')
+    axes.z_axis_tip_property.color = colors.GetColor3d('Red')
+    axes.z_axis_shaft_property.color = colors.GetColor3d('Red')
+
     # Now color the labels.
     colors = vtkNamedColors()
-    axes.x_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('FireBrick')
-    axes.y_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkGreen')
-    axes.z_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkBlue')
+    axes.x_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkGreen')
+    axes.y_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkBlue')
+    axes.z_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('FireBrick')
 
     return axes
 
