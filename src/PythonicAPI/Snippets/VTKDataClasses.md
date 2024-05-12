@@ -152,6 +152,50 @@ class Curvatures:
 
 ```
 
+### Cutter
+
+``` Python
+@dataclass(frozen=True)
+class Cutter:
+    @dataclass(frozen=True)
+    class SortBy:
+        VTK_SORT_BY_VALUE: int = 0
+        VTK_SORT_BY_CELL: int = 1
+
+```
+
+### DataObjectToDataSetFilter
+
+``` Python
+class DataObjectToDataSetFilter:
+    @dataclass(frozen=True)
+    class DataSetType:
+        VTK_POLY_DATA: int = 0
+        VTK_STRUCTURED_POINTS: int = 1
+        VTK_STRUCTURED_GRID: int = 2
+        VTK_RECTILINEAR_GRID: int = 3
+        VTK_UNSTRUCTURED_GRID: int = 4
+
+```
+
+### FieldDataToAttributeDataFilter
+
+``` Python
+@dataclass(frozen=True)
+class FieldDataToAttributeDataFilter:
+    @dataclass(frozen=True)
+    class InputField:
+        VTK_DATA_OBJECT_FIELD: int = 0
+        VTK_POINT_DATA_FIELD: int = 1
+        VTK_CELL_DATA_FIELD: int = 2
+
+    @dataclass(frozen=True)
+    class OutputAttributeData:
+        VTK_CELL_DATA: int = 0
+        VTK_POINT_DATA: int = 1
+
+```
+
 ### Glyph3D
 
 ``` Python
