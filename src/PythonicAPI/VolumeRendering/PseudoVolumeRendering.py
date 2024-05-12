@@ -106,6 +106,7 @@ def main():
     iso_actor.visibility = True
     ren.AddActor(cut)
 
+    # Number od contours.
     n = 20
     opacity = 1.0 / float(n) * 5.0
     cut.property.opacity = 1
