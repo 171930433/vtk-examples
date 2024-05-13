@@ -229,6 +229,30 @@ class Glyph3D:
 
 ```
 
+### GlyphSource2D
+
+``` Python
+@dataclass(frozen=True)
+class GlyphSource2D:
+    @dataclass(frozen=True)
+    class GlyphType:
+        VTK_NO_GLYPH: int = 0
+        VTK_VERTEX_GLYPH: int = 1
+        VTK_DASH_GLYPH: int = 2
+        VTK_CROSS_GLYPH: int = 3
+        VTK_THICKCROSS_GLYPH: int = 4
+        VTK_TRIANGLE_GLYPH: int = 5
+        VTK_SQUARE_GLYPH: int = 6
+        VTK_CIRCLE_GLYPH: int = 7
+        VTK_DIAMOND_GLYPH: int = 8
+        VTK_ARROW_GLYPH: int = 9
+        VTK_THICKARROW_GLYPH: int = 10
+        VTK_HOOKEDARROW_GLYPH: int = 11
+        VTK_EDGEARROW_GLYPH: int = 12
+
+
+```
+
 ### ImageCanvasSource2D
 
 ``` Python
