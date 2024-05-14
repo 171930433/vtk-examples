@@ -7,6 +7,7 @@ from pathlib import Path
 
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
+from vtkmodules.util.execution_model import select_ports
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonComputationalGeometry import (
     vtkParametricBoy,
@@ -486,7 +487,7 @@ def read_cubemap(cubemap):
         flipped_images.append(flip)
 
     for i in range(0, len(flipped_images)):
-        cube_map.SetInputConnection(i, flipped_images[i].GetOutputPort())
+        flipped_images[i] >> select_ports(i, cube_map)
 
     return cube_map
 

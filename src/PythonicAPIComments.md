@@ -33,7 +33,7 @@ Instead of `SetSomeProperty()` or `GetSomeProperty()` you can just just drop the
 
 ```
 
-Generally if a VTK class has a Set or Get method then converting the name to snake case will give you the relevant property e.g. for `SetResolution()` or `GetResolution` the wrapped property will be `resolution`.
+Generally if a VTK class has a Set or Get method then converting the name to snake case will give you the relevant property e.g. for `SetResolution()` or `GetResolution()` the wrapped property will be `resolution`.
 
 However:
 
@@ -100,6 +100,53 @@ A pipeline can produce multiple outputs. Here, p is a tuple of ?vtkDataObject?s,
 | -------------- | ---------------------- | ------- |
 [SolidClip](/PythonicAPI/Meshes/SolidClip) | The tuple `clipper` contains the clipped output as the first element and clipped away output as the second element.
 
+## Selecting ports in a pipeline
+
+Ports in a pipeline can be selected using the function `select_ports()`.
+
+The possibilities are:
+
+- select_ports(input_port, algorithm)
+- select_ports(algorithm, output_port)
+- select_ports(input_port, algorithm, output_port)
+
+So in **VisualizeDirectedGraph** insted of writing:
+
+``` Python
+    arrow_glyph.SetInputConnection(0, graph_to_poly.GetOutputPort(1))
+    arrow_glyph.SetInputConnection(1, arrow_source.GetOutputPort())
+```
+
+you can write:
+
+``` Python
+    select_ports(graph_to_poly, 1) >> arrow_glyph
+    arrow_source >> select_ports(1, arrow_glyph)
+```
+
+In **PBR_Skybox_Anisotropy** instead of writing:
+
+``` Python
+        cube_map.SetInputConnection(i, flipped_images[i].GetOutputPort())
+```
+
+you can write:
+
+``` Python
+        flipped_images[i] >> select_ports(i, cube_map)
+```
+
+| Example Name | Comments | Image |
+| -------------- | ---------------------- | ------- |
+[VisualizeDirectedGraph](/PythonicAPI/Graphs/VisualizeDirectedGraph) | In this case, as documented above, `select_ports()` is used for both input and output.
+[PBR_Skybox_Anisotropy](/PythonicAPI/Rendering/PBR_Skybox_Anisotropy) | Here we use `select_ports()` in a loop to add images to a cube map as documented above.
+
+Remenber to import it:
+
+``` Python
+from vtkmodules.util.execution_model import select_ports
+```
+
 ## Updating part of a pipeline
 
 Sometimes we need to update part of a pipeline so that output can be used in other pipelines.
@@ -164,7 +211,6 @@ The real advantage of this approach is that the defined VTK constants are used i
 [VTKDataClasses](/PythonicAPI/Snippets/VTKDataClasses.md) | This snippet defines immutable dataclasses that can be used in the initialization of VTK classes or to replace the Set/Get functions that set and get these constants.
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | A lot of immutable dataclasses are used in this example
 
-
 ## Python functions and pipelines
 
 A Python function returning a VTK object can be used as the first element of a pipeline.
@@ -183,7 +229,7 @@ Try this example with a `.csv` file to see what happens.
 
 ## Snippets
 
-Here are some code snippets that can be directly dropped into your code [Snippets](/PythonicAPI/Snippets.md).
+Here are some code [snippets](/PythonicAPI/Snippets.md) that can be directly dropped into your code.
 
 ## Python hints
 

@@ -6,6 +6,8 @@ from dataclasses import dataclass
 import vtkmodules.vtkInteractionStyle
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
+from vtkmodules.util.execution_model import select_ports
+from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonDataModel import vtkMutableDirectedGraph
 from vtkmodules.vtkFiltersCore import vtkGlyph3D
 from vtkmodules.vtkFiltersSources import (
@@ -21,11 +23,9 @@ from vtkmodules.vtkRenderingCore import (
     vtkPolyDataMapper
 )
 from vtkmodules.vtkViewsInfovis import vtkGraphLayoutView
-from vtkmodules.vtkCommonColor import vtkNamedColors
 
 
 def main():
-
     colors = vtkNamedColors()
 
     g = vtkMutableDirectedGraph()
@@ -66,17 +66,17 @@ def main():
 
     # Use Glyph3D to repeat the glyph on all edges.
     arrow_glyph = vtkGlyph3D()
-    arrow_glyph.SetInputConnection(0, graph_to_poly.GetOutputPort(1))
-    arrow_glyph.SetInputConnection(1, arrow_source.GetOutputPort())
+    select_ports(graph_to_poly, 1) >> arrow_glyph
+    arrow_source >> select_ports(1, arrow_glyph)
 
     # Add the edge arrow actor to the view.
     arrow_mapper = vtkPolyDataMapper()
     arrow_glyph >> arrow_mapper
-    arrowActor = vtkActor(mapper=arrow_mapper)
+    arrow_actor = vtkActor(mapper=arrow_mapper)
 
     graph_layout_view.renderer.background = colors.GetColor3d('SaddleBrown')
     graph_layout_view.renderer.background2 = colors.GetColor3d('Wheat')
-    graph_layout_view.renderer.AddActor(arrowActor)
+    graph_layout_view.renderer.AddActor(arrow_actor)
 
     graph_layout_view.ResetCamera()
     graph_layout_view.Render()
