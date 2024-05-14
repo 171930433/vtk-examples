@@ -333,7 +333,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [BillboardTextActor3D](/PythonicAPI/Visualization/BillboardTextActor3D) | Label points with billboards.
 [ColoredAnnotatedCube](/PythonicAPI/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
 [CollisionDetection](/PythonicAPI/Visualization/CollisionDetection) | Collison between two spheres.
-[CubeAxesActor](/PythonicAPI/Visualization/CubeAxesActor) | Display three orthogonal axes with [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
+[CubeAxesActor](/PythonicAPI/Visualization/CubeAxesActor) | Display three orthogonal axes with  with labels.
+[CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
 [FlyingHeadSlice](/PythonicAPI/VisualizationAlgorithms/FlyingHeadSlice) | Flying edges used to generate contour lines.
 [DataSetSurface](/PythonicAPI/VisualizationAlgorithms/DataSetSurface) | Cutting a hexahedron with a plane. The red line on the surface shows the cut.
 [PointDataSubdivision](/PythonicAPI/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
