@@ -250,6 +250,24 @@ class GlyphSource2D:
         VTK_HOOKEDARROW_GLYPH: int = 11
         VTK_EDGEARROW_GLYPH: int = 12
 
+```
+
+### HyperStreamline
+
+``` Python
+@dataclass(frozen=True)
+class HyperStreamline:
+    @dataclass(frozen=True)
+    class IntegrationDirection:
+        VTK_INTEGRATE_FORWARD: int = 0
+        VTK_INTEGRATE_BACKWARD: int = 1
+        VTK_INTEGRATE_BOTH_DIRECTIONS: int = 2
+
+    @dataclass(frozen=True)
+    class IntegrationEigenvector:
+        VTK_INTEGRATE_MAJOR_EIGENVECTOR: int = 0
+        VTK_INTEGRATE_MEDIUM_EIGENVECTOR: int = 1
+        VTK_INTEGRATE_MINOR_EIGENVECTOR: int = 2
 
 ```
 
