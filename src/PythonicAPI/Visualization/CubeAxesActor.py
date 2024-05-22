@@ -42,15 +42,12 @@ def main():
 
     cube_axes_actor = vtkCubeAxesActor(bounds=superquadric_source.output.bounds, camera=renderer.active_camera)
     cube_axes_actor.use_text_actor_3D = True
-    cube_axes_actor.GetTitleTextProperty(0).color = axis1_color
-    cube_axes_actor.GetTitleTextProperty(0).font_size = 48
-    cube_axes_actor.GetLabelTextProperty(0).color = axis1_color
 
-    cube_axes_actor.GetTitleTextProperty(1).color = axis2_color
-    cube_axes_actor.GetLabelTextProperty(1).color = axis2_color
-
-    cube_axes_actor.GetTitleTextProperty(2).color = axis3_color
-    cube_axes_actor.GetLabelTextProperty(2).color = axis3_color
+    # After VTK Version: 20240519
+    cube_axes_actor.x_axes_title_property.color = axis1_color
+    cube_axes_actor.x_axes_title_property.font_size = 48
+    cube_axes_actor.y_axes_title_property.color = axis2_color
+    cube_axes_actor.z_axes_title_property.color = axis3_color
 
     cube_axes_actor.draw_x_gridlines = True
     cube_axes_actor.draw_y_gridlines = True
