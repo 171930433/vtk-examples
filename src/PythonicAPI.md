@@ -159,6 +159,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [Glyph2D](/PythonicAPI/Filtering/Glyph2D) |
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
+[PolyDataToImageDataStencil](/PythonicAPI/PolyData/PolyDataToImageDataStencil) |
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
 
 ### Data Types
