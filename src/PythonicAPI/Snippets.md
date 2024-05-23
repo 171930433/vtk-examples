@@ -7,7 +7,7 @@ Snippets are chunks of code that can be cut (*snipped*) and pasted into examples
 
 | Snippet | Description | |
 | -------------- | ------------- | ------- |
-[CameraPosition](/PythonicAPI/Snippets/CameraPosition.md) | Read all VTK polydata file types.
+[CameraPosition](/PythonicAPI/Snippets/CameraPosition.md) | Get the camera position and focal point.
 [CheckVTKVersion](/PythonicAPI/Snippets/CheckVTKVersion.md) | Check the VTK version returning `True` if the requested VTK version is >= the current version.
 [DrawViewportBorder](/PythonicAPI/Snippets/DrawViewportBorder.md) | Draw a border around a renderer's viewport.
 [GetProgramParameters](/PythonicAPI/Snippets/GetProgramParameters.md) | Get the program parameters.

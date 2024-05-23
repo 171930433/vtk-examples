@@ -235,6 +235,7 @@ This section includes ?vtkUnstructuredGrid?.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[GenerateModelsFromLabels](/PythonicAPI/Medical/GenerateModelsFromLabels) | Create models from labeled volume data.
 [MedicalDemo1](/PythonicAPI/Medical/MedicalDemo1) | Create a skin surface from volume data.
 
 ### Surface reconstruction
