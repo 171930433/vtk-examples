@@ -359,6 +359,19 @@ class ImageMathematics:
 
 ```
 
+### ImageProperty
+
+``` Python
+@dataclass(frozen=True)
+class ImageProperty:
+    @dataclass(frozen=True)
+    class InterpolationType:
+        VTK_NEAREST_INTERPOLATION: int = 0
+        VTK_LINEAR_INTERPOLATION: int = 1
+        VTK_CUBIC_INTERPOLATION: int = 2
+
+```
+
 ### LandmarkTransform
 
 ``` Python
