@@ -324,11 +324,8 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
 
         lines = vtkPolyLine()
         lines.point_ids.SetNumberOfIds(number_of_points)
-        print(lines.point_ids.GetNumberOfIds())
         for i in range(0, number_of_points):
-            lines.point_ids.SetId(i, i)
-            # lines.GetPointIds().SetId(i, i)
-            # lines.point_ids.id = (i, i)
+            lines.point_ids.id = (i, i)
 
         cells = vtkCellArray()
         cells.InsertNextCell(lines)
