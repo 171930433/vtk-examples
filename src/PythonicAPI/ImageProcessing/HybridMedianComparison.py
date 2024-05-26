@@ -8,12 +8,19 @@ import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonCore import vtkPoints
 from vtkmodules.vtkCommonDataModel import vtkCellArray, vtkPolyData, vtkPolyLine
+from vtkmodules.vtkCommonDataModel import vtkImageData
 from vtkmodules.vtkFiltersCore import vtkAppendPolyData
 from vtkmodules.vtkIOImage import vtkImageReader2Factory
-from vtkmodules.vtkImagingMorphological import (
-    vtkImageDilateErode3D,
-    vtkImageSeedConnectivity
+from vtkmodules.vtkImagingCore import (
+    vtkImageCast,
+    vtkImageThreshold
 )
+from vtkmodules.vtkImagingGeneral import (
+    vtkImageHybridMedian2D,
+    vtkImageMedian3D
+)
+from vtkmodules.vtkImagingMath import vtkImageMathematics
+from vtkmodules.vtkImagingSources import vtkImageNoiseSource
 from vtkmodules.vtkInteractionStyle import vtkInteractorStyleImage
 from vtkmodules.vtkInteractionWidgets import (
     vtkTextRepresentation,
@@ -25,24 +32,12 @@ from vtkmodules.vtkRenderingCore import (
     vtkImageActor,
     vtkImageProperty,
     vtkPolyDataMapper2D,
-    vtkRenderer,
     vtkRenderWindow,
     vtkRenderWindowInteractor,
+    vtkRenderer,
     vtkTextActor,
     vtkTextProperty
 )
-
-
-def get_program_parameters():
-    import argparse
-    description = 'Demonstrate various binary filters that can alter the shape of segmented regions.'
-    epilogue = '''
-    '''
-    parser = argparse.ArgumentParser(description=description, epilog=epilogue,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('filename', help='original_actor.')
-    args = parser.parse_args()
-    return args.filename
 
 
 def main():
@@ -53,60 +48,60 @@ def main():
     # Read the image.
     reader = vtkImageReader2Factory().CreateImageReader2(file_name)
     reader.file_name = file_name
+    reader.update()
 
-    kernel_size = (31, 31, 1)
+    scalar_range = reader.output.point_data.scalars.range
+    extent = reader.output.extent
+    middle_slice = (extent[5] - extent[4]) // 2
+    print(f'Range: {scalar_range}, middle slice: {middle_slice}')
 
-    img_property = vtkImageProperty(interpolation_type=ImageProperty.InterpolationType.VTK_NEAREST_INTERPOLATION)
+    # Work with double images.
+    cast = vtkImageCast(output_scalar_type=ImageCast.OutputScalarType.VTK_DOUBLE)
 
-    # Dilate
-    dilate = vtkImageDilateErode3D(dilate_value=0, erode_value=255, kernel_size=kernel_size)
+    original_data = vtkImageData()
+    original_data.DeepCopy((reader >> cast).update().output)
 
-    # Erode
-    erode = vtkImageDilateErode3D(dilate_value=255, erode_value=0, kernel_size=kernel_size)
+    noisy_data = add_shot_noise(original_data, 2000.0, 0.1, reader.GetOutput().GetExtent())
 
-    # Opening - dilate then erode.
-    dilate1 = vtkImageDilateErode3D(dilate_value=0, erode_value=255, kernel_size=kernel_size)
-    erode1 = vtkImageDilateErode3D(dilate_value=255, erode_value=0, kernel_size=kernel_size)
+    median = vtkImageMedian3D(input_data=noisy_data, kernel_size=(5, 5, 1))
 
-    # Closing - erode then dilate.
-    erode2 = vtkImageDilateErode3D(dilate_value=255, erode_value=0, kernel_size=kernel_size)
-    dilate2 = vtkImageDilateErode3D(dilate_value=0, erode_value=255, kernel_size=kernel_size)
+    hybrid_median1 = vtkImageHybridMedian2D(input_data=noisy_data)
+    hybrid_median = vtkImageHybridMedian2D()
+    hybrid_median1 >> hybrid_median
 
-    # Connectivity
-    con = vtkImageSeedConnectivity(input_connect_value=0, output_connected_value=0, output_unconnected_value=255)
-    con.AddSeed(300, 200)
+    color_window = (scalar_range[1] - scalar_range[0]) * 0.8
+    color_level = color_window / 2
+
+    image_property = vtkImageProperty(color_window=color_window, color_level=color_level,
+                                      interpolation_type=ImageProperty.InterpolationType.VTK_NEAREST_INTERPOLATION)
+
+    display_extent = reader.data_extent[:4] + (middle_slice, middle_slice)
 
     # Link the actors to the pipelines.
     actors = dict()
 
-    actors['Original'] = vtkImageActor(property=img_property)
-    reader >> actors['Original'].mapper
+    actors['Original'] = vtkImageActor(property=image_property, display_extent=display_extent)
+    actors['Original'].mapper.input_data = original_data
 
-    actors['Connectivity'] = vtkImageActor(property=img_property)
-    reader >> con >> actors['Connectivity'].mapper
+    actors['Noisy'] = vtkImageActor(property=image_property, display_extent=actors['Original'].display_extent)
+    actors['Noisy'].mapper.input_data = noisy_data
 
-    actors['Erosion'] = vtkImageActor(property=img_property)
-    reader >> erode >> actors['Erosion'].mapper
+    actors['Hybrid Median'] = vtkImageActor(property=image_property, display_extent=actors['Original'].display_extent)
+    hybrid_median >> actors['Hybrid Median'].mapper
 
-    actors['Dilation'] = vtkImageActor(property=img_property)
-    reader >> dilate >> actors['Dilation'].mapper
-
-    actors['Opening'] = vtkImageActor(property=img_property)
-    reader >> erode2 >> dilate2 >> actors['Opening'].mapper
-
-    actors['Closing'] = vtkImageActor(property=img_property)
-    reader >> dilate1 >> erode1 >> actors['Closing'].mapper
+    actors['Median'] = vtkImageActor(property=image_property, display_extent=actors['Original'].display_extent)
+    median >> actors['Median'].mapper
 
     keys = list(actors.keys())
 
     # Define the size of the grid that will hold the objects.
     grid_cols = 2
-    grid_rows = 3
+    grid_rows = 2
     # Define side length (in pixels) of each renderer rectangle.
-    col_size = 595
-    row_size = 428
+    col_size = 255
+    row_size = 255
     size = (col_size * grid_cols, row_size * grid_rows)
-    ren_win = vtkRenderWindow(size=size, window_name='MorphologyComparison')
+    ren_win = vtkRenderWindow(size=size, window_name='HybridMedianComparison')
 
     iren = vtkRenderWindowInteractor()
     iren.render_window = ren_win
@@ -189,7 +184,7 @@ def main():
 
     # The renderers share one camera.
     ren_win.Render()
-    renderers['Original'].GetActiveCamera().Dolly(1.35)
+    renderers['Original'].GetActiveCamera().Dolly(1.1)
     renderers['Original'].ResetCameraClippingRange()
     camera = renderers['Original'].GetActiveCamera()
     for k in actors.keys():
@@ -202,6 +197,44 @@ def main():
 
     iren.Initialize()
     iren.Start()
+
+
+def get_program_parameters():
+    import argparse
+    description = 'Comparison of median and hybrid-median filters.'
+    epilogue = '''
+    The hybrid filter preserves corners and thin lines, better than the median filter.
+    '''
+    parser = argparse.ArgumentParser(description=description, epilog=epilogue,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('filename', help='TestPattern.png.')
+    args = parser.parse_args()
+    return args.filename
+
+
+def add_shot_noise(input_image, noise_amplitude, noise_fraction, extent):
+    shot_noise_source = vtkImageNoiseSource(whole_extent=extent, minimum=0.0, maximum=1.0)
+
+    shot_noise_thresh1 = vtkImageThreshold(in_value=0, out_value=noise_amplitude)
+    shot_noise_thresh1.ThresholdByLower(1.0 - noise_fraction)
+    shot_noise_source >> shot_noise_thresh1
+
+    shot_noise_thresh2 = vtkImageThreshold(in_value=1.0 - noise_amplitude, out_value=0.0)
+    shot_noise_thresh2.ThresholdByLower(noise_fraction)
+    shot_noise_source >> shot_noise_thresh2
+
+    shot_noise = vtkImageMathematics(operation=ImageMathematics.Operation.VTK_ADD, )
+    shot_noise.SetInputConnection(0, shot_noise_thresh1.GetOutputPort())
+    shot_noise.SetInputConnection(1, shot_noise_thresh2.GetOutputPort())
+
+    add = vtkImageMathematics(operation=ImageMathematics.Operation.VTK_ADD)
+    add.SetInputData(0, input_image)
+    add.SetInputConnection(1, shot_noise.GetOutputPort())
+    add.update()
+
+    output_image = vtkImageData()
+    output_image.DeepCopy(add.GetOutput())
+    return output_image
 
 
 def get_text_positions(names, justification=0, vertical_justification=0, width=0.96, height=0.1):
@@ -356,6 +389,49 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     actor.property.line_width = line_width
 
     renderer.AddViewProp(actor)
+
+
+@dataclass(frozen=True)
+class ImageCast:
+    @dataclass(frozen=True)
+    class OutputScalarType:
+        VTK_CHAR: int = 2
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_UNSIGNED_INT: int = 7
+        VTK_LONG: int = 8
+        VTK_UNSIGNED_LONG: int = 9
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
+
+
+@dataclass(frozen=True)
+class ImageMathematics:
+    @dataclass(frozen=True)
+    class Operation:
+        VTK_ADD: int = 0
+        VTK_SUBTRACT: int = 1
+        VTK_MULTIPLY: int = 2
+        VTK_DIVIDE: int = 3
+        VTK_INVERT: int = 4
+        VTK_SIN: int = 5
+        VTK_COS: int = 6
+        VTK_EXP: int = 7
+        VTK_LOG: int = 8
+        VTK_ABS: int = 9
+        VTK_SQR: int = 10
+        VTK_SQRT: int = 11
+        VTK_MIN: int = 12
+        VTK_MAX: int = 13
+        VTK_ATAN: int = 14
+        VTK_ATAN2: int = 15
+        VTK_MULTIPLYBYK: int = 16
+        VTK_ADDC: int = 17
+        VTK_CONJUGATE: int = 18
+        VTK_COMPLEX_MULTIPLY: int = 19
+        VTK_REPLACECBYK: int = 20
 
 
 @dataclass(frozen=True)

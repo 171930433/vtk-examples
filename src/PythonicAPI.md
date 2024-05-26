@@ -381,6 +381,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [Attenuation](/PythonicAPI/ImageProcessing/Attenuation) | This MRI image illustrates attenuation that can occur due to sensor position.  The artifact is removed by dividing by the attenuation profile determined manually.
 [EnhanceEdges](/PythonicAPI/ImageProcessing/EnhanceEdges) | High-pass filters can extract and enhance edges in an image. Subtraction of the Laplacian (middle) from the original image (left) results in edge enhancement or a sharpening operation (right).
 [GaussianSmooth](/PythonicAPI/ImageProcessing/GaussianSmooth) | Low-pass filters can be implemented as convolution with a Gaussian kernel.
+[HybridMedianComparison](/PythonicAPI/ImageProcessing/HybridMedianComparison) | Comparison of median and hybrid-median filters. The hybrid filter preserves corners and thin lines, better than the median filter.
 [IdealHighPass](/PythonicAPI/ImageProcessing/IdealHighPass) | This figure shows two high-pass filters in the frequency domain. The Butterworth high-pass filter has a gradual attenuation that avoids ringing produced by the ideal high-pass filter with an abrupt transition.
 [ImageGradient](/PythonicAPI/VisualizationAlgorithms/ImageGradient) | Create an imaging pipeline to visualize gradient information.
 [MorphologyComparison](/PythonicAPI/ImageProcessing/MorphologyComparison) | This figure demonstrates various binary filters that can alter the shape of segmented regions.
