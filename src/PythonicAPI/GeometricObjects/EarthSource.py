@@ -133,6 +133,7 @@ def make_annotated_cube_actor():
     annotated_cube.y_face_text_rotation = 180
     annotated_cube.z_face_text_rotation = 90
     # Make the annotated cube transparent.
+    # We will replace it with a cube whose faces are individually colored.
     annotated_cube.cube_property.opacity = 0
 
     # Colored faces for the cube.
@@ -198,7 +199,6 @@ def make_axes_actor(scale, total_length, xyz_labels):
     axes.z_axis_shaft_property.color = colors.GetColor3d('Red')
 
     # Now color the labels.
-    colors = vtkNamedColors()
     axes.x_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkGreen')
     axes.y_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('DarkBlue')
     axes.z_axis_caption_actor2d.caption_text_property.color = colors.GetColor3d('FireBrick')
