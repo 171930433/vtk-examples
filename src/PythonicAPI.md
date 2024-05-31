@@ -389,7 +389,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [IsoSubsample](/PythonicAPI/ImageProcessing/IsoSubsample) | This figure demonstrates aliasing that occurs when a high-frequency signal is subsampled. High frequencies appear as low frequency artifacts. The left image is an isosurface of a skull after subsampling. The right image used a low-pass filter before subsampling to reduce aliasing.
 [MorphologyComparison](/PythonicAPI/ImageProcessing/MorphologyComparison) | This figure demonstrates various binary filters that can alter the shape of segmented regions.
 [ImageWarp](/PythonicAPI/Images/ImageWarp) | Combine the imaging and visualization pipelines to deform an image in the z-direction. The vtkMergeFilter is used to combine the warped surface with the original color data.
-[VTKSpectrum](/PythonicAPI/ImageProcessing/VTKSpectrum) | The discrete Fourier transform changes an image from the spatial domain into the frequency domain, where each pixel represents a sinusoidal function. This figure shows an image and its power spectrum displayed using a logarithmic transfer function.
+[Pad](/PythonicAPI/ImageProcessing/Pad) | Convolution in frequency space treats the image as a periodic function. A large kernel can pick up features from both sides of the image. The left image has been padded with a constant to eliminate wraparound during convolution. On the right, mirror padding has been used to remove artificial edges introduced by borders.
+[[VTKSpectrum](/PythonicAPI/ImageProcessing/VTKSpectrum) | The discrete Fourier transform changes an image from the spatial domain into the frequency domain, where each pixel represents a sinusoidal function. This figure shows an image and its power spectrum displayed using a logarithmic transfer function.
 
 ## Widgets
 
@@ -398,6 +399,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [BalloonWidget](/PythonicAPI/Widgets/BalloonWidget) | Uses a vtkBalloonWidget to draw labels when the mouse stays above an actor.
 [CompassWidget](/PythonicAPI/Widgets/CompassWidget) | Draws an interactive compass.
 [ContourWidget](/PythonicAPI/Widgets/ContourWidget) | Draw a contour (line) which can be deformed by the user.
+[ImplicitPlaneWidget2](/PythonicAPI/Widgets/ImplicitPlaneWidget2) | Clip polydata with an implicit plane.
 
 ## Plotting
 

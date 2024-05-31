@@ -1300,7 +1300,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [IsoSubsample](/Cxx/ImageProcessing/IsoSubsample) | This figure demonstrates aliasing that occurs when a high-frequency signal is subsampled. High frequencies appear as low frequency artifacts. The left image is an isosurface of a skull after subsampling. The right image used a low-pass filter before subsampling to reduce aliasing.
 [MedianComparison](/Cxx/ImageProcessing/MedianComparison) | Comparison of Gaussian and Median smoothing for reducing low-probability high-amplitude noise.
 [MorphologyComparison](/Cxx/ImageProcessing/MorphologyComparison) | This figure demonstrates various binary filters that can alter the shape of segmented regions.
-[Pad](/Cxx/ImageProcessing/Pad) | Convolution in frequency space treats the image as a periodic function. A large kernel can pick up features from both sides of the image. The lower-left image has been padded with zeros to eliminate wraparound during convolution. On the right, mirror padding has been used to remove artificial edges introduced by borders.
+[Pad](/Cxx/ImageProcessing/Pad) | Convolution in frequency space treats the image as a periodic function. A large kernel can pick up features from both sides of the image. The left image has been padded with a constant to eliminate wraparound during convolution. On the right, mirror padding has been used to remove artificial edges introduced by borders.
 [RGBToHSI](/Cxx/Images/RGBToHSI) | Convert RGB to HSI.
 [RGBToHSV](/Cxx/Images/RGBToHSV) | Convert RGB to HSV.
 [RGBToYIQ](/Cxx/Images/RGBToYIQ) | Convert RGB to YIQ.
