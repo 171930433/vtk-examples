@@ -311,6 +311,10 @@ This section includes ?vtkUnstructuredGrid?.
 
 ## Lighting
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ShadowsLightsDemo](/PythonicAPI/Visualization/ShadowsLightsDemo) | Show lights casting shadows.
+
 ## Texture Mapping
 
 | Example Name | Description | Image |

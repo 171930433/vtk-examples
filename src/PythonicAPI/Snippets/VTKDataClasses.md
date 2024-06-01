@@ -385,6 +385,19 @@ class LandmarkTransform:
 
 ```
 
+### Lights
+
+``` Python
+@dataclass(frozen=True)
+class Light:
+    @dataclass(frozen=True)
+    class LightType:
+        VTK_LIGHT_TYPE_HEADLIGHT: int = 1
+        VTK_LIGHT_TYPE_CAMERA_LIGHT: int = 2
+        VTK_LIGHT_TYPE_SCENE_LIGHT: int = 3
+
+```
+
 ### LookupTable
 
 ``` Python

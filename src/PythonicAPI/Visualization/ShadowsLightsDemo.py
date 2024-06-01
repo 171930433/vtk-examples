@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from dataclasses import dataclass
+
 """
 The scene consists of:
 1) four actors: a rectangle, a box, a cone and a sphere.
@@ -7,6 +9,7 @@ The scene consists of:
 2) Two spotlights, one in the direction of the box, another one in the
    direction of the sphere.
    Both lights are above the box, the cone and  the sphere.
+3) A headlight has been added to fill in some of the dark shadows.
 """
 
 # noinspection PyUnresolvedReferences
@@ -40,105 +43,72 @@ from vtkmodules.vtkRenderingOpenGL2 import (
 
 
 def main():
-    iren = vtkRenderWindowInteractor()
+    colors = vtkNamedColors()
 
-    ren_win = vtkRenderWindow(size=(640, 480), window_name='ShadowsLightsDemo', multi_samples=0)
-    ren_win.SetAlphaBitPlanes(1)
-    iren.SetRenderWindow(ren_win)
-
-
-    renderer = vtkOpenGLRenderer()
+    renderer = vtkOpenGLRenderer(background=colors.GetColor3d('Silver'), background2=colors.GetColor3d('Black'),
+                                 gradient_background=True, automatic_light_creation=False)
+    ren_win = vtkRenderWindow(size=(640, 480), window_name='ShadowsLightsDemo', multi_samples=0, alpha_bit_planes=1)
     ren_win.AddRenderer(renderer)
+    iren = vtkRenderWindowInteractor()
+    iren.render_window = ren_win
 
-    seq = vtkSequencePass()
-
-    passes = vtkRenderPassCollection()
-
+    # Set up a render pass pipeline.
     shadows = vtkShadowMapPass()
-    passes.AddItem(shadows.GetShadowMapBakerPass())
+    passes = vtkRenderPassCollection()
+    passes.AddItem(shadows.shadow_map_baker_pass)
     passes.AddItem(shadows)
 
     opaque = vtkOpaquePass()
     passes.AddItem(opaque)
 
+    seq = vtkSequencePass()
     seq.SetPasses(passes)
 
     camera_p = vtkCameraPass()
-    camera_p.SetDelegatePass(seq)
+    camera_p.delegate_pass = seq
 
     # Tell the renderer to use our render pass pipeline.
     renderer.SetPass(camera_p)
 
-    colors = vtkNamedColors()
     box_color = colors.GetColor3d('Tomato')
     rectangle_color = colors.GetColor3d('Beige')
     cone_color = colors.GetColor3d('Peacock')
     sphere_color = colors.GetColor3d('Banana')
 
-    rectangle_source = vtkPlaneSource()
-    rectangle_source.SetOrigin(-5.0, 0.0, 5.0)
-    rectangle_source.SetPoint1(5.0, 0.0, 5.0)
-    rectangle_source.SetPoint2(-5.0, 0.0, -5.0)
-    rectangle_source.SetResolution(100, 100)
+    rectangle_source = vtkPlaneSource(origin=(-5.0, 0.0, 5.0), point1=(5.0, 0.0, 5.0), point2=(-5.0, 0.0, -5.0),
+                                      resolution=(100, 100))
 
-    rectangle_mapper = vtkPolyDataMapper()
-    rectangle_mapper.SetInputConnection(rectangle_source.GetOutputPort())
+    rectangle_mapper = vtkPolyDataMapper(scalar_visibility=False)
+    rectangle_source >> rectangle_mapper
 
-    rectangle_mapper.SetScalarVisibility(0)
+    rectangle_actor = vtkActor(mapper=rectangle_mapper, visibility=True)
+    rectangle_actor.property.color = rectangle_color
 
-    rectangle_actor = vtkActor()
-    rectangle_actor.SetMapper(rectangle_mapper)
-    rectangle_actor.VisibilityOn()
-    rectangle_actor.GetProperty().SetColor(rectangle_color)
+    box_source = vtkCubeSource(x_length=2.0, y_length=1.0, z_length=1.0)
 
-    box_source = vtkCubeSource()
-    box_source.SetXLength(2.0)
+    box_normals = vtkPolyDataNormals(compute_point_normals=False, compute_cell_normals=True)
 
-    box_normals = vtkPolyDataNormals()
-    box_normals.SetInputConnection(box_source.GetOutputPort())
-    box_normals.ComputePointNormalsOff()
-    box_normals.ComputeCellNormalsOn()
-    box_normals.Update()
-    box_normals.GetOutput().GetPointData().SetNormals(None)
+    box_mapper = vtkPolyDataMapper(scalar_visibility=False)
+    box_source >> box_normals >> box_mapper
 
-    box_mapper = vtkPolyDataMapper()
-    box_mapper.SetInputConnection(box_normals.GetOutputPort())
-    box_mapper.ScalarVisibilityOff()
+    box_actor = vtkActor(mapper=box_mapper, visibility=True, position=(-2.0, 2.0, 0.0))
+    box_actor.property.color = box_color
 
-    box_actor = vtkActor()
-    box_actor.SetMapper(box_mapper)
-    box_actor.VisibilityOn()
-    box_actor.SetPosition(-2.0, 2.0, 0.0)
-    box_actor.GetProperty().SetColor(box_color)
+    cone_source = vtkConeSource(resolution=24, direction=(1.0, 1.0, 1.0))
 
-    cone_source = vtkConeSource()
-    cone_source.SetResolution(24)
-    cone_source.SetDirection(1.0, 1.0, 1.0)
+    cone_mapper = vtkPolyDataMapper(scalar_visibility=False)
+    cone_source >> cone_mapper
 
-    cone_mapper = vtkPolyDataMapper()
-    cone_mapper.SetInputConnection(cone_source.GetOutputPort())
-    cone_mapper.SetScalarVisibility(0)
+    cone_actor = vtkActor(mapper=cone_mapper, visibility=True, position=(0.0, 1.0, 1.0))
+    cone_actor.property.color = cone_color
 
-    cone_actor = vtkActor()
-    cone_actor.SetMapper(cone_mapper)
-    cone_actor.VisibilityOn()
-    cone_actor.SetPosition(0.0, 1.0, 1.0)
-    cone_actor.GetProperty().SetColor(cone_color)
+    sphere_source = vtkSphereSource(theta_resolution=32, phi_resolution=32)
 
-    sphere_source = vtkSphereSource()
-    sphere_source.SetThetaResolution(32)
-    sphere_source.SetPhiResolution(32)
+    sphere_mapper = vtkPolyDataMapper(scalar_visibility=False)
+    sphere_source >> sphere_mapper
 
-    sphere_mapper = vtkPolyDataMapper()
-    sphere_mapper.SetInputConnection(sphere_source.GetOutputPort())
-    sphere_mapper.ScalarVisibilityOff()
-
-    sphere_actor = vtkActor()
-    sphere_actor.SetMapper(sphere_mapper)
-
-    sphere_actor.VisibilityOn()
-    sphere_actor.SetPosition(2.0, 2.0, -1.0)
-    sphere_actor.GetProperty().SetColor(sphere_color)
+    sphere_actor = vtkActor(mapper=sphere_mapper, visibility=True, position=(2.0, 2.0, -1.0))
+    sphere_actor.property.color = sphere_color
 
     renderer.AddViewProp(rectangle_actor)
     renderer.AddViewProp(box_actor)
@@ -148,39 +118,32 @@ def main():
     # Spotlights.
 
     # Lighting the box.
-    l1 = vtkLight()
-    l1.SetPosition(-4.0, 4.0, -1.0)
-    l1.SetFocalPoint(box_actor.GetPosition())
-    l1.SetColor(colors.GetColor3d('White'))
-    l1.PositionalOn()
+    l1 = vtkLight(position=(-4.0, 4.0, -1.0), focal_point=box_actor.position, color=colors.GetColor3d('White'),
+                  positional=True, switch=True)
     renderer.AddLight(l1)
-    l1.SwitchOn()
 
     # Lighting the sphere.
-    l2 = vtkLight()
-    l2.SetPosition(4.0, 5.0, 1.0)
-    l2.SetFocalPoint(sphere_actor.GetPosition())
-    l2.SetColor(colors.GetColor3d('Magenta'))
-    l2.PositionalOn()
+    l2 = vtkLight(position=(4.0, 5.0, 1.0), focal_point=sphere_actor.position, color=colors.GetColor3d('Magenta'),
+                  positional=True, switch=True)
     renderer.AddLight(l2)
-    l2.SwitchOn()
 
     # For each spotlight, add a light frustum wireframe representation and a cone
     # wireframe representation, colored with the light color.
-    angle = l1.GetConeAngle()
+    angle = l1.cone_angle
     if l1.LightTypeIsSceneLight() and l1.GetPositional() and angle < 180.0:  # spotlight
-        la = vtkLightActor()
-        la.SetLight(l1)
+        la = vtkLightActor(light=l1)
+        # la.SetLight(l1)
         renderer.AddViewProp(la)
-    angle = l2.GetConeAngle()
+    angle = l2.cone_angle
     if l2.LightTypeIsSceneLight() and l2.GetPositional() and angle < 180.0:  # spotlight
-        la = vtkLightActor()
-        la.SetLight(l2)
+        la = vtkLightActor(light=l2)
+        # la.SetLight(l2)
         renderer.AddViewProp(la)
 
-    renderer.SetBackground2(colors.GetColor3d('Black'))
-    renderer.SetBackground(colors.GetColor3d('Silver'))
-    renderer.SetGradientBackground(True)
+    # Add in a headlight.
+    light = vtkLight(light_type=Light.LightType.VTK_LIGHT_TYPE_HEADLIGHT, position=(0.0, 8.0, 0.0),
+                     focal_point=(0.0, 0.0, 0.0), diffuse_color=colors.GetColor3d('LightGrey'))
+    renderer.AddLight(light)
 
     ren_win.Render()
     ren_win.SetWindowName('ShadowsLightsDemo')
@@ -194,6 +157,15 @@ def main():
     ren_win.Render()
 
     iren.Start()
+
+
+@dataclass(frozen=True)
+class Light:
+    @dataclass(frozen=True)
+    class LightType:
+        VTK_LIGHT_TYPE_HEADLIGHT: int = 1
+        VTK_LIGHT_TYPE_CAMERA_LIGHT: int = 2
+        VTK_LIGHT_TYPE_SCENE_LIGHT: int = 3
 
 
 if __name__ == '__main__':
