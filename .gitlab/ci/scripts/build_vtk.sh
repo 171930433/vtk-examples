@@ -12,6 +12,7 @@ if [ ! -d vtk_build ]; then
         -DVTK_MODULE_ENABLE_VTK_cli11:STRING=YES \
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2:STRING=DONT_WANT \
         -DVTK_BUILD_TESTING=ON \
+        -DVTK_WEBASSEMBLY_THREADS=OFF \
         -S vtk  -B build
     mkdir install
 else
