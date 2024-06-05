@@ -398,6 +398,19 @@ class Light:
 
 ```
 
+### LinearExtrusionFilter
+
+``` Python
+@dataclass(frozen=True)
+class LinearExtrusionFilter:
+    @dataclass(frozen=True)
+    class ExtrusionType:
+        VTK_VECTOR_EXTRUSION: int = 1
+        VTK_NORMAL_EXTRUSION: int = 2
+        VTK_POINT_EXTRUSION: int = 3
+
+```
+
 ### LookupTable
 
 ``` Python
