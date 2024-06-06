@@ -21,7 +21,7 @@ def camera_modified_callback(caller, event):
     res += f'\tcamera.position = ({", ".join(map("{0:0.6f}".format, caller.position))})\n'
     res += f'\tcamera.focal_point = ({", ".join(map("{0:0.6f}".format, caller.focal_point))})\n'
     res += f'\tcamera.view_up = ({", ".join(map("{0:0.6f}".format, caller.view_up))})\n'
-    res += f'\tcamera.distance = ({"{0:0.6f}".format(caller.GetDistance())})\n'
+    res += f'\tcamera.distance = {"{0:0.6f}".format(caller.GetDistance())}\n'
     res += f'\tcamera.clipping_range = ({", ".join(map("{0:0.6f}".format, caller.clipping_range))})\n'
     print(res)
 

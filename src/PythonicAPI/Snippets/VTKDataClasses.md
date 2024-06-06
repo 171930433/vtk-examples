@@ -359,6 +359,19 @@ class ImageMathematics:
 
 ```
 
+### ImageProperty
+
+``` Python
+@dataclass(frozen=True)
+class ImageProperty:
+    @dataclass(frozen=True)
+    class InterpolationType:
+        VTK_NEAREST_INTERPOLATION: int = 0
+        VTK_LINEAR_INTERPOLATION: int = 1
+        VTK_CUBIC_INTERPOLATION: int = 2
+
+```
+
 ### LandmarkTransform
 
 ``` Python
@@ -369,6 +382,32 @@ class LandmarkTransform:
         VTK_LANDMARK_RIGIDBODY: int = 6
         VTK_LANDMARK_SIMILARITY: int = 7
         VTK_LANDMARK_AFFINE: int = 12
+
+```
+
+### Lights
+
+``` Python
+@dataclass(frozen=True)
+class Light:
+    @dataclass(frozen=True)
+    class LightType:
+        VTK_LIGHT_TYPE_HEADLIGHT: int = 1
+        VTK_LIGHT_TYPE_CAMERA_LIGHT: int = 2
+        VTK_LIGHT_TYPE_SCENE_LIGHT: int = 3
+
+```
+
+### LinearExtrusionFilter
+
+``` Python
+@dataclass(frozen=True)
+class LinearExtrusionFilter:
+    @dataclass(frozen=True)
+    class ExtrusionType:
+        VTK_VECTOR_EXTRUSION: int = 1
+        VTK_NORMAL_EXTRUSION: int = 2
+        VTK_POINT_EXTRUSION: int = 3
 
 ```
 
