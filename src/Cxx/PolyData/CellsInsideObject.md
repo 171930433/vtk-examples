@@ -9,4 +9,4 @@ If two polydata datasets are provided, the example uses the second as the closed
     The example is run with `src/Testing/Data/cow.g`.
 
 !!! warning
-    The surface that contains cells must be closed and manifold. The example does not check for this. Run ClosedSurface [(C++)](../ClosedSurface) or [(Python)](../../../Python/PolyData/ClosedSurface) to check your surface.
+    The surface that contains cells must be closed and manifold. The example does not check for this. Run [ClosedSurface](../ClosedSurface) to check your surface.

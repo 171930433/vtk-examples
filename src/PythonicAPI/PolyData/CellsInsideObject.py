@@ -149,22 +149,22 @@ def main():
     surface_actor.property.opacity = 0.1
 
     ren = vtkRenderer(background=background_color, use_hidden_line_removal=True)
-    rend_win = vtkRenderWindow(size=(640, 480), window_name='CellsInsideObject')
-    rend_win.AddRenderer(ren)
+    ren_win = vtkRenderWindow(size=(640, 480), window_name='CellsInsideObject')
+    ren_win.AddRenderer(ren)
 
     iren = vtkRenderWindowInteractor()
-    iren.render_window = rend_win
+    iren.render_window = ren_win
 
     ren.AddActor(surface_actor)
     ren.AddActor(outside_actor)
     ren.AddActor(inside_actor)
     ren.AddActor(border_actor)
 
-    rend_win.Render()
+    ren_win.Render()
     ren.active_camera.Azimuth(30)
     ren.active_camera.Elevation(30)
     ren.active_camera.Dolly(1.25)
-    rend_win.Render()
+    ren_win.Render()
 
     iren.Start()
 

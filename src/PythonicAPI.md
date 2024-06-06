@@ -68,6 +68,10 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 ##### Output
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[WritePLY](/PythonicAPI/IO/WritePLY) |
+
 #### VTK Formats
 
 ##### Input
@@ -181,6 +185,7 @@ This section includes examples of manipulating meshes.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[ClosedSurface](/PythonicAPI/PolyData/ClosedSurface) | Check if a surface is closed.
 [DeformPointSet](/PythonicAPI/Meshes/DeformPointSet) | Use the vtkDeformPointSet filter to deform a vtkSphereSource with arbitrary polydata.
 [DelaunayMesh](/PythonicAPI/Modelling/DelaunayMesh) | Two-dimensional Delaunay triangulation of a random set of points. Points and edges are shown highlighted with sphere glyphs and tubes.
 [PointInterpolator](/PythonicAPI/Meshes/PointInterpolator) | Plot a scalar field of points onto a PolyData surface.
@@ -306,6 +311,7 @@ This section includes ?vtkUnstructuredGrid?.
 | -------------- | ------------- | ------- |
 [ColoredSphere](/PythonicAPI/Rendering/ColoredSphere) | A simple sphere.
 [GradientBackground](/PythonicAPI/Rendering/GradientBackground) | Demonstrates the background shading options.
+[OutlineGlowPass](/PythonicAPI/Rendering/OutlineGlowPass) | Demonstrates how to render a object in a scene with a glowing outline.
 [PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
 [PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
 [PBR_Skybox_Anisotropy](/PythonicAPI/Rendering/PBR_Skybox_Anisotropy) | Demonstrates physically based rendering, a skybox, image based lighting, and anisotropic texturing.
@@ -343,6 +349,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [BillboardTextActor3D](/PythonicAPI/Visualization/BillboardTextActor3D) | Label points with billboards.
 [ColoredAnnotatedCube](/PythonicAPI/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
 [CollisionDetection](/PythonicAPI/Visualization/CollisionDetection) | Collison between two spheres.
+[CreateBFont](/PythonicAPI/VisualizationAlgorithms/CreateBFont) | A scanned image clipped with a scalar value of 1/2 its maximum intensity produces a mixture of quadrilaterals and triangles.
 [CubeAxesActor](/PythonicAPI/Visualization/CubeAxesActor) | Display three orthogonal axes with  with labels.
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
 [DataSetSurface](/PythonicAPI/VisualizationAlgorithms/DataSetSurface) | Cutting a hexahedron with a plane. The red line on the surface shows the cut.
