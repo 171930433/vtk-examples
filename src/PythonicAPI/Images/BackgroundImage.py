@@ -50,11 +50,11 @@ def main():
         canvas_source = vtkImageCanvasSource2D(extent=(0, 100, 0, 100, 0, 0), number_of_scalar_components=3,
                                                scalar_type=ImageCanvasSource2D.ScalarType.VTK_UNSIGNED_CHAR)
         # Do the drawing.
-        canvas_source.SetDrawColor(colors.GetColor4ub('warm_grey'))
+        canvas_source.draw_color = colors.GetColor4ub('warm_grey')
         canvas_source.FillBox(0, 100, 0, 100)
-        canvas_source.SetDrawColor(colors.GetColor4ub('DarkCyan'))
+        canvas_source.draw_color = colors.GetColor4ub('DarkCyan')
         canvas_source.FillTriangle(10, 10, 25, 10, 25, 25)
-        canvas_source.SetDrawColor(colors.GetColor4ub('LightCoral'))
+        canvas_source.draw_color = colors.GetColor4ub('LightCoral')
         canvas_source.FillTube(75, 75, 0, 75, 5.0)
         image_data = canvas_source.update().output
 
@@ -84,10 +84,9 @@ def main():
     scene_renderer.AddActor(superquadric_actor)
     background_renderer.AddActor(image_slice)
 
-    render_window = vtkRenderWindow(number_of_layers=2)
+    render_window = vtkRenderWindow(window_name='BackgroundImage', number_of_layers=2)
     render_window.AddRenderer(background_renderer)
     render_window.AddRenderer(scene_renderer)
-    render_window.SetWindowName('BackgroundImage')
 
     render_window_interactor = vtkRenderWindowInteractor()
     render_window_interactor.render_window = render_window
@@ -100,17 +99,17 @@ def main():
     spacing = image_data.spacing
     extent = image_data.extent
 
-    camera = background_renderer.GetActiveCamera()
+    camera = background_renderer.active_camera
     camera.ParallelProjectionOn()
 
     xc = origin[0] + 0.5 * (extent[0] + extent[1]) * spacing[0]
     yc = origin[1] + 0.5 * (extent[2] + extent[3]) * spacing[1]
     # xd = (extent[1] - extent[0] + 1) * spacing[0]
     yd = (extent[3] - extent[2] + 1) * spacing[1]
-    d = camera.GetDistance()
-    camera.SetParallelScale(0.5 * yd)
-    camera.SetFocalPoint(xc, yc, 0.0)
-    camera.SetPosition(xc, yc, d)
+    d = camera.distance
+    camera.parallel_scale = 0.5 * yd
+    camera.focal_point = (xc, yc, 0.0)
+    camera.position = (xc, yc, d)
 
     # Render again to set the correct view.
     render_window.Render()

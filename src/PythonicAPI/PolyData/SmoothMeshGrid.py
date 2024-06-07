@@ -45,7 +45,6 @@ def main():
     size = 32
 
     rn = vtkMinimalStandardRandomSequence(seed=1)
-    # rn.SetSeed(1)
 
     # Define z values for the topography (random height)
     topography = numpy.zeros([size, size])
@@ -73,9 +72,9 @@ def main():
             points.InsertNextPoint((i + 1), j, z3)
 
             triangle = vtkTriangle()
-            triangle.GetPointIds().SetId(0, count)
-            triangle.GetPointIds().SetId(1, count + 1)
-            triangle.GetPointIds().SetId(2, count + 2)
+            triangle.point_ids.SetId(0, count)
+            triangle.point_ids.SetId(1, count + 1)
+            triangle.point_ids.SetId(2, count + 2)
 
             triangles.InsertNextCell(triangle)
 
@@ -89,9 +88,9 @@ def main():
             points.InsertNextPoint((i + 1), j, z3)
 
             triangle = vtkTriangle()
-            triangle.GetPointIds().SetId(0, count + 3)
-            triangle.GetPointIds().SetId(1, count + 4)
-            triangle.GetPointIds().SetId(2, count + 5)
+            triangle.point_ids.SetId(0, count + 3)
+            triangle.point_ids.SetId(1, count + 4)
+            triangle.point_ids.SetId(2, count + 5)
 
             count += 6
 
@@ -166,7 +165,7 @@ def main():
             camera = renderers[k].GetActiveCamera()
             camera.Elevation(-45)
         else:
-            renderers[k].SetActiveCamera(camera)
+            renderers[k].active_camera = camera
 
         renderers[k].ResetCamera()
         camera.Zoom(1.2)

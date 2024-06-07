@@ -45,10 +45,8 @@ def main():
     reader >> mapper
 
     actor = vtkActor(mapper=mapper)
-    # actor.SetMapper(mapper)
 
     renderer = vtkRenderer(background=colors.GetColor3d('Wheat'))
-    # renderer.SetBackground(colors.GetColor3d('Wheat'))
     renderer.UseHiddenLineRemovalOn()
     renderer.AddActor(actor)
 
@@ -138,7 +136,7 @@ class AnimationObserver(object):
 
     def __call__(self, caller, ev):
         step = 0 if (self.reader.step == self.reader.GetNumberOfSteps() - 1) else self.reader.step + 1
-        self.reader.SetStep(step)
+        self.reader.step = step
         print(f'Current step: {self.reader.step:3d}')
         self.reader.update()
         self.interactor.Render()

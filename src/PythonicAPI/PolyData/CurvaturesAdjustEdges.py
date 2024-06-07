@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import math
 from collections import namedtuple, OrderedDict
@@ -181,7 +181,7 @@ def main(argv):
         if first:
             text_widget.default_renderer = renderer
             first = False
-        renderer.SetViewport(*viewports[k])
+        renderer.viewport = viewports[k]
         renderer.AddActor(src_actor)
         scalar_bar_widgets[k].default_renderer = renderer
 
@@ -273,7 +273,7 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
         constrain_curvatures(p, curvature, gauss_curvature, gauss_curvature)
         scalar_bar_labels = 1
 
-    p.GetPointData().SetActiveScalars(curvature)
+    p.point_data.SetActiveScalars(curvature)
     scalar_range_curvatures = curvatures.update().output.GetPointData().GetScalars(curvature).range
 
     bands = get_bands(scalar_range_curvatures, scalar_bar_labels)
@@ -284,7 +284,7 @@ def generate_gaussian_curvatures(surface, needs_adjusting, frequency_table=False
         print_bands_frequencies(curvature, bands, freq)
 
     lut = get_diverging_lut()
-    lut.SetTableRange(scalar_range_curvatures)
+    lut.table_range = scalar_range_curvatures
 
     return {'surface': p, 'scalar_range_curvatures': scalar_range_curvatures, 'scalar_bar_labels': scalar_bar_labels,
             'lut': lut}
@@ -331,7 +331,7 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
         constrain_curvatures(p, curvature, mean_curvature, mean_curvature)
         scalar_bar_labels = 1
 
-    p.GetPointData().SetActiveScalars(curvature)
+    p.point_data.SetActiveScalars(curvature)
     scalar_range_curvatures = curvatures.update().output.GetPointData().GetScalars(curvature).range
 
     bands = get_bands(scalar_range_curvatures, scalar_bar_labels)
@@ -342,7 +342,7 @@ def generate_mean_curvatures(surface, needs_adjusting, frequency_table=False):
         print_bands_frequencies(curvature, bands, freq)
 
     lut = get_diverging_lut1()
-    lut.SetTableRange(scalar_range_curvatures)
+    lut.table_range = scalar_range_curvatures
 
     return {'surface': p, 'scalar_range_curvatures': scalar_range_curvatures, 'scalar_bar_labels': scalar_bar_labels,
             'lut': lut}
@@ -631,7 +631,7 @@ def get_hills():
     polydata = (plane >> delaunay).update().output
 
     elevation = vtkDoubleArray()
-    elevation.SetNumberOfTuples(points.GetNumberOfPoints())
+    elevation.number_of_tuples = points.GetNumberOfPoints()
 
     #  We define the parameters for the hills here.
     # [[0: x0, 1: y0, 2: x variance, 3: y variance, 4: amplitude]...]
@@ -644,7 +644,7 @@ def get_hills():
             xx[0] = (x[0] - hd[j][0] / hd[j][2]) ** 2.0
             xx[1] = (x[1] - hd[j][1] / hd[j][3]) ** 2.0
             x[2] += hd[j][4] * math.exp(-(xx[0] + xx[1]) / 2.0)
-            polydata.GetPoints().SetPoint(i, x)
+            polydata.points.SetPoint(i, x)
             elevation.SetValue(i, x[2])
 
     textures = vtkFloatArray(number_of_components=2,
@@ -670,8 +670,7 @@ def get_hills():
     transform = vtkTransform()
     transform.RotateX(-90.0)
 
-    transform_filter = vtkTransformPolyDataFilter()
-    transform_filter.SetTransform(transform)
+    transform_filter = vtkTransformPolyDataFilter(transform=transform)
 
     return polydata >> normals >> tangents >> transform_filter
 

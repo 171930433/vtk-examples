@@ -75,9 +75,7 @@ def main(argv):
     not_selected_actor = vtkActor(mapper=not_selected_mapper, property=point_property)
 
     # There will be one render window.
-    render_window = vtkRenderWindow()
-    render_window.SetSize(900, 300)
-    render_window.SetWindowName('ExtractSelectedIds')
+    render_window = vtkRenderWindow(size=(900, 300), window_name='ExtractSelectedIds')
 
     # And one interactor.
     interactor = vtkRenderWindowInteractor()

@@ -31,11 +31,10 @@ def main():
 
     iren.render_window = ren_win
     importer.render_window = ren_win
-    # importer.Read()
     importer.Update()
 
-    actors = renderer.GetActors()  # This is a vtkActorCollection
-    print('There are', actors.GetNumberOfItems(), 'actors.')
+    actors = renderer.actors  # This is a vtkActorCollection
+    print('There are', actors.number_of_items, 'actors.')
 
     ren_win.Render()
     camera = vtkCamera()
@@ -45,7 +44,7 @@ def main():
     camera.Azimuth(150)
     camera.Elevation(30)
 
-    renderer.SetActiveCamera(camera)
+    renderer.active_camera = camera
     renderer.ResetCamera()
     renderer.ResetCameraClippingRange()
 

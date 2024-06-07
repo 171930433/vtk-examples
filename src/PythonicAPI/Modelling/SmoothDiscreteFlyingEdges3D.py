@@ -137,7 +137,7 @@ def make_colors(n):
     lut.SetTableValue(0, 0.0, 0.0, 0.0, 1.0)
 
     random_sequence = vtkMinimalStandardRandomSequence()
-    random_sequence.SetSeed(5071)
+    random_sequence.seed = 5071
     for i in range(1, n):
         r = random_sequence.GetRangeValue(0.4, 1)
         random_sequence.Next()

@@ -289,8 +289,7 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
 
     # Use normalized viewport coordinates since
     # they are independent of window size.
-    coordinate = vtkCoordinate()
-    coordinate.SetCoordinateSystemToNormalizedViewport()
+    coordinate = vtkCoordinate(coordinate_system=Coordinate.CoordinateSystem.VTK_NORMALIZED_VIEWPORT)
     poly = vtkAppendPolyData()
     if border == ViewPort.Border.TOP_BOTTOM:
         (
@@ -313,26 +312,6 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     actor.property.line_width = line_width
 
     renderer.AddViewProp(actor)
-
-
-@dataclass(frozen=True)
-class ViewPort:
-    @dataclass(frozen=True)
-    class Border:
-        TOP: int = 0
-        LEFT: int = 1
-        BOTTOM: int = 2
-        RIGHT: int = 3
-        LEFT_BOTTOM: int = 4
-        BOTTOM_RIGHT: int = 5
-        RIGHT_TOP: int = 6
-        RIGHT_TOP_LEFT: int = 7
-        TOP_LEFT: int = 8
-        TOP_LEFT_BOTTOM: int = 9
-        TOP_LEFT_BOTTOM_RIGHT: int = 10
-        TOP_BOTTOM: int = 11
-        LEFT_RIGHT: int = 12
-        NUMBER_OF_BORDER_TYPES: int = 13
 
 
 def get_text_positions(names, justification=0, vertical_justification=0, width=0.96, height=0.1):
@@ -400,6 +379,20 @@ def get_text_positions(names, justification=0, vertical_justification=0, width=0
 
 
 @dataclass(frozen=True)
+class Coordinate:
+    @dataclass(frozen=True)
+    class CoordinateSystem:
+        VTK_DISPLAY: int = 0
+        VTK_NORMALIZED_DISPLAY: int = 1
+        VTK_VIEWPORT: int = 2
+        VTK_NORMALIZED_VIEWPORT: int = 3
+        VTK_VIEW: int = 4
+        VTK_POSE: int = 5
+        VTK_WORLD: int = 6
+        VTK_USERDEFINED: int = 7
+
+
+@dataclass(frozen=True)
 class TextProperty:
     @dataclass(frozen=True)
     class Justification:
@@ -412,6 +405,26 @@ class TextProperty:
         VTK_TEXT_BOTTOM: int = 0
         VTK_TEXT_CENTERED: int = 1
         VTK_TEXT_TOP: int = 2
+
+
+@dataclass(frozen=True)
+class ViewPort:
+    @dataclass(frozen=True)
+    class Border:
+        TOP: int = 0
+        LEFT: int = 1
+        BOTTOM: int = 2
+        RIGHT: int = 3
+        LEFT_BOTTOM: int = 4
+        BOTTOM_RIGHT: int = 5
+        RIGHT_TOP: int = 6
+        RIGHT_TOP_LEFT: int = 7
+        TOP_LEFT: int = 8
+        TOP_LEFT_BOTTOM: int = 9
+        TOP_LEFT_BOTTOM_RIGHT: int = 10
+        TOP_BOTTOM: int = 11
+        LEFT_RIGHT: int = 12
+        NUMBER_OF_BORDER_TYPES: int = 13
 
 
 if __name__ == '__main__':

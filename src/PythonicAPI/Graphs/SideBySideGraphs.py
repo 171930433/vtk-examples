@@ -35,7 +35,7 @@ def main():
     points.InsertNextPoint(0.0, 1.0, 0.0)
 
     # Add the coordinates of the points to the graph
-    g0.SetPoints(points)
+    g0.points = points
 
     # Create the second graph
     g1 = vtkMutableUndirectedGraph()
@@ -51,7 +51,7 @@ def main():
     points.InsertNextPoint(1.0, 0.0, 0.0)
 
     # Add the coordinates of the points to the graph
-    g1.SetPoints(points)
+    g1.points = points
 
     # There will be one render window
     ren_win = vtkRenderWindow(size=(600, 300), window_name='SideBySideGraphs')
@@ -75,7 +75,7 @@ def main():
     graph_layout_view0.ResetCamera()
 
     graph_layout_view1 = vtkGraphLayoutView(render_window=ren_win, interactor=iren)
-    graph_layout_view1.GetRenderer().SetViewport(right_viewport)
+    graph_layout_view1.renderer.SetViewport(right_viewport)
     graph_layout_view1.AddRepresentationFromInput(g1)
     # If we create a layout object directly, just set the pointer through this method.
     # graph_layout_view1.SetLayoutStrategy(force_directed)
@@ -85,7 +85,7 @@ def main():
     graph_layout_view1.Render()
     graph_layout_view1.ResetCamera()
 
-    # graph_layout_view0.GetInteractor().Start()
+    # graph_layout_view0.interactor.Start()
     iren.Start()
 
 

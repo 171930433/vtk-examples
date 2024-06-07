@@ -52,12 +52,11 @@ class MouseInteractorStyle(vtkInteractorStyleTrackballCamera):
         world_position = picker.pick_position
         print(f'Cell id is: {picker.cell_id}')
 
-        if picker.GetCellId() != -1:
+        if picker.cell_id != -1:
             print(f'Pick position is: ({world_position[0]:.6g}, {world_position[1]:.6g}, {world_position[2]:.6g})')
 
-            ids = vtkIdTypeArray()
-            ids.SetNumberOfComponents(1)
-            ids.InsertNextValue(picker.GetCellId())
+            ids = vtkIdTypeArray(number_of_components=1)
+            ids.InsertNextValue(picker.cell_id)
 
             selection_node = vtkSelectionNode(field_type=vtkSelectionNode.CELL,
                                               content_type=vtkSelectionNode.INDICES,
@@ -75,8 +74,8 @@ class MouseInteractorStyle(vtkInteractorStyleTrackballCamera):
             selected = vtkUnstructuredGrid()
             selected.ShallowCopy(extract_selection.output)
 
-            print(f'Number of points in the selection: {selected.GetNumberOfPoints()}')
-            print(f'Number of cells in the selection : {selected.GetNumberOfCells()}')
+            print(f'Number of points in the selection: {selected.number_of_points}')
+            print(f'Number of cells in the selection : {selected.number_of_cells}')
 
             selected >> self.selected_mapper
             self.selected_actor.property.edge_visibility = True

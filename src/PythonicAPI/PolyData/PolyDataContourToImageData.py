@@ -99,7 +99,6 @@ def main():
     image_writer.Write()
 
     image_writer = vtkPNGWriter(file_name='labelImage.png')
-    image_writer.SetFileName('labelImage.png')
     img_stenc >> image_writer
     image_writer.Write()
 

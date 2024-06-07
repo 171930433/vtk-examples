@@ -332,8 +332,7 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
 
     # Use normalized viewport coordinates since
     # they are independent of window size.
-    coordinate = vtkCoordinate()
-    coordinate.SetCoordinateSystemToNormalizedViewport()
+    coordinate = vtkCoordinate(coordinate_system=Coordinate.CoordinateSystem.VTK_NORMALIZED_VIEWPORT)
     poly = vtkAppendPolyData()
     if border == ViewPort.Border.TOP_BOTTOM:
         (
@@ -356,6 +355,20 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     actor.property.line_width = line_width
 
     renderer.AddViewProp(actor)
+
+
+@dataclass(frozen=True)
+class Coordinate:
+    @dataclass(frozen=True)
+    class CoordinateSystem:
+        VTK_DISPLAY: int = 0
+        VTK_NORMALIZED_DISPLAY: int = 1
+        VTK_VIEWPORT: int = 2
+        VTK_NORMALIZED_VIEWPORT: int = 3
+        VTK_VIEW: int = 4
+        VTK_POSE: int = 5
+        VTK_WORLD: int = 6
+        VTK_USERDEFINED: int = 7
 
 
 @dataclass(frozen=True)

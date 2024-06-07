@@ -100,8 +100,6 @@ def main():
     threshold.OutputSet(outside_id)
     threshold.OutputSet(inside_id)
     threshold.OutputSet(border_id)
-    # threshold.Update()
-    # threshold.SetInputConnection(select.GetOutputPort())
     (select >> threshold).update()
 
     # Visualize

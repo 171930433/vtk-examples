@@ -88,9 +88,7 @@ def main():
     not_selected_actor = vtkActor(mapper=not_selected_mapper, property=sphere_property, backface_property=backfaces)
 
     # There will be one render window
-    render_window = vtkRenderWindow()
-    render_window.SetSize(900, 300)
-    render_window.SetWindowName('ExtractSelectionCells')
+    render_window = vtkRenderWindow(size=(900, 300), window_name='ExtractSelectionCells')
 
     # And one interactor
     interactor = vtkRenderWindowInteractor()

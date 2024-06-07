@@ -59,7 +59,6 @@ def main():
     reader >> skin_extractor >> skin_mapper
 
     skin = vtkActor(mapper=skin_mapper)
-    skin.SetMapper(skin_mapper)
     skin.property.diffuse_color = colors.GetColor3d('SkinColor')
 
     back_prop = vtkProperty()
@@ -90,7 +89,7 @@ def main():
     # thereby enlarging the image.
     ren.AddActor(outline)
     ren.AddActor(skin)
-    ren.SetActiveCamera(camera)
+    ren.active_camera = camera
     ren.ResetCamera()
     camera.Dolly(1.5)
 

@@ -39,7 +39,6 @@ def main():
 
     # There will be one render window.
     render_window = vtkRenderWindow(size=(600, 300), window_name='ImageNormalize')
-    render_window.SetSize(600, 300)
 
     # And one interactor
     interactor = vtkRenderWindowInteractor()
