@@ -757,6 +757,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                       }
                                       btn_reload.onclick = function() {
                                           frame.src = frame.src;
+                                          checkbox.checked = false;
                                       }
                                       btn_open.onclick = function(){
                                         window.open(\'https://vtk.org/files/examples/'''
