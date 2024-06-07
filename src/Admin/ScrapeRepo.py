@@ -735,6 +735,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                       var btn_wasm = document.getElementById("wasm-button");
                                       var btn_reload = document.getElementById("reload-wasm-button");
                                       var btn_open = document.getElementById("open-wasm-button");
+                                      var checkbox = document.getElementById("checkbox");
                                       var frame = document.getElementById("frame");
                                       var wasm = document.getElementById("wasm-div");
                                       var img = document.getElementById("screenshot-div");
@@ -744,6 +745,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                           frame.src = "about:blank";
                                           btn_screenshot.disabled = true;
                                           btn_wasm.disabled = false;
+                                          checkbox.checked = false;
                                         }
                                       btn_wasm.onclick = function () {
                                           img.style.display = "none";
@@ -764,6 +766,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                         frame.src = "about:blank";
                                         btn_screenshot.disabled = true;
                                         btn_wasm.disabled = false;
+                                        checkbox.checked = false;
                                       } 
                                       checkbox.addEventListener('change', (event) => {
                                         frame.contentWindow.postMessage("ToggleOutput", "https://vtk.org")
