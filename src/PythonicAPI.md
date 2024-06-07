@@ -101,6 +101,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [GeometricObjectsDemo](/PythonicAPI/GeometricObjects/GeometricObjectsDemo) |
 [PipelineReuse](/PythonicAPI/GeometricObjects/PipelineReuse) | How to reuse a pipeline.
 [Planes](/PythonicAPI/GeometricObjects/Planes) | We create a convex hull of the planes for display purposes.
+[PlanesIntersection](/PythonicAPI/GeometricObjects/PlanesIntersection) |
 [SourceObjectsDemo](/PythonicAPI/GeometricObjects/SourceObjectsDemo) | Examples of source objects that procedurally generate polygonal models.  These nine images represent just some of the capability of VTK. From upper left in reading order: sphere, cone, cylinder, cube, plane, text, random point cloud, disk (with or without hole), and line source. Other polygonal source objects are available; check subclasses of vtkPolyDataAlgorithm.
 
 ### Cells
@@ -116,6 +117,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [EarthSource](/PythonicAPI/GeometricObjects/EarthSource) | Create the Earth.
 [Frustum](/PythonicAPI/GeometricObjects/Frustum) |
+[PlatonicSolids](/PythonicAPI/GeometricObjects/PlatonicSolids) | All five platonic solids are displayed.
 [TessellatedBoxSource](/PythonicAPI/GeometricObjects/TessellatedBoxSource) | Generate a box with tessellated sides.
 
 ### Non Linear
@@ -164,6 +166,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [Glyph2D](/PythonicAPI/Filtering/Glyph2D) |
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
+[PerlinNoise](/PythonicAPI/Filtering/PerlinNoise) |
 [PolyDataContourToImageData](/PythonicAPI/PolyData/PolyDataContourToImageData) |
 [PolyDataToImageDataStencil](/PythonicAPI/PolyData/PolyDataToImageDataStencil) |
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
