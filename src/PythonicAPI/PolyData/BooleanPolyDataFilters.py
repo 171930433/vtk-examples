@@ -153,7 +153,7 @@ def main():
 
     viewUp = (0.0, 0.0, 1.0)
     position = (0.0, -1.0, 0.0)
-    PositionCamera(renderer, viewUp, position)
+    position_camera(renderer, viewUp, position)
     renderer.active_camera.Dolly(1.4)
     renderer.ResetCameraClippingRange()
 
@@ -200,9 +200,9 @@ def read_poly_data(file_name):
         return None
 
 
-def PositionCamera(renderer, viewUp, position):
-    renderer.GetActiveCamera().SetViewUp(viewUp)
-    renderer.GetActiveCamera().SetPosition(position)
+def position_camera(renderer, view_up, position):
+    renderer.active_camera.view_up = view_up
+    renderer.active_camera.position = position
     renderer.ResetCamera()
 
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from dataclasses import dataclass
+
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
 # noinspection PyUnresolvedReferences
@@ -9,6 +11,7 @@ import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkChartsCore import vtkCategoryLegend
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonCore import (
+    vtkLogger,
     vtkLookupTable,
     vtkVariantArray
 )
@@ -17,13 +20,6 @@ from vtkmodules.vtkCommonDataModel import (
     vtkGenericCell
 )
 from vtkmodules.vtkFiltersCore import vtkTubeFilter
-
-# vtkExtractEdges moved from vtkFiltersExtraction to vtkFiltersCore in
-# VTK commit d9981b9aeb93b42d1371c6e295d76bfdc18430bd
-try:
-    from vtkmodules.vtkFiltersCore import vtkExtractEdges
-except ImportError:
-    from vtkmodules.vtkFiltersExtraction import vtkExtractEdges
 from vtkmodules.vtkFiltersGeneral import vtkShrinkFilter
 from vtkmodules.vtkFiltersSources import vtkSphereSource
 from vtkmodules.vtkIOLegacy import vtkUnstructuredGridReader
@@ -40,6 +36,13 @@ from vtkmodules.vtkRenderingCore import (
 from vtkmodules.vtkRenderingLabel import vtkLabeledDataMapper
 from vtkmodules.vtkViewsContext2D import vtkContextView
 
+# vtkExtractEdges moved from vtkFiltersExtraction to vtkFiltersCore in
+# VTK commit d9981b9aeb93b42d1371c6e295d76bfdc18430bd
+try:
+    from vtkmodules.vtkFiltersCore import vtkExtractEdges
+except ImportError:
+    from vtkmodules.vtkFiltersExtraction import vtkExtractEdges
+
 
 def get_program_parameters():
     import argparse
@@ -55,6 +58,10 @@ def get_program_parameters():
 
 
 def main():
+    #  Turn of the INFO message from vtkExtractEdges
+    # See: https://gitlab.kitware.com/vtk/vtk/-/issues/18785
+    vtkLogger.SetStderrVerbosity(vtkLogger.VERBOSITY_OFF)
+
     colors = vtkNamedColors()
 
     filename = get_program_parameters()
@@ -107,15 +114,14 @@ def main():
     # The geometry.
     geometry_shrink = vtkShrinkFilter(shrink_factor=0.8)
 
-    geometry_mapper = vtkDataSetMapper(scalar_range=(0, 11))
-    geometry_mapper.SetScalarModeToUseCellData()
+    geometry_mapper = vtkDataSetMapper(scalar_range=(0, 11),
+                                       scalar_mode=Mapper.ScalarMode.VTK_SCALAR_MODE_USE_CELL_DATA)
     reader >> geometry_shrink >> geometry_mapper
 
-    geometry_actor = vtkActor()
-    geometry_actor.SetMapper(geometry_mapper)
-    geometry_actor.GetProperty().SetLineWidth(3)
-    geometry_actor.GetProperty().EdgeVisibilityOn()
-    geometry_actor.GetProperty().SetEdgeColor(0, 0, 0)
+    geometry_actor = vtkActor(mapper=geometry_mapper)
+    geometry_actor.property.line_width = 3
+    geometry_actor.property.edge_visibility = True
+    geometry_actor.property.edge_color = colors.GetColor3d('Black')
 
     # NOTE: We must copy the original_lut because the categorical legend
     # needs an indexed lookup table, but the geometry_mapper uses a
@@ -127,13 +133,10 @@ def main():
     categorical_lut.IndexedLookupOn()
 
     # Legend
-    for v in range(0, legend_values.GetNumberOfTuples()):
+    for v in range(0, legend_values.number_of_tuples):
         categorical_lut.SetAnnotation(legend_values.GetValue(v), legend_values.GetValue(v).ToString())
-    legend = vtkCategoryLegend()
-    legend.SetScalarsToColors(categorical_lut)
-    legend.SetValues(legend_values)
-    legend.SetTitle('Cell Type')
-    legend.GetBrush().SetColor(colors.GetColor4ub('Silver'))
+    legend = vtkCategoryLegend(scalars_to_colors=categorical_lut, values=legend_values, title='Cell Type')
+    legend.brush.color = colors.GetColor4ub('Silver')
 
     width = 640
     height = 480
@@ -163,12 +166,36 @@ def main():
     a_camera.Azimuth(-40.0)
     a_camera.Elevation(50.0)
 
-    renderer.SetActiveCamera(a_camera)
+    renderer.active_camera = a_camera
     renderer.ResetCamera()
 
     render_window.Render()
 
     render_window_interactor.Start()
+
+
+@dataclass(frozen=True)
+class Mapper:
+    @dataclass(frozen=True)
+    class ColorMode:
+        VTK_COLOR_MODE_DEFAULT: int = 0
+        VTK_COLOR_MODE_MAP_SCALARS: int = 1
+        VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
+
+    @dataclass(frozen=True)
+    class ResolveCoincidentTopology:
+        VTK_RESOLVE_OFF: int = 0
+        VTK_RESOLVE_POLYGON_OFFSET: int = 1
+        VTK_RESOLVE_SHIFT_ZBUFFER: int = 2
+
+    @dataclass(frozen=True)
+    class ScalarMode:
+        VTK_SCALAR_MODE_DEFAULT: int = 0
+        VTK_SCALAR_MODE_USE_POINT_DATA: int = 1
+        VTK_SCALAR_MODE_USE_CELL_DATA: int = 2
+        VTK_SCALAR_MODE_USE_POINT_FIELD_DATA: int = 3
+        VTK_SCALAR_MODE_USE_CELL_FIELD_DATA: int = 4
+        VTK_SCALAR_MODE_USE_FIELD_DATA: int = 5
 
 
 if __name__ == '__main__':

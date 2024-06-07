@@ -55,9 +55,9 @@ def main():
                                interpolate_scalars_before_mapping=True)
     mapper.SelectColorArray(nodal_var)
     reader >> geometry >> mapper
+
     # Actor
     actor = vtkActor(mapper=mapper)
-    actor.SetMapper(mapper)
 
     # Renderer
     renderer = vtkRenderer(background=colors.GetColor3d('DimGray'))

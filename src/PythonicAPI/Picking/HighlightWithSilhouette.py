@@ -50,9 +50,9 @@ def main():
     style.default_renderer = renderer
 
     random_sequence = vtkMinimalStandardRandomSequence()
-    # random_sequence.SetSeed(1043618065)
-    # random_sequence.SetSeed(5170)
-    random_sequence.SetSeed(8775070)
+    # random_sequence.seed = 1043618065
+    # random_sequence.seed = 5170
+    random_sequence.seed = 8775070
 
     # Add spheres to play with.
     for i in range(number_of_spheres):
@@ -131,8 +131,8 @@ class MouseInteractorHighLightActor(vtkInteractorStyleTrackballCamera):
 
         #  Pick from this location.
         picker = vtkPropPicker()
-        picker.Pick(*click_pos, 0, self.GetDefaultRenderer())
-        self.last_picked_actor = picker.GetActor()
+        picker.Pick(*click_pos, 0, self.default_renderer)
+        self.last_picked_actor = picker.actor
 
         # If we picked something before, remove the silhouette actor and
         # generate a new one.

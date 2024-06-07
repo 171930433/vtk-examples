@@ -22,7 +22,8 @@ from vtkmodules.vtkFiltersGeneral import vtkCurvatures
 # noinspection PyUnresolvedReferences
 from vtkmodules.vtkIOXML import (
     vtkXMLPolyDataReader,
-    vtkXMLPolyDataWriter
+    vtkXMLPolyDataWriter,
+    vtkXMLWriterBase,
 )
 from vtkmodules.vtkInteractionWidgets import (
     vtkCameraOrientationWidget,
@@ -70,11 +71,9 @@ def main(argv):
     else:
         curvature = 'Mean_Curvature'
 
-    reader = vtkXMLPolyDataReader()
-    reader.SetFileName(file_name)
-    reader.Update()
+    reader = vtkXMLPolyDataReader(file_name=file_name)
 
-    source = reader.GetOutput()
+    source = reader.update().output
 
     if gaussian_curvature:
         cc = vtkCurvatures(curvature_type=Curvatures.CurvatureType.VTK_CURVATURE_GAUSS)
@@ -86,10 +85,7 @@ def main(argv):
     scalar_range = source.point_data.GetScalars(curvature).range
 
     if save_pd:
-        writer = vtkXMLPolyDataWriter()
-        writer.SetFileName('Source.vtp')
-        writer.SetInputData(source)
-        writer.SetDataModeToAscii()
+        writer = vtkXMLPolyDataWriter(input_data=source, file_name='Source.vtp', data_mode=vtkXMLWriterBase.Ascii)
         writer.Write()
 
     # Build a lookup table

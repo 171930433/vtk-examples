@@ -53,9 +53,9 @@ def main():
     interactor.interactor_style = style
 
     random_sequence = vtkMinimalStandardRandomSequence()
-    # random_sequence.SetSeed(1043618065)
-    # random_sequence.SetSeed(5170)
-    random_sequence.SetSeed(8775070)
+    # random_sequence.seed = 1043618065
+    # random_sequence.seed = 5170
+    random_sequence.seed = 8775070
 
     # Add spheres to play with.
     for i in range(number_of_spheres):
@@ -114,7 +114,7 @@ class MouseInteractorHighLightActor(vtkInteractorStyleTrackballCamera):
         picker.Pick(*click_pos, 0, self.default_renderer)
 
         # Get the new actor.
-        self.new_picked_actor = picker.GetActor()
+        self.new_picked_actor = picker.actor
 
         # If something was selected.
         if self.new_picked_actor:

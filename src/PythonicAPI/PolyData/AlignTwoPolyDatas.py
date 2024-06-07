@@ -157,17 +157,16 @@ def main():
     print('  Best distance:                          {:0.5f}'.format(best_distance))
 
     if write_data:
-        writer = vtkPolyDataWriter()
+        writer = vtkPolyDataWriter(file_name='AlignedSource.vtk')
         if best_distance == distance_before_align:
-            writer.SetInputData(original_source_polydata)
+            writer.input_data = original_source_polydata
         elif best_distance == distance_after_align:
-            writer.SetInputData(source_polydata)
+            writer.input_data = source_polydata
         else:
-            writer.SetInputData(transform.GetOutput())
-        writer.SetFileName('AlignedSource.vtk')
+            writer.input_data = transform.output
         writer.Write()
-        writer.SetInputData(tpd.GetOutput())
-        writer.SetFileName('Target.vtk')
+        writer.file_name = 'Target.vtk'
+        tpd >> writer
         writer.Write()
 
     # Select the source to use.
@@ -281,7 +280,7 @@ def align_bounding_boxes(source, target):
     best_distance = best_bounding_box('Z', target, source, target_landmarks, source_landmarks, best_distance,
                                       best_points)
 
-    lm_transform.SetSourceLandmarks(best_points)
+    lm_transform.source_landmarks = best_points
     lm_transform.Modified()
 
     lm_transform_pd = vtkTransformPolyDataFilter(transform=lm_transform)
@@ -320,7 +319,7 @@ def best_bounding_box(axis, target, source, target_landmarks, source_landmarks, 
         test_transform_pd.input_data = source_landmarks
         test_transform_pd.update()
 
-        lm_transform.SetSourceLandmarks(test_transform_pd.output.points)
+        lm_transform.source_landmarks = test_transform_pd.output.points
         lm_transform.Modified()
 
         lm_transform_pd.input_data = source

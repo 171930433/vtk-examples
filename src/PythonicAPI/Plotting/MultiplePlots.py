@@ -97,10 +97,10 @@ def main():
     right_chart_actor = vtkContextActor()
 
     right_chart_scene.AddItem(right_chart)
-    right_chart_actor.SetScene(right_chart_scene)
+    right_chart_actor.scene = right_chart_scene
 
     right_renderer.AddActor(right_chart_actor)
-    right_chart_scene.SetRenderer(right_renderer)
+    right_chart_scene.renderer = right_renderer
 
     # Create the data.
     table = vtkTable()
