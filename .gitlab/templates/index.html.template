@@ -109,6 +109,7 @@
         canvas.setAttribute('tabindex', '0');
         // grab focus when the render window region receives mouse clicks.
         canvas.addEventListener('click', () => canvas.focus());
+        window.setTimeout(() => window.dispatchEvent(new Event('resize')));
       }
     };
 
