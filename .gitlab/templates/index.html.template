@@ -34,23 +34,41 @@
     <textarea readonly id="output" rows="8" style="width: 25vw; margin-left: 2px; resize: none; border: none; outline: none; padding: 0"></textarea>
   </div>
   <script type='text/javascript'>
+    var canvas = document.getElementById('canvas');
+    var output = document.getElementById('output');
+
+    window.addEventListener(
+      "message",
+      (event) => {
+        if (event.data == "ToggleOutput") {
+          if (output.style.display == 'none') {
+            output.style.display = 'flex';
+            canvas.style.height = '75vh';
+            window.dispatchEvent(new Event('resize'));
+          }
+          else {
+            output.style.display = 'none';
+            canvas.style.height = '100vh';
+            window.dispatchEvent(new Event('resize'));
+          }
+        }
+      },
+      false,
+    );
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.addEventListener('keydown', function(event) {
         if (event.key == "Q" || event.key == "q" || event.key == "E" || event.key == "e")
             event.preventDefault();
     }, true);
 
-    var canvas = document.getElementById('canvas');
-
     if (window.self !== window.top)
     {
         document.getElementById('display-div').style.flexDirection = 'column';
-        var output = document.getElementById('output');
         output.style.height = '25vh';
         output.style.width = '100vw';
         output.style.margin = '0';
+        output.style.display = 'none';
         canvas.style.width = '100vw';
-        canvas.style.height = '75vh';
     }
 
     var Module = {

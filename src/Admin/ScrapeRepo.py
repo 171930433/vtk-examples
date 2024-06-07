@@ -714,7 +714,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                           'Test' + source_path.stem + '.png?raw=true'])
                     if lang == 'Cxx' and not check_excluded(excluded_examples, source_path.stem):
                         # href to open image in new tab
-                        md_file.write('''<button id="screenshot-button" class="wasm-tab" disabled>Screenshot</button><button id="wasm-button" class="wasm-tab">Interactive example</button><hr style="margin-top: 10px; margin-bottom: 10px;"><div id="screenshot-div"><a href="''' + image_url + ' target="_blank">' + '\n')
+                        md_file.write('''<button id="screenshot-button" class="wasm-tab" disabled>Screenshot</button><button id="wasm-button" class="wasm-tab">Interactive example</button><div id="screenshot-div"><a href="''' + image_url + ' target="_blank">' + '\n')
                         md_file.write(
                             '<img style="border:2px solid beige;float:center" src="' +
                             image_url + '" width="256" />')
@@ -722,8 +722,13 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
 
                         # wasmified example
                         md_file.write('''<div id="wasm-div" style="display: none;">
-                                      <button id="reload-wasm-button" class="wasm-button" style="display: inline;">Reload example</button>
-                                      <button id="open-wasm-button" class="wasm-button" style="display: inline;">Open in new tab</button>''')
+                                      <div style="display: flex; margin-bottom: 10px">
+                                      <button id="reload-wasm-button" class="wasm-button">Reload example</button>
+                                      <button id="open-wasm-button" class="wasm-button">Open in new tab</button>
+                                      <input id="checkbox" type="checkbox">
+                                      <label for="checkbox" style="align-self: center;">Show logs</label>
+                                      <a style="margin-left: auto;" href="https://examples.vtk.org/site/WASM/1_WASM"><button class="wasm-button">Documentation</button></a>
+                                      </div>''')
                         md_file.write('<iframe id="frame" src="about:blank" style="width: 80vw; height: 80vh; border: medium;"></iframe></div>\n')
                         md_file.write('''<script>
                                       var btn_screenshot = document.getElementById("screenshot-button");
@@ -760,6 +765,9 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
                                         btn_screenshot.disabled = true;
                                         btn_wasm.disabled = false;
                                       } 
+                                      checkbox.addEventListener('change', (event) => {
+                                        frame.contentWindow.postMessage("ToggleOutput", "https://vtk.org")
+                                      })
                         </script>\n''')
                         md_file.write('<hr>\n')
                         md_file.write('\n')
