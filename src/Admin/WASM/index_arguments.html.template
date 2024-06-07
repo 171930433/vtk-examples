@@ -28,7 +28,9 @@
     <p><a href="https://docs.vtk.org/en/latest/advanced/build_wasm_emscripten.html" target="_blank">&bull; Instructions to build and install VTK-WASM on your system.</a></p>
   </div>
   <div id="display-div" style="display: none; flex-direction: row; width: 100vw; height: 100vh">
-    <canvas id="canvas" style="width: 75vw; height: 100vh;"></canvas>
+    <div id="canvas_container">
+      <canvas id="canvas" style="width: 75vw; height: 100vh;"></canvas>
+    </div>
     <textarea readonly id="output" rows="8" style="width: 25vw; margin-left: 2px; resize: none; border: none; outline: none; padding: 0"></textarea>
   </div>
   <script type='text/javascript'>
