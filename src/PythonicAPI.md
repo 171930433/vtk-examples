@@ -58,6 +58,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [ReadAllPolyDataTypesDemo](/PythonicAPI/IO/ReadAllPolyDataTypesDemo) | Read all VTK polydata file types.
 [ReadExodusData](/PythonicAPI/IO/ReadExodusData) | A simple script for reading and viewing ExodusII data interactively.
+[ReadSLC](/PythonicAPI/IO/ReadSLC) | Read an SLC file.
 [TransientHDFReader](/PythonicAPI/IO/TransientHDFReader) | Read transient data written inside a vtkhdf file.
 
 ###### Importers
@@ -98,6 +99,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[Dodecahedron](/PythonicAPI/GeometricObjects/Dodecahedron) | Create a dodecahedron using vtkPolyhedron.
 [GeometricObjectsDemo](/PythonicAPI/GeometricObjects/GeometricObjectsDemo) |
 [PipelineReuse](/PythonicAPI/GeometricObjects/PipelineReuse) | How to reuse a pipeline.
 [Planes](/PythonicAPI/GeometricObjects/Planes) | We create a convex hull of the planes for display purposes.
@@ -169,6 +171,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [PerlinNoise](/PythonicAPI/Filtering/PerlinNoise) |
 [PolyDataContourToImageData](/PythonicAPI/PolyData/PolyDataContourToImageData) |
 [PolyDataToImageDataStencil](/PythonicAPI/PolyData/PolyDataToImageDataStencil) |
+[RuledSurfaceFilter](/PythonicAPI/PolyData/RuledSurfaceFilter) |
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
 
 ### Data Types
