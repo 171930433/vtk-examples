@@ -29,7 +29,7 @@ def main():
     mapper = vtkPolyDataMapper()
     reader >> mapper
 
-    # Implementing Marching Cubes Algorithm to create the surface using vtkContourFilter object.
+    # Create the surface using a vtkContourFilter object.
     contour_filter = vtkContourFilter()
     # Change the range(2nd and 3rd Parameter) based on your
     # requirement. The recommended value for 1st parameter is greater than 1
@@ -63,7 +63,6 @@ def main():
     # Assign actor to the renderer.
     renderer.AddActor(actor)
     renderer.AddActor(outline_actor)
-    # renderer.SetBackground(colors.GetColor3d('SlateGray'))
 
     # Pick a good view
     cam1 = renderer.GetActiveCamera()

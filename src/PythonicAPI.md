@@ -72,6 +72,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [WritePLY](/PythonicAPI/IO/WritePLY) |
+[WriteSTL](/PythonicAPI/IO/WriteSTL) |
 
 #### VTK Formats
 
@@ -147,6 +148,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [ImplicitQuadric](/PythonicAPI/ImplicitFunctions/ImplicitQuadric) | Create an ellipsoid using an implicit quadric
 [ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
 [ImplicitSphere1](/PythonicAPI/ImplicitFunctions/ImplicitSphere1) | Demonstrate sampling of a sphere implicit function
+[Lorenz](/PythonicAPI/Visualization/Lorenz) | Visualizing a Lorenz strange attractor by integrating the Lorenz equations in a volume.
 [SampleFunction](/PythonicAPI/ImplicitFunctions/SampleFunction) | Sample and visualize an implicit function.
 [SmoothDiscreteFlyingEdges3D](/PythonicAPI/Modelling/SmoothDiscreteFlyingEdges3D) | Generate smooth surfaces from labeled data.
 
@@ -317,6 +319,7 @@ This section includes ?vtkUnstructuredGrid?.
 | -------------- | ------------- | ------- |
 [ColoredSphere](/PythonicAPI/Rendering/ColoredSphere) | A simple sphere.
 [GradientBackground](/PythonicAPI/Rendering/GradientBackground) | Demonstrates the background shading options.
+[MotionBlur](/PythonicAPI/Rendering/MotionBlur) | Example of motion blur.
 [OutlineGlowPass](/PythonicAPI/Rendering/OutlineGlowPass) | Demonstrates how to render a object in a scene with a glowing outline.
 [PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
 [PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
@@ -422,6 +425,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [CompassWidget](/PythonicAPI/Widgets/CompassWidget) | Draws an interactive compass.
 [ContourWidget](/PythonicAPI/Widgets/ContourWidget) | Draw a contour (line) which can be deformed by the user.
 [ImplicitPlaneWidget2](/PythonicAPI/Widgets/ImplicitPlaneWidget2) | Clip polydata with an implicit plane.
+[SphereWidget](/PythonicAPI/Widgets/SphereWidget) | This 3D widget defines a sphere that can be interactively placed in a scene.
+[SplineWidget](/PythonicAPI/Widgets/SplineWidget) | This example shows how to use vtkSplineWidget with a callback being used to get the length of the spline widget.
 
 ## Plotting
 
