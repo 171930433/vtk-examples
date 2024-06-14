@@ -245,6 +245,11 @@ This section includes ?vtkUnstructuredGrid?.
 
 #### ?vtkUnstructuredGrid?
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ClipUnstructuredGridWithPlane](/PythonicAPI/UnstructuredGrid/ClipUnstructuredGridWithPlane) | Clip a UGrid with a plane.
+[ClipUnstructuredGridWithPlane2](/PythonicAPI/UnstructuredGrid/ClipUnstructuredGridWithPlane2) | Clip a UGrid with a plane.
+
 ### Registration
 
 ### Medical

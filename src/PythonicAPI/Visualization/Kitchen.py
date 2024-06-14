@@ -51,14 +51,14 @@ def main():
     reader = vtkStructuredGridReader(file_name=file_name)
     # Force a read to occur.
     reader.update()
-    # length = reader.output.length
 
     if reader.output.point_data.scalars:
         scalar_range = reader.output.point_data.scalars.GetRange()
 
     if reader.output.point_data.vectors:
+        length = reader.output.length
         max_velocity = reader.output.point_data.vectors.GetMaxNorm()
-        max_time = 4.0 * reader.GetOutput().GetLength() / max_velocity
+        max_time = 4.0 * length / max_velocity
 
     # Outline around the data.
     outline_filter = vtkStructuredGridOutlineFilter()
@@ -128,7 +128,7 @@ def main():
     sg_filter = get_shaded_surfaces(extent, reader, colors, 'Silver')
     sg_filter.property.opacity = 0.75
 
-    # For fun, lets put a screen across the sg_filter
+    # For fun, lets put a screen across the sg_filter.
     bounds = sg_filter.GetBounds()
     origin = (bounds[0], bounds[2], bounds[4])
     p1 = (bounds[1], bounds[2], bounds[4])
@@ -139,7 +139,7 @@ def main():
     sg_scr_src >> sg_scr_mapper
     sg_screen = vtkActor(mapper=sg_scr_mapper)
     sg_screen.property.representation = Property.Representation.VTK_WIREFRAME
-    sg_screen.property.color = colors.GetColor3d('LampBLack')
+    sg_screen.property.color = colors.GetColor3d('LampBlack')
     sg_screen.property.line_width = 1
 
     # Regular streamlines.
@@ -195,10 +195,8 @@ def main():
     ren.AddActor(lines)
     ren.AddActor(rake)
 
-    ren.SetBackground(colors.GetColor3d('SlateGray'))
-
     camera = vtkCamera()
-    ren.SetActiveCamera(camera)
+    ren.active_camera = camera
     ren.ResetCamera()
 
     camera.focal_point = (3.505, 2.505, 1.255)
@@ -217,7 +215,7 @@ def main():
 
 def get_shaded_surfaces(extent, reader, colors, color: str):
     """
-    Set up shaded surfaces (i.e., supporting geometry).
+    Set up shaded surfaces (the supporting geometry).
 
     :param extent: The extent of the geometry.
     :param reader: The data source.
