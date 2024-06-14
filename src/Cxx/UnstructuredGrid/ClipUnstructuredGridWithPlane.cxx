@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
   insideActor->SetMapper(insideMapper);
   insideActor->GetProperty()->SetDiffuseColor(
       colors->GetColor3d("Banana").GetData());
-  insideActor->GetProperty()->SetAmbient(.3);
+  insideActor->GetProperty()->SetAmbient(0.3);
   insideActor->GetProperty()->EdgeVisibilityOn();
 
   vtkNew<vtkDataSetMapper> clippedMapper;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
   clippedActor->SetMapper(clippedMapper);
   clippedActor->GetProperty()->SetDiffuseColor(
       colors->GetColor3d("Tomato").GetData());
-  insideActor->GetProperty()->SetAmbient(.3);
+  insideActor->GetProperty()->SetAmbient(0.3);
   clippedActor->GetProperty()->EdgeVisibilityOn();
 
   // Create transforms to make a better visualization

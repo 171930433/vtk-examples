@@ -83,8 +83,8 @@ def main():
 
     insideActor = vtkActor()
     insideActor.SetMapper(insideMapper)
-    insideActor.GetProperty().SetDiffuseColor(colors.GetColor3d('banana'))
-    insideActor.GetProperty().SetAmbient(.3)
+    insideActor.GetProperty().SetDiffuseColor(colors.GetColor3d('Banana'))
+    insideActor.GetProperty().SetAmbient(0.3)
     insideActor.GetProperty().EdgeVisibilityOn()
 
     clippedMapper = vtkDataSetMapper()
@@ -93,8 +93,8 @@ def main():
 
     clippedActor = vtkActor()
     clippedActor.SetMapper(clippedMapper)
-    clippedActor.GetProperty().SetDiffuseColor(colors.GetColor3d('tomato'))
-    insideActor.GetProperty().SetAmbient(.3)
+    clippedActor.GetProperty().SetDiffuseColor(colors.GetColor3d('Tomato'))
+    insideActor.GetProperty().SetAmbient(0.3)
     clippedActor.GetProperty().EdgeVisibilityOn()
 
     # Create transforms to make a better visualization

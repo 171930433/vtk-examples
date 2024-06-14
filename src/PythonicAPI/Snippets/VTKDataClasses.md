@@ -471,6 +471,31 @@ class Property:
 
 ```
 
+### RuledSurfaceFilter
+
+``` Python
+@dataclass(frozen=True)
+class RuledSurfaceFilter:
+    @dataclass(frozen=True)
+    class RuledMode:
+        VTK_RULED_MODE_RESAMPLE: int = 0
+        VTK_RULED_MODE_POINT_WALK: int = 1
+
+```
+
+### SphereWidget
+
+``` Python
+@dataclass(frozen=True)
+class SphereWidget:
+    @dataclass(frozen=True)
+    class Representation:
+        VTK_SPHERE_OFF: int = 0
+        VTK_SPHERE_WIREFRAME: int = 1
+        VTK_SPHERE_SURFACE: int = 2
+
+```
+
 ### SpiderPlotActor
 
 ``` Python

@@ -134,9 +134,9 @@ def main(fn, select_figure, no_sliders, chosen_tissues):
     ren_win = vtkRenderWindow(window_name='FroggieView')
     ren_win.AddRenderer(ren)
     iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
+    iren.render_window = ren_win
     style = vtkInteractorStyleTrackballCamera()
-    iren.SetInteractorStyle(style)
+    iren.interactor_style = style
 
     sliders = dict()
     left_step_size = 1.0 / 9

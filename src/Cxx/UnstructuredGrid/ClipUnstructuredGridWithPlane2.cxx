@@ -69,8 +69,8 @@ int main(int argc, char* argv[])
   vtkNew<vtkActor> insideActor;
   insideActor->SetMapper(insideMapper);
   insideActor->GetProperty()->SetDiffuseColor(
-      colors->GetColor3d("banana").GetData());
-  insideActor->GetProperty()->SetAmbient(.3);
+      colors->GetColor3d("Banana").GetData());
+  insideActor->GetProperty()->SetAmbient(0.3);
   insideActor->GetProperty()->EdgeVisibilityOn();
 
   vtkNew<vtkDataSetMapper> clippedMapper;
@@ -80,8 +80,8 @@ int main(int argc, char* argv[])
   vtkNew<vtkActor> clippedActor;
   clippedActor->SetMapper(clippedMapper);
   clippedActor->GetProperty()->SetDiffuseColor(
-      colors->GetColor3d("tomato").GetData());
-  insideActor->GetProperty()->SetAmbient(.3);
+      colors->GetColor3d("Tomato").GetData());
+  insideActor->GetProperty()->SetAmbient(0.3);
   clippedActor->GetProperty()->EdgeVisibilityOn();
 
   // Create transforms to make a better visualization
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
   vtkNew<vtkTransform> clippedTransform;
   clippedTransform->Translate((bounds[1] - bounds[0]) * .75, 0, 0);
   clippedTransform->Translate(center[0], center[1], center[2]);
-  clippedTransform->RotateY(60.0);
+  clippedTransform->RotateY(-120.0);
   clippedTransform->Translate(-center[0], -center[1], -center[2]);
   clippedActor->SetUserTransform(clippedTransform);
 

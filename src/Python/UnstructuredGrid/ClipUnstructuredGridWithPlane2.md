@@ -7,21 +7,22 @@ Note that this clipping filter does not retain the original cells if they are no
 After exiting, the example reports the number of each cell type for each output:
 
 ``` text
-The inside dataset contains a
-  vtkUnstructuredGrid that has 110148 cells
-        Cell type vtkTetra occurs 106998 times.
-        Cell type vtkWedge occurs 3150 times.
-The clipped dataset contains a
-  vtkUnstructuredGrid that has 111824 cells
-        Cell type vtkTetra occurs 107420 times.
-        Cell type vtkWedge occurs 4404 times.
+------------------------
+The inside dataset contains a 
+?vtkUnstructuredGrid? that has 110084 cells
+    Cell type ?vtkTetra? occurs 106934 times.
+    Cell type ?vtkWedge? occurs 3150 times.
+------------------------
+The clipped dataset contains a 
+?vtkUnstructuredGrid? that has 110084 cells
+    Cell type ?vtkTetra? occurs 106934 times.
+    Cell type ?vtkWedge? occurs 3150 times.
 ```
 
-Compare these results with [ClipUnstructuredGridWithPlane2 (C++)](../../../Cxx/UnstructuredGrid/ClipUnstructuredGridWithPlane), [ClipUnstructuredGridWithPlane2 (Python)](../ClipUnstructuredGridWithPlane). Notice that in this example, the original vtkHexahedron in the unclipped regions are converted to vtkTetra. Also, the resulting vtkUnstructuredGrid's have more than 4 times the number of cells.
+Compare these results with [ClipUnstructuredGridWithPlane](../ClipUnstructuredGridWithPlane). Notice that in this example, the original ?vtkHexahedron? in the unclipped regions are converted to ?vtkTetra?. Also, the resulting ?vtkUnstructuredGrid?'s have more than 4 times the number of cells.
 
 !!! example "usage"
     ClipUnstructuredGridWithPlane2 treemesh.vtk
 
 !!! info "thanks"
     Thanks to Bane Sullivan for sharing the treemesh.vtk unstructured grid dataset.
-    

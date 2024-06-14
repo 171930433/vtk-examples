@@ -58,6 +58,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [ReadAllPolyDataTypesDemo](/PythonicAPI/IO/ReadAllPolyDataTypesDemo) | Read all VTK polydata file types.
 [ReadExodusData](/PythonicAPI/IO/ReadExodusData) | A simple script for reading and viewing ExodusII data interactively.
+[ReadSLC](/PythonicAPI/IO/ReadSLC) | Read an SLC file.
 [TransientHDFReader](/PythonicAPI/IO/TransientHDFReader) | Read transient data written inside a vtkhdf file.
 
 ###### Importers
@@ -71,6 +72,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [WritePLY](/PythonicAPI/IO/WritePLY) |
+[WriteSTL](/PythonicAPI/IO/WriteSTL) |
 
 #### VTK Formats
 
@@ -98,9 +100,11 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[Dodecahedron](/PythonicAPI/GeometricObjects/Dodecahedron) | Create a dodecahedron using vtkPolyhedron.
 [GeometricObjectsDemo](/PythonicAPI/GeometricObjects/GeometricObjectsDemo) |
 [PipelineReuse](/PythonicAPI/GeometricObjects/PipelineReuse) | How to reuse a pipeline.
 [Planes](/PythonicAPI/GeometricObjects/Planes) | We create a convex hull of the planes for display purposes.
+[PlanesIntersection](/PythonicAPI/GeometricObjects/PlanesIntersection) |
 [SourceObjectsDemo](/PythonicAPI/GeometricObjects/SourceObjectsDemo) | Examples of source objects that procedurally generate polygonal models.  These nine images represent just some of the capability of VTK. From upper left in reading order: sphere, cone, cylinder, cube, plane, text, random point cloud, disk (with or without hole), and line source. Other polygonal source objects are available; check subclasses of vtkPolyDataAlgorithm.
 
 ### Cells
@@ -116,6 +120,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [EarthSource](/PythonicAPI/GeometricObjects/EarthSource) | Create the Earth.
 [Frustum](/PythonicAPI/GeometricObjects/Frustum) |
+[PlatonicSolids](/PythonicAPI/GeometricObjects/PlatonicSolids) | All five platonic solids are displayed.
 [TessellatedBoxSource](/PythonicAPI/GeometricObjects/TessellatedBoxSource) | Generate a box with tessellated sides.
 
 ### Non Linear
@@ -143,6 +148,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [ImplicitQuadric](/PythonicAPI/ImplicitFunctions/ImplicitQuadric) | Create an ellipsoid using an implicit quadric
 [ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
 [ImplicitSphere1](/PythonicAPI/ImplicitFunctions/ImplicitSphere1) | Demonstrate sampling of a sphere implicit function
+[Lorenz](/PythonicAPI/Visualization/Lorenz) | Visualizing a Lorenz strange attractor by integrating the Lorenz equations in a volume.
 [SampleFunction](/PythonicAPI/ImplicitFunctions/SampleFunction) | Sample and visualize an implicit function.
 [SmoothDiscreteFlyingEdges3D](/PythonicAPI/Modelling/SmoothDiscreteFlyingEdges3D) | Generate smooth surfaces from labeled data.
 
@@ -164,8 +170,10 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [Glyph2D](/PythonicAPI/Filtering/Glyph2D) |
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
+[PerlinNoise](/PythonicAPI/Filtering/PerlinNoise) |
 [PolyDataContourToImageData](/PythonicAPI/PolyData/PolyDataContourToImageData) |
 [PolyDataToImageDataStencil](/PythonicAPI/PolyData/PolyDataToImageDataStencil) |
+[RuledSurfaceFilter](/PythonicAPI/PolyData/RuledSurfaceFilter) |
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
 
 ### Data Types
@@ -236,6 +244,11 @@ This section includes examples of manipulating meshes.
 This section includes ?vtkUnstructuredGrid?.
 
 #### ?vtkUnstructuredGrid?
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ClipUnstructuredGridWithPlane](/PythonicAPI/UnstructuredGrid/ClipUnstructuredGridWithPlane) | Clip a UGrid with a plane.
+[ClipUnstructuredGridWithPlane2](/PythonicAPI/UnstructuredGrid/ClipUnstructuredGridWithPlane2) | Clip a UGrid with a plane.
 
 ### Registration
 
@@ -311,6 +324,7 @@ This section includes ?vtkUnstructuredGrid?.
 | -------------- | ------------- | ------- |
 [ColoredSphere](/PythonicAPI/Rendering/ColoredSphere) | A simple sphere.
 [GradientBackground](/PythonicAPI/Rendering/GradientBackground) | Demonstrates the background shading options.
+[MotionBlur](/PythonicAPI/Rendering/MotionBlur) | Example of motion blur.
 [OutlineGlowPass](/PythonicAPI/Rendering/OutlineGlowPass) | Demonstrates how to render a object in a scene with a glowing outline.
 [PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
 [PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
@@ -358,6 +372,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [FroggieView](/PythonicAPI/Visualization/FroggieView) | View surfaces of a segmented frog dataset using preprocessed `*.vtk` tissue files. You can turn on and off surfaces, control their opacity through the use of sliders and control the camera position.
 [HeadBone](/PythonicAPI/VisualizationAlgorithms/HeadBone) | Marching cubes surface of human bone.
 [HyperStreamline](/PythonicAPI/VisualizationAlgorithms/HyperStreamline) | Example of hyperstreamlines, the four hyperstreamlines shown are integrated along the minor principal stress axis. A plane (colored with a different lookup table) is also shown.
+[Kitchen](/PythonicAPI/Visualization/Kitchen) | Demonstrates stream tracing in a kitchen.
 [PointDataSubdivision](/PythonicAPI/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
 [PseudoVolumeRendering](/PythonicAPI/VolumeRendering/PseudoVolumeRendering) | Here we use 20 cut planes, each with an opacity of of 0.25. They are then rendered back-to-front to simulate volume rendering.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
@@ -406,7 +421,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [MorphologyComparison](/PythonicAPI/ImageProcessing/MorphologyComparison) | This figure demonstrates various binary filters that can alter the shape of segmented regions.
 [ImageWarp](/PythonicAPI/Images/ImageWarp) | Combine the imaging and visualization pipelines to deform an image in the z-direction. The vtkMergeFilter is used to combine the warped surface with the original color data.
 [Pad](/PythonicAPI/ImageProcessing/Pad) | Convolution in frequency space treats the image as a periodic function. A large kernel can pick up features from both sides of the image. The left image has been padded with a constant to eliminate wraparound during convolution. On the right, mirror padding has been used to remove artificial edges introduced by borders.
-[[VTKSpectrum](/PythonicAPI/ImageProcessing/VTKSpectrum) | The discrete Fourier transform changes an image from the spatial domain into the frequency domain, where each pixel represents a sinusoidal function. This figure shows an image and its power spectrum displayed using a logarithmic transfer function.
+[VTKSpectrum](/PythonicAPI/ImageProcessing/VTKSpectrum) | The discrete Fourier transform changes an image from the spatial domain into the frequency domain, where each pixel represents a sinusoidal function. This figure shows an image and its power spectrum displayed using a logarithmic transfer function.
 
 ## Widgets
 
@@ -416,6 +431,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [CompassWidget](/PythonicAPI/Widgets/CompassWidget) | Draws an interactive compass.
 [ContourWidget](/PythonicAPI/Widgets/ContourWidget) | Draw a contour (line) which can be deformed by the user.
 [ImplicitPlaneWidget2](/PythonicAPI/Widgets/ImplicitPlaneWidget2) | Clip polydata with an implicit plane.
+[SphereWidget](/PythonicAPI/Widgets/SphereWidget) | This 3D widget defines a sphere that can be interactively placed in a scene.
+[SplineWidget](/PythonicAPI/Widgets/SplineWidget) | This example shows how to use vtkSplineWidget with a callback being used to get the length of the spline widget.
 
 ## Plotting
 
