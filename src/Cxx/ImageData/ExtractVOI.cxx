@@ -20,8 +20,7 @@ int main(int, char*[])
   source->Update();
 
   int* inputDims = source->GetOutput()->GetDimensions();
-  std::cout << "Dims: "
-            << " x: " << inputDims[0] << " y: " << inputDims[1]
+  std::cout << "Dims: " << " x: " << inputDims[0] << " y: " << inputDims[1]
             << " z: " << inputDims[2] << std::endl;
   std::cout << "Number of points: " << source->GetOutput()->GetNumberOfPoints()
             << std::endl;
@@ -37,9 +36,9 @@ int main(int, char*[])
   vtkImageData* extracted = extractVOI->GetOutput();
 
   int* extractedDims = extracted->GetDimensions();
-  std::cout << "Dims: "
-            << " x: " << extractedDims[0] << " y: " << extractedDims[1]
-            << " z: " << extractedDims[2] << std::endl;
+  std::cout << "Dims: " << " x: " << extractedDims[0]
+            << " y: " << extractedDims[1] << " z: " << extractedDims[2]
+            << std::endl;
   std::cout << "Number of points: " << extracted->GetNumberOfPoints()
             << std::endl;
   std::cout << "Number of cells: " << extracted->GetNumberOfCells()

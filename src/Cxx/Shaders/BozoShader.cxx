@@ -78,8 +78,7 @@ int main(int argc, char* argv[])
   if (argc < 2)
   {
     std::cout << "Usage: " << argv[0] << " Shaders/PerlinNoise.glsl "
-              << "[polydataFile] "
-              << "[k(5)]" << std::endl;
+              << "[polydataFile] " << "[k(5)]" << std::endl;
     return EXIT_FAILURE;
   }
   auto polyData = ReadPolyData(argc > 2 ? argv[2] : "");
@@ -323,9 +322,9 @@ int main(int argc, char* argv[])
   interactor->Start();
 
   transform->GetOutput()->GetBounds(bounds);
-  std::cout << "Range: "
-            << " x " << bounds[1] - bounds[0] << " y " << bounds[3] - bounds[2]
-            << " y " << bounds[5] - bounds[4] << std::endl;
+  std::cout << "Range: " << " x " << bounds[1] - bounds[0] << " y "
+            << bounds[3] - bounds[2] << " y " << bounds[5] - bounds[4]
+            << std::endl;
   return EXIT_SUCCESS;
 }
 

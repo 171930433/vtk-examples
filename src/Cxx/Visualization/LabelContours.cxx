@@ -142,10 +142,10 @@ int main(int argc, char* argv[])
 
     double midPoint[3];
     points->GetPoint(midPointId, midPoint);
-    std::cout << "\tmidPoint is " << midPointId << " with coordinate "
-              << "(" << std::fixed << std::setprecision(2) << midPoint[0]
-              << ", " << midPoint[1] << ", " << midPoint[2] << ")"
-              << " and value " << scalars->GetTuple1(midPointId) << std::endl;
+    std::cout << "\tmidPoint is " << midPointId << " with coordinate " << "("
+              << std::fixed << std::setprecision(2) << midPoint[0] << ", "
+              << midPoint[1] << ", " << midPoint[2] << ")" << " and value "
+              << scalars->GetTuple1(midPointId) << std::endl;
     labelPoints->InsertNextPoint(midPoint);
     labelScalars->InsertNextTuple1(scalars->GetTuple1(midPointId));
   }
@@ -177,10 +177,10 @@ int main(int argc, char* argv[])
 
     double midPoint[3];
     points->GetPoint(midPointId, midPoint);
-    std::cout << "\tmidPoint is " << midPointId << " with coordinate "
-              << "(" << std::fixed << std::setprecision(2) << midPoint[0]
-              << ", " << midPoint[1] << ", " << midPoint[2] << ")"
-              << " and value " << scalars->GetTuple1(midPointId) << std::endl;
+    std::cout << "\tmidPoint is " << midPointId << " with coordinate " << "("
+              << std::fixed << std::setprecision(2) << midPoint[0] << ", "
+              << midPoint[1] << ", " << midPoint[2] << ")" << " and value "
+              << scalars->GetTuple1(midPointId) << std::endl;
     labelPoints->InsertNextPoint(midPoint);
     labelScalars->InsertNextTuple1(scalars->GetTuple1(midPointId));
   }

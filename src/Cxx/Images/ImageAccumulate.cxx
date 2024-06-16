@@ -58,9 +58,8 @@ void CreateImage(vtkSmartPointer<vtkImageData> image)
   int* dims = image->GetDimensions();
   // int dims[3]; // can't do this
 
-  std::cout << "Dims: "
-            << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2]
-            << std::endl;
+  std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1]
+            << " z: " << dims[2] << std::endl;
 
   // Fill every entry of the image data with "2.0"
   for (int z = 0; z < dims[2]; z++)

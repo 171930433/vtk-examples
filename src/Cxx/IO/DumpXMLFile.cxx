@@ -96,8 +96,8 @@ int main(int argc, char* argv[])
     std::cout << argv[f] << std::endl
               << " contains a " << std::endl
               << dataSet->GetClassName() << " that has " << numberOfCells
-              << " cells"
-              << " and " << numberOfPoints << " points." << std::endl;
+              << " cells" << " and " << numberOfPoints << " points."
+              << std::endl;
     typedef std::map<int, int> CellContainer;
     CellContainer cellMap;
     for (int i = 0; i < numberOfCells; i++)
@@ -125,9 +125,8 @@ int main(int argc, char* argv[])
         std::cout << "\tArray " << i << " is named "
                   << (pd->GetArrayName(i) ? pd->GetArrayName(i) : "NULL")
                   << " has " << pd->GetArray(i)->GetNumberOfTuples()
-                  << " tuples"
-                  << " with " << pd->GetArray(i)->GetNumberOfComponents()
-                  << " components"
+                  << " tuples" << " with "
+                  << pd->GetArray(i)->GetNumberOfComponents() << " components"
                   << " of type " << pd->GetArray(i)->GetClassName()
                   << std::endl;
       }
@@ -159,11 +158,9 @@ int main(int argc, char* argv[])
             << "\tArray " << i << " is named "
             << dataSet->GetFieldData()->GetArray(i)->GetName() << " has "
             << dataSet->GetFieldData()->GetArray(i)->GetNumberOfTuples()
-            << " tuples"
-            << " with "
+            << " tuples" << " with "
             << dataSet->GetFieldData()->GetArray(i)->GetNumberOfComponents()
-            << " components"
-            << " of type "
+            << " components" << " of type "
             << dataSet->GetFieldData()->GetArray(i)->GetClassName()
             << std::endl;
       }

@@ -45,9 +45,9 @@ public:
         acos((handlePosition[2] - center[2]) / radius));
 
     std::cout << "r, theta, phi: (" << std::setprecision(3) << radius << ", "
-              << theta << ", " << phi << ") "
-              << "x, y, z: (" << handlePosition[0] << ", " << handlePosition[1]
-              << ", " << handlePosition[2] << ") " << std::endl;
+              << theta << ", " << phi << ") " << "x, y, z: ("
+              << handlePosition[0] << ", " << handlePosition[1] << ", "
+              << handlePosition[2] << ") " << std::endl;
   }
 
   vtkSphereCallback()

@@ -712,9 +712,8 @@ bool ProcessCommandLine(vtksys::CommandLineArguments& arg,
   arg.Parse();
   if (help)
   {
-    std::cout << "Usage: "
-              << "WordCloud"
-              << " textFileName " << arg.GetHelp() << std::endl;
+    std::cout << "Usage: " << "WordCloud" << " textFileName " << arg.GetHelp()
+              << std::endl;
     return false;
   }
 

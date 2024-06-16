@@ -207,12 +207,8 @@ int main(int argc, char* argv[])
   if (argc < 2)
   {
     std::cout << "Usage: " << argv[0] << " PerlnNoise.glsl "
-              << "[polydataFile] "
-              << "[veincolor(1,1,1)] "
-              << "[veinfreq(10)] "
-              << "[veinlevels(2)] "
-              << "[warpfreq(1)] "
-              << "[warping(.5)] "
+              << "[polydataFile] " << "[veincolor(1,1,1)] " << "[veinfreq(10)] "
+              << "[veinlevels(2)] " << "[warpfreq(1)] " << "[warping(.5)] "
               << "[sharpness(8)]" << std::endl;
     return EXIT_FAILURE;
   }
@@ -614,9 +610,9 @@ int main(int argc, char* argv[])
   interactor->Start();
 
   transform->GetOutput()->GetBounds(bounds);
-  std::cout << "Range: "
-            << " x " << bounds[1] - bounds[0] << " y " << bounds[3] - bounds[2]
-            << " y " << bounds[5] - bounds[4] << std::endl;
+  std::cout << "Range: " << " x " << bounds[1] - bounds[0] << " y "
+            << bounds[3] - bounds[2] << " y " << bounds[5] - bounds[4]
+            << std::endl;
   return EXIT_SUCCESS;
 }
 

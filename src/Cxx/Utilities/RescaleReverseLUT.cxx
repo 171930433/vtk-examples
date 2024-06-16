@@ -269,8 +269,7 @@ GenerateNewCTF(vtkNew<vtkDiscretizableColorTransferFunction> const& oldCTF,
   {
     for (size_t i = 0; i < newX.size(); ++i)
     {
-      newCTF->AddRGBPoint(newX[i], newRGB[i][0], newRGB[i][1],
-                          newRGB[i][2]);
+      newCTF->AddRGBPoint(newX[i], newRGB[i][0], newRGB[i][1], newRGB[i][2]);
     }
   }
   else
@@ -279,8 +278,7 @@ GenerateNewCTF(vtkNew<vtkDiscretizableColorTransferFunction> const& oldCTF,
     for (size_t i = 0; i < sz; i++)
     {
       auto j = sz - (i + 1);
-      newCTF->AddRGBPoint(newX[i], newRGB[j][0], newRGB[j][1],
-                          newRGB[j][2]);
+      newCTF->AddRGBPoint(newX[i], newRGB[j][0], newRGB[j][1], newRGB[j][2]);
     }
   }
   newCTF->Build();

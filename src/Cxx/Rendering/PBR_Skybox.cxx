@@ -930,8 +930,7 @@ std::string DisplayParameters(Parameters& parameters)
       {
         if (it == parameters.cubemap.cbegin())
         {
-          res << std::setw(15) << std::left << "cubemap"
-              << ": " << *it << "\n";
+          res << std::setw(15) << std::left << "cubemap" << ": " << *it << "\n";
         }
         else
         {

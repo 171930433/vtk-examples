@@ -49,9 +49,8 @@ void CreateImage(vtkImageData* const image,
 
   int* dims = image->GetDimensions();
 
-  std::cout << "Dims: "
-            << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2]
-            << std::endl;
+  std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1]
+            << " z: " << dims[2] << std::endl;
 
   for (int z = 0; z < dims[2]; z++)
   {

@@ -9,7 +9,6 @@ AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: true
-AllowShortLoopsOnASingleLine: true
 BraceWrapping:
   AfterClass: true
   AfterControlStatement : true

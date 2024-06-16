@@ -14,8 +14,7 @@ int main(int, char*[])
 
   imageData->AllocateScalars(VTK_UNSIGNED_CHAR, 1);
 
-  std::cout << "Extent: "
-            << " xmin: " << extent[0] << " xmax: " << extent[1]
+  std::cout << "Extent: " << " xmin: " << extent[0] << " xmax: " << extent[1]
             << " ymin: " << extent[2] << " ymax: " << extent[3]
             << " zmin: " << extent[4] << " zmax: " << extent[5] << std::endl;
 
