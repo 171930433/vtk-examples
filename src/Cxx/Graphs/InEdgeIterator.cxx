@@ -65,8 +65,8 @@ void Directed()
     while (it->HasNext())
     {
       vtkInEdgeType edge = it->Next();
-      std::cout << "Edge id: " << edge.Id << " "
-                << "Source: " << edge.Source << std::endl;
+      std::cout << "Edge id: " << edge.Id << " " << "Source: " << edge.Source
+                << std::endl;
     }
 
     std::cout << "Nothing should be output, vertex 0 has no incoming edges!"
@@ -81,8 +81,8 @@ void Directed()
     while (it->HasNext())
     {
       vtkInEdgeType edge = it->Next();
-      std::cout << "Edge id: " << edge.Id << " "
-                << "Source: " << edge.Source << std::endl;
+      std::cout << "Edge id: " << edge.Id << " " << "Source: " << edge.Source
+                << std::endl;
     }
   }
 }

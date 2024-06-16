@@ -68,14 +68,13 @@ int main(int, char*[])
 
   // We need the geometry filter to ensure that the
   // blanked point and surrounding faces is missing.
-  vtkNew<vtkStructuredGridGeometryFilter>geometryFilter;
+  vtkNew<vtkStructuredGridGeometryFilter> geometryFilter;
   geometryFilter->SetInputData(structuredGrid);
 
   // Create a mapper and actor.
   vtkNew<vtkDataSetMapper> gridMapper;
   // gridMapper->SetInputData(structuredGrid);
   gridMapper->SetInputConnection(geometryFilter->GetOutputPort());
-
 
   vtkNew<vtkActor> gridActor;
   gridActor->SetMapper(gridMapper);

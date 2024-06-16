@@ -73,9 +73,8 @@ void CreateColorImage(vtkImageData* image, std::string const& colorName,
 
   int* dims = image->GetDimensions();
 
-  std::cout << "Dims: "
-            << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2]
-            << std::endl;
+  std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1]
+            << " z: " << dims[2] << std::endl;
 
   for (unsigned char y = 0; y < dims[1]; y++)
   {

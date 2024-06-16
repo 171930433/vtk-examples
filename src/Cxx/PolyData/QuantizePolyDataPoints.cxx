@@ -43,9 +43,8 @@ int main(int, char*[])
     quantized->GetPoints()->GetPoint(i, pQuantized);
 
     std::cout << "Point " << i << " : (" << pOrig[0] << ", " << pOrig[1] << ", "
-              << pOrig[2] << ")"
-              << " (" << pQuantized[0] << ", " << pQuantized[1] << ", "
-              << pQuantized[2] << ")" << std::endl;
+              << pOrig[2] << ")" << " (" << pQuantized[0] << ", "
+              << pQuantized[1] << ", " << pQuantized[2] << ")" << std::endl;
   }
 
   double radius = 0.02;

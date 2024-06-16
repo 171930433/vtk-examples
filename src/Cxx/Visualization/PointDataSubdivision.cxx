@@ -175,8 +175,7 @@ int main(int argc, char* argv[])
     std::cerr << "Usage: " << argv[0]
               << "sourcetouse: (parametric_torus; parametric_ellipsoid; boy; "
                  "sphere; mobius; cone; random_hills; superquadric)"
-              << "[displayNormals]"
-              << "[gouraudInterpolation]"
+              << "[displayNormals]" << "[gouraudInterpolation]"
               << "[glyphPoints]" << std::endl;
     return EXIT_FAILURE;
   }

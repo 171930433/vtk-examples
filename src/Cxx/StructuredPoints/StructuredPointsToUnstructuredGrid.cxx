@@ -14,9 +14,8 @@ int main(int, char*[])
 
   int* dims = structuredPoints->GetDimensions();
 
-  std::cout << "Dims: "
-            << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2]
-            << std::endl;
+  std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1]
+            << " z: " << dims[2] << std::endl;
 
   std::cout << "Number of points: " << structuredPoints->GetNumberOfPoints()
             << std::endl;

@@ -21,9 +21,8 @@ int main(int, char*[])
   while (edgeListIterator->HasNext())
   {
     vtkEdgeType edge = edgeListIterator->Next();
-    std::cout << "Edge: " << edge.Id << " is from "
-              << "Source: " << edge.Source << " to Target: " << edge.Target
-              << std::endl;
+    std::cout << "Edge: " << edge.Id << " is from " << "Source: " << edge.Source
+              << " to Target: " << edge.Target << std::endl;
   }
 
   return EXIT_SUCCESS;

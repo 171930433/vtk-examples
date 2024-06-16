@@ -393,8 +393,7 @@ int main(int argc, char* argv[])
   std::string line(7 + nameSize + colorSize, '-');
 
   std::cout << line << '\n'
-            << std::setw(nameSize) << std::left << "Tissue"
-            << " Label "
+            << std::setw(nameSize) << std::left << "Tissue" << " Label "
             << "Color" << '\n'
             << line << std::endl;
   auto intSize = 2;

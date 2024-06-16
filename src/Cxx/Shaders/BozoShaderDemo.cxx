@@ -81,8 +81,7 @@ int main(int argc, char* argv[])
   if (argc < 2)
   {
     std::cout << "Usage: " << argv[0] << " PerlnNoise.glsl "
-              << "[polydataFile] "
-              << "[k(5)]" << std::endl;
+              << "[polydataFile] " << "[k(5)]" << std::endl;
     return EXIT_FAILURE;
   }
   vtkNew<vtkNamedColors> colors;

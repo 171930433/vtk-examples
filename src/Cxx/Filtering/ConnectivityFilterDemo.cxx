@@ -52,8 +52,8 @@ int main(int argc, char* argv[])
   }
   else
   {
-    std::cout << "Generated data"
-              << " contains " << numberOfRegions << " regions" << std::endl;
+    std::cout << "Generated data" << " contains " << numberOfRegions
+              << " regions" << std::endl;
   }
   vtkNew<vtkLookupTable> lut;
   lut->SetNumberOfTableValues(std::max(numberOfRegions, 10));

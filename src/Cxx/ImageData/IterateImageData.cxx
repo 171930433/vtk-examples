@@ -15,9 +15,8 @@ int main(int, char*[])
   int* dims = imageData->GetDimensions();
   // int dims[3]; // can't do this
 
-  std::cout << "Dims: "
-            << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2]
-            << std::endl;
+  std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1]
+            << " z: " << dims[2] << std::endl;
 
   std::cout << "Number of points: " << imageData->GetNumberOfPoints()
             << std::endl;

@@ -79,28 +79,23 @@ int main(int argc, char* argv[])
   {
     if (dynamic_cast<vtkStringArray*>(table->GetColumn(i)))
     {
-      std::cout << i << " is "
-                << "StringArray named ";
+      std::cout << i << " is " << "StringArray named ";
     }
     else if (dynamic_cast<vtkDoubleArray*>(table->GetColumn(i)))
     {
-      std::cout << i << " is "
-                << "DoubleArray named ";
+      std::cout << i << " is " << "DoubleArray named ";
     }
     else if (dynamic_cast<vtkFloatArray*>(table->GetColumn(i)))
     {
-      std::cout << i << " is "
-                << "DoubleArray named ";
+      std::cout << i << " is " << "DoubleArray named ";
     }
     else if (dynamic_cast<vtkIntArray*>(table->GetColumn(i)))
     {
-      std::cout << i << " is "
-                << "IntArray named ";
+      std::cout << i << " is " << "IntArray named ";
     }
     else
     {
-      std::cout << i << " is "
-                << "Unknown type named ";
+      std::cout << i << " is " << "Unknown type named ";
     }
     std::cout << "\"" << table->GetColumn(i)->GetName() << "\"" << std::endl;
 
