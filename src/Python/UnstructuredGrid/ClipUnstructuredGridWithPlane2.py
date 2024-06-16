@@ -36,12 +36,14 @@ def get_program_parameters():
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('filename', help='treemesh.vtk')
+    parser.add_argument('-o', action='store_false',
+                        help='Output using the original code.')
     args = parser.parse_args()
-    return args.filename
+    return args.filename, args.o
 
 
 def main():
-    filename = get_program_parameters()
+    filename, correct_output = get_program_parameters()
 
     # Create the reader for the data.
     reader = vtkUnstructuredGridReader()
@@ -69,12 +71,35 @@ def main():
     clipPlane.SetOrigin(reader.GetOutput().GetCenter())
     clipPlane.SetNormal(xnorm)
 
-    clipper = vtkClipDataSet()
-    clipper.SetClipFunction(clipPlane)
-    clipper.SetInputData(reader.GetOutput())
-    clipper.SetValue(0.0)
-    clipper.GenerateClippedOutputOn()
-    clipper.Update()
+    if correct_output:
+        clipper = vtkClipDataSet()
+        clipper.SetClipFunction(clipPlane)
+        clipper.SetInputData(reader.GetOutput())
+        clipper.SetValue(0.0)
+        clipper.GenerateClippedOutputOff()
+        clipper.Update()
+
+        # Set inside out, generate the clipped output and
+        #  use the clipped output for the clipped mapper.
+        # If this is done a similar image to
+        # ClipUnstructuredGridWithPlane is created.
+        clipper1 = vtkClipDataSet()
+        clipper1.SetClipFunction(clipPlane)
+        clipper1.SetInputData(reader.GetOutput())
+        clipper1.SetValue(0.0)
+        clipper1.InsideOutOn()
+        clipper1.GenerateClippedOutputOn()
+        clipper1.Update()
+
+    else:
+        clipper = vtkClipDataSet()
+        clipper.SetClipFunction(clipPlane)
+        clipper.SetInputData(reader.GetOutput())
+        clipper.SetValue(0.0)
+        clipper.GenerateClippedOutputOn()
+        clipper.Update()
+
+        clipper1 = None
 
     insideMapper = vtkDataSetMapper()
     insideMapper.SetInputData(clipper.GetOutput())
@@ -87,7 +112,10 @@ def main():
     insideActor.GetProperty().EdgeVisibilityOn()
 
     clippedMapper = vtkDataSetMapper()
-    clippedMapper.SetInputData(clipper.GetClippedOutput())
+    if correct_output:
+        clippedMapper.SetInputData(clipper1.GetClippedOutput())
+    else:
+        clippedMapper.SetInputData(clipper.GetClippedOutput())
     clippedMapper.ScalarVisibilityOff()
 
     clippedActor = vtkActor()
@@ -107,7 +135,10 @@ def main():
     clippedTransform = vtkTransform()
     clippedTransform.Translate((bounds[1] - bounds[0]) * 0.75, 0, 0)
     clippedTransform.Translate(center[0], center[1], center[2])
-    clippedTransform.RotateY(-120.0)
+    if correct_output:
+        clippedTransform.RotateY(60.0)
+    else:
+        clippedTransform.RotateY(-120.0)
     clippedTransform.Translate(-center[0], -center[1], -center[2])
     clippedActor.SetUserTransform(clippedTransform)
 
@@ -136,16 +167,26 @@ def main():
     for k, v in collections.OrderedDict(sorted(cellMap.items())).items():
         print('\tCell type ', vtkCellTypes.GetClassNameFromTypeId(k), ' occurs ', v, ' times.')
 
-    numberOfCells = clipper.GetClippedOutput().GetNumberOfCells()
     print('------------------------')
-    print('The clipped dataset contains a \n', clipper.GetClippedOutput().GetClassName(), ' that has ', numberOfCells,
-          ' cells')
     outsideCellMap = dict()
-    for i in range(0, numberOfCells):
-        outsideCellMap.setdefault(clipper.GetClippedOutput().GetCellType(i), 0)
-        outsideCellMap[clipper.GetClippedOutput().GetCellType(i)] += 1
+    if correct_output:
+        number_of_cells = clipper1.GetClippedOutput().GetNumberOfCells()
+        print('The clipped dataset contains a \n', clipper1.GetClippedOutput().GetClassName(), ' that has ',
+              numberOfCells,
+              ' cells')
+        for i in range(0, number_of_cells):
+            outsideCellMap.setdefault(clipper1.GetClippedOutput().GetCellType(i), 0)
+            outsideCellMap[clipper1.GetClippedOutput().GetCellType(i)] += 1
+    else:
+        number_of_cells = clipper.GetClippedOutput().GetNumberOfCells()
+        print('The clipped dataset contains a \n', clipper.GetClippedOutput().GetClassName(), ' that has ',
+              numberOfCells,
+              ' cells')
+        for i in range(0, number_of_cells):
+            outsideCellMap.setdefault(clipper.GetClippedOutput().GetCellType(i), 0)
+            outsideCellMap[clipper.GetClippedOutput().GetCellType(i)] += 1
     for k, v in collections.OrderedDict(sorted(outsideCellMap.items())).items():
-        print('\tCell type ', vtkCellTypes.GetClassNameFromTypeId(k), ' occurs ', v, ' times.')
+        print(f' Cell type {vtkCellTypes.GetClassNameFromTypeId(k)} occurs {v} times.')
 
 
 if __name__ == '__main__':

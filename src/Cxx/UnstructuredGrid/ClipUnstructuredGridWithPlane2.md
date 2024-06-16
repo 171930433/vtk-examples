@@ -14,9 +14,9 @@ The inside dataset contains a
     Cell type ?vtkWedge? occurs 3150 times.
 ------------------------
 The clipped dataset contains a 
-?vtkUnstructuredGrid? that has 110084 cells
-    Cell type ?vtkTetra? occurs 106934 times.
-    Cell type ?vtkWedge? occurs 3150 times.
+?vtkUnstructuredGrid? that has 111733 cells
+    Cell type ?vtkTetra? occurs 107401 times.
+    Cell type ?vtkWedge? occurs 4332 times.
 ```
 
 Compare these results with [ClipUnstructuredGridWithPlane](../ClipUnstructuredGridWithPlane). Notice that in this example, the original ?vtkHexahedron? in the unclipped regions are converted to ?vtkTetra?. Also, the resulting ?vtkUnstructuredGrid?'s have more than 4 times the number of cells.
