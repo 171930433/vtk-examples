@@ -25,6 +25,10 @@ int main(int argc, char* argv[])
               << std::endl;
     return EXIT_FAILURE;
   }
+
+  // If false, output using the original code.
+  auto correctOutput = true;
+
   // Create the reader for the data.
   std::string filename = argv[1];
   std::cout << "Loading " << filename.c_str() << std::endl;
@@ -56,11 +60,35 @@ int main(int argc, char* argv[])
   clipPlane->SetNormal(xnorm);
 
   vtkNew<vtkClipDataSet> clipper;
-  clipper->SetClipFunction(clipPlane);
-  clipper->SetInputData(reader->GetOutput());
-  clipper->SetValue(0.0);
-  clipper->GenerateClippedOutputOn();
-  clipper->Update();
+  vtkNew<vtkClipDataSet> clipper1;
+
+  if (correctOutput)
+  {
+    clipper->SetClipFunction(clipPlane);
+    clipper->SetInputData(reader->GetOutput());
+    clipper->SetValue(0.0);
+    clipper->GenerateClippedOutputOn();
+    clipper->Update();
+
+    // Set inside out, generate the clipped output and
+    //  use the clipped output for the clipped mapper.
+    // If this is done a similar image to
+    //  ClipUnstructuredGridWithPlane is created.
+    clipper1->SetClipFunction(clipPlane);
+    clipper1->SetInputData(reader->GetOutput());
+    clipper1->SetValue(0.0);
+    clipper1->InsideOutOn();
+    clipper1->GenerateClippedOutputOn();
+    clipper1->Update();
+  }
+  else
+  {
+    clipper->SetClipFunction(clipPlane);
+    clipper->SetInputData(reader->GetOutput());
+    clipper->SetValue(0.0);
+    clipper->GenerateClippedOutputOn();
+    clipper->Update();
+  }
 
   vtkNew<vtkDataSetMapper> insideMapper;
   insideMapper->SetInputData(clipper->GetOutput());
@@ -74,7 +102,14 @@ int main(int argc, char* argv[])
   insideActor->GetProperty()->EdgeVisibilityOn();
 
   vtkNew<vtkDataSetMapper> clippedMapper;
-  clippedMapper->SetInputData(clipper->GetClippedOutput());
+  if (correctOutput)
+  {
+    clippedMapper->SetInputData(clipper1->GetClippedOutput());
+  }
+  else
+  {
+    clippedMapper->SetInputData(clipper->GetClippedOutput());
+  }
   clippedMapper->ScalarVisibilityOff();
 
   vtkNew<vtkActor> clippedActor;
@@ -95,7 +130,14 @@ int main(int argc, char* argv[])
   vtkNew<vtkTransform> clippedTransform;
   clippedTransform->Translate((bounds[1] - bounds[0]) * .75, 0, 0);
   clippedTransform->Translate(center[0], center[1], center[2]);
-  clippedTransform->RotateY(-120.0);
+  if (correctOutput)
+  {
+    clippedTransform->RotateY(60.0);
+  }
+  else
+  {
+    clippedTransform->RotateY(-120.0);
+  }
   clippedTransform->Translate(-center[0], -center[1], -center[2]);
   clippedActor->SetUserTransform(clippedTransform);
 
@@ -130,16 +172,29 @@ int main(int argc, char* argv[])
               << " occurs " << c.second << " times." << std::endl;
   }
 
-  numberOfCells = clipper->GetClippedOutput()->GetNumberOfCells();
   std::cout << "------------------------" << std::endl;
-  std::cout << "The clipped dataset contains a " << std::endl
-            << clipper->GetClippedOutput()->GetClassName() << " that has "
-            << numberOfCells << " cells" << std::endl;
-  typedef std::map<int, int> OutsideCellContainer;
   CellContainer outsideCellMap;
-  for (vtkIdType i = 0; i < numberOfCells; i++)
+  if (correctOutput)
   {
-    outsideCellMap[clipper->GetClippedOutput()->GetCellType(i)]++;
+    numberOfCells = clipper1->GetClippedOutput()->GetNumberOfCells();
+    std::cout << "The clipped dataset contains a " << std::endl
+              << clipper1->GetClippedOutput()->GetClassName() << " that has "
+              << numberOfCells << " cells" << std::endl;
+    for (vtkIdType i = 0; i < numberOfCells; i++)
+    {
+      outsideCellMap[clipper1->GetClippedOutput()->GetCellType(i)]++;
+    }
+  }
+  else
+  {
+    numberOfCells = clipper->GetClippedOutput()->GetNumberOfCells();
+    std::cout << "The clipped dataset contains a " << std::endl
+              << clipper->GetClippedOutput()->GetClassName() << " that has "
+              << numberOfCells << " cells" << std::endl;
+    for (vtkIdType i = 0; i < numberOfCells; i++)
+    {
+      outsideCellMap[clipper->GetClippedOutput()->GetCellType(i)]++;
+    }
   }
 
   for (auto c : outsideCellMap)

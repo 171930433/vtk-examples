@@ -108,7 +108,7 @@ def main():
     interactor.Start()
 
     # Generate a report.
-    number_of_cells = clipper.GetOutput().GetNumberOfCells()
+    number_of_cells = clipper.output.number_of_cells
     print('------------------------')
     print(f'The inside dataset contains a {clipper.output.class_name} that has {number_of_cells} cells')
     cell_map = dict()
@@ -120,13 +120,13 @@ def main():
     for k, v in collections.OrderedDict(sorted(cell_map.items())).items():
         print(f' Cell type {vtkCellTypes.GetClassNameFromTypeId(k)} occurs {v} times.')
 
-    number_of_cells = clipper.GetClippedOutput().GetNumberOfCells()
+    number_of_cells = clipper.clipped_output.number_of_cells
     print('------------------------')
-    print(f'The clipped dataset contains a {clipper.output.class_name} that has {number_of_cells} cells')
+    print(f'The clipped dataset contains a {clipper.clipped_output.class_name} that has {number_of_cells} cells')
     outside_cell_map = dict()
     for i in range(0, number_of_cells):
-        outside_cell_map.setdefault(clipper.GetClippedOutput().GetCellType(i), 0)
-        outside_cell_map[clipper.GetClippedOutput().GetCellType(i)] += 1
+        outside_cell_map.setdefault(clipper.clipped_output.GetCellType(i), 0)
+        outside_cell_map[clipper.clipped_output.GetCellType(i)] += 1
     for k, v in collections.OrderedDict(sorted(outside_cell_map.items())).items():
         print(f' Cell type {vtkCellTypes.GetClassNameFromTypeId(k)} occurs {v} times.')
 
