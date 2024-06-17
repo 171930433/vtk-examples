@@ -85,6 +85,8 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [ReadLegacyUnstructuredGrid](/PythonicAPI/IO/ReadLegacyUnstructuredGrid) | Read an unstructured grid that contains 11 linear cells.
+[WriteLegacyLinearCells](/PythonicAPI/IO/WriteLegacyLinearCells) | Write each linear cell into a legacy UnstructuredGrid file (.vtk).
+[WriteXMLLinearCells](/PythonicAPI/IO/WriteXMLLinearCells) | Write each linear cell into an XML UnstructuredGrid file (.vtu).
 
 ### Image Format
 
