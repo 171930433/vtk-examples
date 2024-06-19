@@ -8,6 +8,7 @@ import vtkmodules.vtkInteractionStyle
 import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonCore import (
+    vtkCommand,
     vtkPoints
 )
 from vtkmodules.vtkCommonDataModel import (
@@ -16,7 +17,8 @@ from vtkmodules.vtkCommonDataModel import (
 )
 from vtkmodules.vtkInteractionWidgets import (
     vtkContourWidget,
-    vtkOrientedGlyphContourRepresentation
+    vtkOrientedGlyphContourRepresentation,
+    vtkWidgetEvent
 )
 from vtkmodules.vtkRenderingCore import (
     vtkRenderWindow,
@@ -25,10 +27,28 @@ from vtkmodules.vtkRenderingCore import (
 )
 
 
+def get_program_parameters():
+    import argparse
+    description = 'Contour widget.'
+    epilogue = '''
+    The options -Shift or -Scale demonstrate how to override the left button press event.
+    If either of these are set, you cannot change the shape of the circle.
+    '''
+    parser = argparse.ArgumentParser(description=description, epilog=epilogue,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-Shift', action='store_true',
+                       help='Pressing the left button on a point will shift the whole circle.')
+    group.add_argument('-Scale', action='store_true',
+                       help='Pressing the left button on a point will scale the whole circle.')
+    return parser.parse_args()
+
+
 def main():
     colors = vtkNamedColors()
-
     # colors.SetColor('bkg', [0.1, 0.2, 0.4, 1.0])
+
+    args = get_program_parameters()
 
     # Create the RenderWindow, Renderer and both Actors
     renderer = vtkRenderer(background=colors.GetColor3d('MidnightBlue'))
@@ -44,6 +64,19 @@ def main():
 
     contour_widget = vtkContourWidget(interactor=interactor, representation=contour_rep)
     contour_widget.On()
+
+    if args.Shift:
+        contour_widget.event_translator.RemoveTranslation(
+            vtkCommand.LeftButtonPressEvent)
+        contour_widget.event_translator.SetTranslation(
+            vtkCommand.LeftButtonPressEvent,
+            vtkWidgetEvent.Translate)
+    if args.Scale:
+        contour_widget.event_translator.RemoveTranslation(
+            vtkCommand.LeftButtonPressEvent)
+        contour_widget.event_translator.SetTranslation(
+            vtkCommand.LeftButtonPressEvent,
+            vtkWidgetEvent.Scale)
 
     # Generate a set of points arranged in a circle.
     points = vtkPoints()
