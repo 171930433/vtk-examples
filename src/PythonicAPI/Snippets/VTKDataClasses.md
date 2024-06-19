@@ -559,6 +559,25 @@ class VolumeProperty:
 
 ```
 
+### VoxelModeller
+
+``` VoxelModeller
+    @dataclass(frozen=True)
+    class ScalarType:
+        VTK_BIT: int = 1
+        VTK_CHAR: int = 2
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_UNSIGNED_INT: int = 7
+        VTK_LONG: int = 8
+        VTK_UNSIGNED_LONG: int = 9
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
+
+```
+
 ### WindowToImageFilter
 
 ``` Python
