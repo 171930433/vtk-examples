@@ -63,7 +63,7 @@ For an example of the usage of dataclasses, please see: [CurvaturesNormalsElevat
     More dataclasses will be added in alphabetical order as the need arises.
 
 !!! note
-    Generally there is no need for a dataclass if an enum has been used in the C++ code and it is public.
+    Generally there is no need for a dataclass if a public enum has been used in the C++ code. Just use a particular enum in this case.
 
 To use these dataclasses, remember to import the following:
 

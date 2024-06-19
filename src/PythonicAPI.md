@@ -388,6 +388,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [ImageNormalize](/PythonicAPI/ImageData/ImageNormalize) | Normalize an image.
+[WriteReadVtkImageData](/PythonicAPI/ImageData/WriteReadVtkImageData) | Generate, edit and read out vtk image data.
+
 
 ## Volume Rendering
 
@@ -462,7 +464,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
-[ParallelCoordinatesExtraction](/Python/PythonicAPI/ParallelCoordinatesExtraction) | Extract data based on a selection in a Parallel Coordinates View.
+[ParallelCoordinatesExtraction](/PythonicAPI/ParallelCoordinatesExtraction) | Extract data based on a selection in a Parallel Coordinates View.
 [ParallelCoordinatesView](/PythonicAPI/InfoVis/ParallelCoordinatesView) | How to use Parallel Coordinates View to plot and compare data set attributes.
 
 ## PyQt
