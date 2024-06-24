@@ -442,13 +442,17 @@ def add_vtk_nightly_doc_link(s, vtk_classes, stats):
     s = s.replace('_ktvvtk', '_ktv_')
     m = set(reg3.findall(s))
     new_str = s
+    links = dict()
     if m:
         for c in m:
             if c in vtk_classes:
-                ss = new_str.split(c)
-                new_link = f'[{c}](https://www.vtk.org/doc/nightly/html/class{c}.html#details)'
-                new_str = new_link.join(ss)
-                stats['doxy_count'] += 1
+                links[c] = f'[{c}](https://www.vtk.org/doc/nightly/html/class{c}.html)'
+        split_str = re.split(reg3,s)
+        link_keys = links.keys()
+        for idx, ss in enumerate(split_str):
+            if ss in link_keys:
+                split_str[idx] = links[ss]
+        new_str = ''.join(split_str)
     new_str = new_str.replace('_ktv_', 'vtk')
     return new_str
 
