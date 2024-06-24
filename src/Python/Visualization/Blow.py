@@ -166,7 +166,8 @@ def get_program_parameters():
    '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue)
     parser.add_argument('filename', help='blow.vtk')
-    parser.add_argument('data_point', default=-1, type=int, nargs='?', help='The particular color scheme to use.')
+    parser.add_argument('-d', '--data_point', default=-1, type=int, nargs='?',
+                        help='The frame to display (0...9).')
     args = parser.parse_args()
     return args.filename, args.data_point
 

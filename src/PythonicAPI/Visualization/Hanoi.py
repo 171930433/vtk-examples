@@ -102,10 +102,7 @@ ren_win = vtkRenderWindow(size=(1200, 750), window_name='Hanoi')
 peg_stack = [[vtkActor], [vtkActor], [vtkActor]]
 
 
-def main():
-    max_pucks = 20
-    if not verify_parameters(max_pucks):
-        return
+def hanoi():
 
     colors = vtkNamedColors()
 
@@ -389,6 +386,12 @@ class WindowToImageFilter:
         VTK_RGBA: int = 4
         VTK_ZBUFFER: int = 5
 
+
+def main():
+    max_pucks = 20
+    if not verify_parameters(max_pucks):
+        return
+    hanoi()
 
 if __name__ == '__main__':
     main()

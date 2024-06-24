@@ -344,7 +344,7 @@ def get_program_parameters():
    '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('fileName', help='office.binary.')
+    parser.add_argument('fileName', help='office.binary.vtk')
     args = parser.parse_args()
     return args.fileName
 
