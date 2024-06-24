@@ -606,8 +606,8 @@ class VTKClassesInExamples:
                 self.vtk_examples_xref[vtk_class][eg] = tmp
 
             for vtk_class in vtk_keys:
-                self.vtk_examples_xref[vtk_class]['VTKLink'] = {
-                    vtk_class: f'{self.vtk_docs_url}{self.vtk_classes[vtk_class]}#details'}
+                self.vtk_examples_xref[vtk_class]['VTKLink'] = \
+                    {vtk_class: f'{self.vtk_docs_url}{self.vtk_classes[vtk_class]}'}
 
     def get_used_classes(self):
         """
@@ -658,7 +658,7 @@ class VTKClassesInExamples:
             tmp = []
             for c in list(sorted(excl_classes, key=lambda x: (x.lower(), x.swapcase()))):
                 if self.add_vtk_html:
-                    tmp.append(f'[{c}]({self.vtk_docs_url}{self.vtk_classes[c]}#details)')
+                    tmp.append(f'[{c}]({self.vtk_docs_url}{self.vtk_classes[c]})')
                 else:
                     tmp.append(f'{c}')
                 if len(tmp) == self.excluded_columns:
@@ -690,7 +690,7 @@ class VTKClassesInExamples:
                     tmp.clear()
                     if self.add_vtk_html:
                         res.append(
-                            tr.format(f'[{c}]({self.vtk_docs_url}{self.vtk_classes[c]}#details)', f_list.strip()))
+                            tr.format(f'[{c}]({self.vtk_docs_url}{self.vtk_classes[c]})', f_list.strip()))
                     else:
                         res.append(tr.format(f'{c}', f_list.strip()))
             res.append('')
@@ -737,7 +737,7 @@ class VTKClassesInExamples:
             tmp = list()
             for c in unused_classes:
                 if self.add_vtk_html:
-                    tmp.append(f'[{c}]({self.vtk_docs_url}{self.vtk_classes[c]}#details)')
+                    tmp.append(f'[{c}]({self.vtk_docs_url}{self.vtk_classes[c]})')
                 else:
                     tmp.append(c)
                 idx += 1
