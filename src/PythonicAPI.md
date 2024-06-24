@@ -85,6 +85,8 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [ReadLegacyUnstructuredGrid](/PythonicAPI/IO/ReadLegacyUnstructuredGrid) | Read an unstructured grid that contains 11 linear cells.
+[WriteLegacyLinearCells](/PythonicAPI/IO/WriteLegacyLinearCells) | Write each linear cell into a legacy UnstructuredGrid file (.vtk).
+[WriteXMLLinearCells](/PythonicAPI/IO/WriteXMLLinearCells) | Write each linear cell into an XML UnstructuredGrid file (.vtu).
 
 ### Image Format
 
@@ -149,6 +151,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
 [ImplicitSphere1](/PythonicAPI/ImplicitFunctions/ImplicitSphere1) | Demonstrate sampling of a sphere implicit function
 [Lorenz](/PythonicAPI/Visualization/Lorenz) | Visualizing a Lorenz strange attractor by integrating the Lorenz equations in a volume.
+[MarchingCubes](/PythonicAPI/Modelling/MarchingCubes) | Create a voxelized sphere.
 [SampleFunction](/PythonicAPI/ImplicitFunctions/SampleFunction) | Sample and visualize an implicit function.
 [SmoothDiscreteFlyingEdges3D](/PythonicAPI/Modelling/SmoothDiscreteFlyingEdges3D) | Generate smooth surfaces from labeled data.
 
@@ -370,6 +373,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [FlyingHeadSlice](/PythonicAPI/VisualizationAlgorithms/FlyingHeadSlice) | Flying edges used to generate contour lines.
 [FroggieSurface](/PythonicAPI/Visualization/FroggieSurface) | Construct surfaces from a segmented frog dataset. Up to fifteen different surfaces may be extracted. You can turn on and off surfaces and control the camera position.
 [FroggieView](/PythonicAPI/Visualization/FroggieView) | View surfaces of a segmented frog dataset using preprocessed `*.vtk` tissue files. You can turn on and off surfaces, control their opacity through the use of sliders and control the camera position.
+[Hanoi](/PythonicAPI/Visualization/Hanoi) | Towers of Hanoi.
 [HeadBone](/PythonicAPI/VisualizationAlgorithms/HeadBone) | Marching cubes surface of human bone.
 [HyperStreamline](/PythonicAPI/VisualizationAlgorithms/HyperStreamline) | Example of hyperstreamlines, the four hyperstreamlines shown are integrated along the minor principal stress axis. A plane (colored with a different lookup table) is also shown.
 [Kitchen](/PythonicAPI/Visualization/Kitchen) | Demonstrates stream tracing in a kitchen.
@@ -385,6 +389,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [ImageNormalize](/PythonicAPI/ImageData/ImageNormalize) | Normalize an image.
+[WriteReadVtkImageData](/PythonicAPI/ImageData/WriteReadVtkImageData) | Generate, edit and read out vtk image data.
+
 
 ## Volume Rendering
 
@@ -428,6 +434,8 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [BalloonWidget](/PythonicAPI/Widgets/BalloonWidget) | Uses a vtkBalloonWidget to draw labels when the mouse stays above an actor.
+[BoxWidget](/PythonicAPI/Widgets/BoxWidget) | This 3D widget defines a region of interest that is represented by an arbitrarily oriented hexahedron with interior face angles of 90 degrees (orthogonal faces). The object creates 7 handles that can be moused on and manipulated.
+[BoxWidget2](/PythonicAPI/Widgets/BoxWidget2) |  This 3D widget defines a region of interest that is represented by an arbitrarily oriented hexahedron with interior face angles of 90 degrees (orthogonal faces). The object creates 7 handles that can be moused on and manipulated. ?vtkBoxWidget2? and ?vtkBoxRepresentation? are used in this example.
 [CompassWidget](/PythonicAPI/Widgets/CompassWidget) | Draws an interactive compass.
 [ContourWidget](/PythonicAPI/Widgets/ContourWidget) | Draw a contour (line) which can be deformed by the user.
 [ImplicitPlaneWidget2](/PythonicAPI/Widgets/ImplicitPlaneWidget2) | Clip polydata with an implicit plane.
@@ -456,5 +464,10 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [TextOrigin](/PythonicAPI/Annotation/TextOrigin) | This example demonstrates the use of vtkVectorText and vtkFollower. vtkVectorText is used to create 3D annotation.
 
 ## InfoVis
+
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ParallelCoordinatesExtraction](/PythonicAPI/ParallelCoordinatesExtraction) | Extract data based on a selection in a Parallel Coordinates View.
+[ParallelCoordinatesView](/PythonicAPI/InfoVis/ParallelCoordinatesView) | How to use Parallel Coordinates View to plot and compare data set attributes.
 
 ## PyQt

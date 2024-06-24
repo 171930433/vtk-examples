@@ -63,7 +63,7 @@ For an example of the usage of dataclasses, please see: [CurvaturesNormalsElevat
     More dataclasses will be added in alphabetical order as the need arises.
 
 !!! note
-    Generally there is no need for a dataclass if an enum has been used in the C++ code and it is public.
+    Generally there is no need for a dataclass if a public enum has been used in the C++ code. Just use a particular enum in this case.
 
 To use these dataclasses, remember to import the following:
 
@@ -556,6 +556,25 @@ class VolumeProperty:
         VTK_NEAREST_INTERPOLATION: int = 0
         VTK_LINEAR_INTERPOLATION: int = 1
         VTK_CUBIC_INTERPOLATION: int = 2
+
+```
+
+### VoxelModeller
+
+``` VoxelModeller
+    @dataclass(frozen=True)
+    class ScalarType:
+        VTK_BIT: int = 1
+        VTK_CHAR: int = 2
+        VTK_UNSIGNED_CHAR: int = 3
+        VTK_SHORT: int = 4
+        VTK_UNSIGNED_SHORT: int = 5
+        VTK_INT: int = 6
+        VTK_UNSIGNED_INT: int = 7
+        VTK_LONG: int = 8
+        VTK_UNSIGNED_LONG: int = 9
+        VTK_FLOAT: int = 10
+        VTK_DOUBLE: int = 11
 
 ```
 
