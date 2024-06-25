@@ -95,6 +95,9 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [HDRReader](/PythonicAPI/IO/HDRReader) | Read a high-dynamic-range imaging file.
+[ReadDICOM](/PythonicAPI/IO/ReadDICOM) | Read DICOM file.
+[ReadDICOMSeries](/PythonicAPI/IO/ReadDICOMSeries) | This example demonstrates how to read a series of DICOM images and scroll through slices
+
 
 #### Output
 

@@ -25,9 +25,9 @@ class StatusMessage:
 class MyVtkInteractorStyleImage(vtkInteractorStyleImage):
     def __init__(self, parent=None):
         super().__init__()
-        self.AddObserver('key_press_event', self.key_press_event)
-        self.AddObserver('mouse_wheel_forward_event', self.mouse_wheel_forward_event)
-        self.AddObserver('mouse_wheel_backward_event', self.mouse_wheel_backward_event)
+        self.AddObserver('KeyPressEvent', self.key_press_event)
+        self.AddObserver('MouseWheelForwardEvent', self.mouse_wheel_forward_event)
+        self.AddObserver('MouseWheelBackwardEvent', self.mouse_wheel_backward_event)
         self.image_viewer = None
         self.status_mapper = None
         self.slice = 0

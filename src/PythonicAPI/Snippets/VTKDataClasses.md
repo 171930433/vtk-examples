@@ -514,6 +514,13 @@ class SpiderPlotActor:
 @dataclass(frozen=True)
 class TextProperty:
     @dataclass(frozen=True)
+    class FontFamily:
+        VTK_ARIAL: int = 0
+        VTK_COURIER: int = 1
+        VTK_TIMES: int = 2
+        VTK_UNKNOWN_FONT: int = 3
+
+    @dataclass(frozen=True)
     class Justification:
         VTK_TEXT_LEFT: int = 0
         VTK_TEXT_CENTERED: int = 1
