@@ -25,13 +25,13 @@ class BandedPolyDataContourFilter:
 
 Here:
 
-- `BandedPolyDataContourFilter` refers to `?vtkBandedPolyDataContourFilter?`
+- `BandedPolyDataContourFilter` refers to `vtkBandedPolyDataContourFilter`
 - `ScalarMode` refers to the functions in the class called `SetScalarModeToIndex()` and `SetScalarModeToValue()`. This is why this subclass is named `ScalarMode`.
 
 This allows us to write code like this:
 
 ``` Python
-    bcf = ?vtkBandedPolyDataContourFilter?(
+    bcf = vtkBandedPolyDataContourFilter(
         input_data=p,
         scalar_mode=BandedPolyDataContourFilter.ScalarMode.VTK_SCALAR_MODE_INDEX,
         generate_contour_edges=True)
@@ -45,7 +45,7 @@ This allows us to write code like this:
 Instead of:
 
 ``` Python
-    bcf = ?vtkBandedPolyDataContourFilter?()
+    bcf = vtkBandedPolyDataContourFilter()
     bcf.SetInputData(cc.GetOutput())
     # Use either the minimum or maximum value for each band.
     for k in bands:
@@ -544,6 +544,20 @@ class Texture:
         VTK_COLOR_MODE_MAP_SCALARS: int = 1
         VTK_COLOR_MODE_DIRECT_SCALARS: int = 2
 
+```
+
+### TubeFilter
+
+``` Python
+@dataclass(frozen=True)
+class TubeFilter:
+    @dataclass(frozen=True)
+    class VaryRadius:
+        VTK_VARY_RADIUS_OFF: int = 0
+        VTK_VARY_RADIUS_BY_SCALAR: int = 1
+        VTK_VARY_RADIUS_BY_VECTOR: int = 2
+        VTK_VARY_RADIUS_BY_ABSOLUTE_SCALAR: int = 3
+        VTK_VARY_RADIUS_BY_VECTOR_NORM: int = 4
 ```
 
 ### VolumeProperty
