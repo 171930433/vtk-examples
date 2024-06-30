@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
+from vtkmodules.util.execution_model import select_ports
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonCore import vtkPoints
 from vtkmodules.vtkCommonDataModel import vtkCellArray, vtkPolyData, vtkPolyLine
@@ -38,6 +39,19 @@ from vtkmodules.vtkRenderingCore import (
     vtkTextActor,
     vtkTextProperty
 )
+
+
+def get_program_parameters():
+    import argparse
+    description = 'Comparison of median and hybrid-median filters.'
+    epilogue = '''
+    The hybrid filter preserves corners and thin lines, better than the median filter.
+    '''
+    parser = argparse.ArgumentParser(description=description, epilog=epilogue,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('filename', help='TestPattern.png.')
+    args = parser.parse_args()
+    return args.filename
 
 
 def main():
@@ -199,19 +213,6 @@ def main():
     iren.Start()
 
 
-def get_program_parameters():
-    import argparse
-    description = 'Comparison of median and hybrid-median filters.'
-    epilogue = '''
-    The hybrid filter preserves corners and thin lines, better than the median filter.
-    '''
-    parser = argparse.ArgumentParser(description=description, epilog=epilogue,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('filename', help='TestPattern.png.')
-    args = parser.parse_args()
-    return args.filename
-
-
 def add_shot_noise(input_image, noise_amplitude, noise_fraction, extent):
     shot_noise_source = vtkImageNoiseSource(whole_extent=extent, minimum=0.0, maximum=1.0)
 
@@ -223,13 +224,14 @@ def add_shot_noise(input_image, noise_amplitude, noise_fraction, extent):
     shot_noise_thresh2.ThresholdByLower(noise_fraction)
     shot_noise_source >> shot_noise_thresh2
 
-    shot_noise = vtkImageMathematics(operation=ImageMathematics.Operation.VTK_ADD, )
-    shot_noise.SetInputConnection(0, shot_noise_thresh1.GetOutputPort())
-    shot_noise.SetInputConnection(1, shot_noise_thresh2.GetOutputPort())
+    shot_noise = vtkImageMathematics(operation=ImageMathematics.Operation.VTK_ADD)
+    shot_noise_thresh1 >> select_ports(shot_noise, 0)
+    shot_noise_thresh2 >> select_ports(shot_noise, 1)
 
     add = vtkImageMathematics(operation=ImageMathematics.Operation.VTK_ADD)
-    add.SetInputData(0, input_image)
-    add.SetInputConnection(1, shot_noise.GetOutputPort())
+    input_image >> select_ports(add, 0)
+    shot_noise >> select_ports(add, 1)
+
     add.update()
 
     output_image = vtkImageData()

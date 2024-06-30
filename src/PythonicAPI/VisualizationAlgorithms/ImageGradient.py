@@ -70,8 +70,8 @@ def main():
     # Note that vtkImageViewer and vtkImageViewer2 are convenience wrappers around
     # vtkActor2D, vtkImageMapper, vtkRenderer, and vtkRenderWindow.
     # So all that needs to be supplied is the interactor.
-    viewer = vtkImageViewer(z_slice=22, color_window=255.0, color_level=127.0)
-    viewer.SetInputConnection(rgb.GetOutputPort())
+    viewer = vtkImageViewer(z_slice=22, color_window=255.0, color_level=127.0,
+                            input_connection=rgb.output_port)
     viewer.renderer.background = colors.GetColor3d('Silver')
     viewer.render_window.size = (512, 512)
     viewer.render_window.window_name = 'ImageGradient'

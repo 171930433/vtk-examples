@@ -96,7 +96,6 @@ def main():
 
     poly_mapper = vtkPolyDataMapper()
     deform >> poly_mapper
-    poly_mapper.SetInputConnection(deform.GetOutputPort())
     poly_actor = vtkActor(mapper=poly_mapper)
 
     renderer = vtkRenderer(background=colors.GetColor3d('DarkSlateGray'))

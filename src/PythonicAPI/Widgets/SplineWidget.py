@@ -42,18 +42,13 @@ def main(argv):
     renderer = vtkRenderer(background=colors.GetColor3d('ParaViewBkg'))
 
     # Create a cylinder.
-    cylinder = vtkCylinderSource()
-    cylinder.SetCenter(0.0, 0.0, 0.0)
-    cylinder.SetRadius(3.0)
-    cylinder.SetHeight(5.0)
-    cylinder.SetResolution(100)
+    cylinder = vtkCylinderSource(center=(0.0, 0.0, 0.0), radius=3.0, height=5.0, resolution=100)
 
     # Create a mapper and actor
     mapper = vtkPolyDataMapper()
-    mapper.SetInputConnection(cylinder.GetOutputPort())
-    actor = vtkActor()
-    actor.GetProperty().SetColor(colors.GetColor3d('Cornsilk'))
-    actor.SetMapper(mapper)
+    cylinder >> mapper
+    actor = vtkActor(mapper=mapper)
+    actor.property.color = colors.GetColor3d('Cornsilk')
     # Add the actor to the scene
     renderer.AddActor(actor)
 

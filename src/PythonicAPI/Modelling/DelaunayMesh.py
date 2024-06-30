@@ -72,9 +72,7 @@ def main():
     # and putting fat spheres at the points.
     extract = vtkExtractEdges()
     tubes = vtkTubeFilter(radius=0.01, number_of_sides=6)
-    tubes.SetInputConnection(extract.GetOutputPort())
     map_edges = vtkPolyDataMapper()
-    map_edges.SetInputConnection(tubes.GetOutputPort())
     delny >> extract >> tubes >> map_edges
     edge_actor = vtkActor(mapper=map_edges)
     edge_actor.property.color = colors.GetColor3d('peacock')

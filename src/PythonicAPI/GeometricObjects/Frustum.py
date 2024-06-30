@@ -36,7 +36,6 @@ def main():
 
     mapper = vtkPolyDataMapper()
     frustum_source >> shrink >> mapper
-    mapper.SetInputConnection(shrink.GetOutputPort())
 
     back = vtkProperty(color=colors.GetColor3d('Tomato'))
 

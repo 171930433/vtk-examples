@@ -4,6 +4,7 @@
 import vtkmodules.vtkInteractionStyle
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
+from vtkmodules.util.execution_model import select_ports
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonDataModel import (
     vtkCylinder,
@@ -52,10 +53,10 @@ def main():
                                          sample_dimensions=(sample_resolution, sample_resolution, sample_resolution),
                                          model_bounds=(x_min, x_max, x_min, x_max, x_min, x_max))
 
-    # Probe cylinder with the sphere isosurface
+    # Probe cylinder with the sphere isosurface.
     probe_cylinder = vtkProbeFilter()
-    probe_cylinder.SetInputConnection(0, iso_sphere.output_port)
-    probe_cylinder.SetInputConnection(1, sampled_cylinder.output_port)
+    iso_sphere >> select_ports(0, probe_cylinder)
+    sampled_cylinder >> select_ports(1, probe_cylinder)
     probe_cylinder.update()
 
     # Restore the original normals.
