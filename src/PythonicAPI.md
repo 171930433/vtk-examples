@@ -393,6 +393,9 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [Office](/PythonicAPI/VisualizationAlgorithms/Office) | Using random point seeds to create streamlines.
 [OfficeA](/PythonicAPI/VisualizationAlgorithms/OfficeA) | Corresponds to Fig 9-47(a) in the VTK textbook.
 [OfficeTube](/PythonicAPI/VisualizationAlgorithms/OfficeTube) | The stream polygon. Sweeping a polygon to form a tube.
+[PineRootConnectivity](/PythonicAPI/VisualizationAlgorithms/PineRootConnectivity) | Applying the connectivity filter to remove noisy isosurfaces.
+[PineRootConnectivityA](/PythonicAPI/VisualizationAlgorithms/PineRootConnectivityA) | The isosurface, with no connectivity filter applied.
+[PineRootDecimation](/PythonicAPI/VisualizationAlgorithms/PineRootDecimation) | Applying the decimation and connectivity filters to remove noisy isosurfaces and reduce data size.
 [PointDataSubdivision](/PythonicAPI/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
 [PseudoVolumeRendering](/PythonicAPI/VolumeRendering/PseudoVolumeRendering) | Here we use 20 cut planes, each with an opacity of of 0.25. They are then rendered back-to-front to simulate volume rendering.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
