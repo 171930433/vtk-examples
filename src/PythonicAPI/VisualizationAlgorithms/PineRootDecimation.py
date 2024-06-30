@@ -41,25 +41,6 @@ This example demonstrates how to use the vtkConnectivityFilter and vtkDecimate.
 
 
 def main():
-    # def NumberOfTriangles(pd):
-    #     """
-    #     Count the number of triangles.
-    #     :param pd: vtkPolyData.
-    #     :return: The number of triangles.
-    #     """
-    #     cells = pd.GetPolys()
-    #     numOfTriangles = 0
-    #     idList = vtkIdList()
-    #     for i in range(0, cells.GetNumberOfCells()):
-    #         cells.GetNextCell(idList)
-    #         # If a cell has three points it is a triangle.
-    #         if idList.GetNumberOfIds() == 3:
-    #             numOfTriangles += 1
-    #     return numOfTriangles
-    #
-    # colors = vtkNamedColors()
-    #
-    # fileName = get_program_parameters()
     def number_of_triangles(pd):
         """
         Count the number of triangles.

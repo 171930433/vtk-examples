@@ -15,7 +15,7 @@ To illustrate the application of connectivity analysis, we will use an MRI datas
     #### Python
     We just implement:
     ``` python
-    def NumberOfTriangles(pd):
+    def number_of_triangles(pd):
     ```
     within the scope of the calling function.
 

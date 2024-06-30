@@ -15,7 +15,7 @@ auto NumberofTriangles = [](auto *pd)
 We just implement:
 
 ``` python
-def NumberOfTriangles(pd):
+def number_of_triangles(pd):
 ```
 
 within the scope of the calling function.
