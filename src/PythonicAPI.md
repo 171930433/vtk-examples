@@ -335,6 +335,13 @@ This section includes ?vtkUnstructuredGrid?.
 [GradientBackground](/PythonicAPI/Rendering/GradientBackground) | Demonstrates the background shading options.
 [MotionBlur](/PythonicAPI/Rendering/MotionBlur) | Example of motion blur.
 [OutlineGlowPass](/PythonicAPI/Rendering/OutlineGlowPass) | Demonstrates how to render a object in a scene with a glowing outline.
+[PBR_Anisotropy](/PythonicAPI/Rendering/PBR_Anisotropy) | Render spheres with different anisotropy values.
+[PBR_Clear_Coat](/PythonicAPI/Rendering/PBR_Clear_Coat) | Render a cube with custom texture mapping and a coat normal texture.
+[PBR_Edge_Tint](/PythonicAPI/Rendering/PBR_Edge_Tint) | Render spheres with different edge colors using a skybox as image based lighting.
+[PBR_HDR_Environment](/PythonicAPI/Rendering/PBR_HDR_Environment) | Renders spheres with different materials using a skybox as image based lighting.
+[PBR_Mapping](/PythonicAPI/Rendering/PBR_Mapping) | Render a cube with custom texture mapping.
+[PBR_Materials](/PythonicAPI/Rendering/PBR_Materials) | Renders spheres with different materials using a skybox as image based lighting.
+[PBR_Materials_Coat](/PythonicAPI/Rendering/PBR_Materials_Coat) | Render spheres with different coat materials using a skybox as image based lighting.
 [PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
 [PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
 [PBR_Skybox_Anisotropy](/PythonicAPI/Rendering/PBR_Skybox_Anisotropy) | Demonstrates physically based rendering, a skybox, image based lighting, and anisotropic texturing.

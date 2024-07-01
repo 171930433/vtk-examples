@@ -11,7 +11,7 @@ A good source for Skybox HDRs and Textures is [Poly Haven](https://polyhaven.com
 The parameters used to generate the example image are loaded from a generic JSON file, not all the parameters are used:
 
 ``` text
-<DATA>/PBR_Examples.json
+<DATA>/PBR_Parameters.json
 ```
 
 Where `<DATA>` is the path to `?vtk-?examples/src/Testing/Data`.
@@ -27,7 +27,7 @@ For information about the parameters in the JSON file, please see [PBR_JSON_form
 - [Object Shading Properties](https://gitlab.kitware.com/paraview/paraview-docs/-/blob/master/doc/source/ReferenceManual/objectShadingProperties.rst)
 
 !!! note
-    - `<DATA>/PBR_Examples.json` assumes that the skyboxes and textures are in the subfolders `Skyboxes` and `Textures` relative to this file This allows you to copy this JSON file and the associated subfolders to any other location on your computer.
+    - `<DATA>/PBR_Parameters.json` assumes that the skyboxes and textures are in the subfolders `Skyboxes` and `Textures` relative to this file This allows you to copy this JSON file and the associated subfolders to any other location on your computer.
     - You can turn off the skybox in the JSON file by setting `"skybox":false`. Image based lighting will still be active.
 
 !!! note
