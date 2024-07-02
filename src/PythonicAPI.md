@@ -126,6 +126,8 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [EarthSource](/PythonicAPI/GeometricObjects/EarthSource) | Create the Earth.
 [Frustum](/PythonicAPI/GeometricObjects/Frustum) |
+[OrientedArrow](/PythonicAPI/GeometricObjects/OrientedArrow) | Orient an arrow along an arbitrary vector.
+[OrientedCylinder](/PythonicAPI/GeometricObjects/OrientedCylinder) | Orient a cylinder along an arbitrary vector.
 [PlatonicSolids](/PythonicAPI/GeometricObjects/PlatonicSolids) | All five platonic solids are displayed.
 [TessellatedBoxSource](/PythonicAPI/GeometricObjects/TessellatedBoxSource) | Generate a box with tessellated sides.
 
