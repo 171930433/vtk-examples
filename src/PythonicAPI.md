@@ -186,7 +186,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [PolyDataToImageDataStencil](/PythonicAPI/PolyData/PolyDataToImageDataStencil) |
 [RuledSurfaceFilter](/PythonicAPI/PolyData/RuledSurfaceFilter) |
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
-[WarpTo](/PythonicAPI/PythonicAPI/WarpTo) | Deform geometry by warping towards a point.
+[WarpTo](/PythonicAPI/Filtering/WarpTo) | Deform geometry by warping towards a point.
 [WarpVector](/PythonicAPI/PolyData/WarpVector) | This example warps/deflects a line.
 
 ### Data Types
