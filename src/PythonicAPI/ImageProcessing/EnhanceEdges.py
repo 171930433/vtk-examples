@@ -122,11 +122,11 @@ def main():
 
     # Renderers share one camera.
     render_window.Render()
-    renderers[0].GetActiveCamera().Dolly(1.5)
+    renderers[0].active_camera.Dolly(1.5)
     renderers[0].ResetCameraClippingRange()
 
     for r in range(1, len(renderers)):
-        renderers[r].SetActiveCamera(renderers[0].GetActiveCamera())
+        renderers[r].SetActiveCamera(renderers[0].active_camera)
     render_window_interactor.Initialize()
     render_window_interactor.Start()
 

@@ -67,8 +67,8 @@ def main():
 
     renderer.AddActor(actor)
     renderer.ResetCamera()
-    renderer.GetActiveCamera().Azimuth(150)
-    renderer.GetActiveCamera().Elevation(30)
+    renderer.active_camera.Azimuth(150)
+    renderer.active_camera.Elevation(30)
     renderer.ResetCameraClippingRange()
 
     render_window.Render()

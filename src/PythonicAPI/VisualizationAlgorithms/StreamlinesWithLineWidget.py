@@ -110,7 +110,7 @@ def main():
     line_widget2.AddObserver('StartInteractionEvent', EnableActorCallback(streamline2))
     line_widget2.AddObserver('InteractionEvent', GenerateStreamlinesCallback(seeds2, ren_win))
 
-    cam = ren.GetActiveCamera()
+    cam = ren.active_camera
     if illustration:
         # We need to directly display the streamlines in this case.
         line_widget.EnabledOn()

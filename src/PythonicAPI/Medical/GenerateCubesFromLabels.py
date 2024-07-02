@@ -83,7 +83,7 @@ def main():
 
     render_window.Render()
 
-    camera = renderer.GetActiveCamera()
+    camera = renderer.active_camera
     camera.position = (130.171200, 942.438334, -262.344068)
     camera.focal_point = (279.491372, 262.325784, 172.209964)
     camera.view_up = (0.235239, -0.486113, -0.841639)

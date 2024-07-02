@@ -154,8 +154,8 @@ def main():
                 continue
 
             renderers[index].ResetCamera()
-            renderers[index].GetActiveCamera().Azimuth(30)
-            renderers[index].GetActiveCamera().Elevation(-30)
+            renderers[index].active_camera.Azimuth(30)
+            renderers[index].active_camera.Elevation(-30)
             renderers[index].ResetCameraClippingRange()
 
     for i in range(0, len(titles)):

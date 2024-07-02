@@ -126,7 +126,7 @@ def main():
                 renderer.ResetCamera()
                 renderer.active_camera.Azimuth(30)
                 renderer.active_camera.Elevation(30)
-                renderer.GetActiveCamera().Zoom(0.8)
+                renderer.active_camera.Zoom(0.8)
                 renderer.ResetCameraClippingRange()
 
             render_window.AddRenderer(renderer)

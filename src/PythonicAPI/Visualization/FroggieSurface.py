@@ -173,7 +173,7 @@ def main(fn, select_figure, chosen_tissues, flying_edges, decimate):
     print('\n'.join(res))
 
     #  Final view.
-    camera = ren.GetActiveCamera()
+    camera = ren.active_camera
     # Superior Anterior Left
     labels = 'sal'
     if select_figure == 'a':

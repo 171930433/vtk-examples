@@ -170,7 +170,7 @@ def main():
         ren.AddActor(skybox)
 
     ren_win.Render()
-    ren.GetActiveCamera().Zoom(1.5)
+    ren.active_camera.Zoom(1.5)
     # ren_win.Render()
 
     iren.Start()

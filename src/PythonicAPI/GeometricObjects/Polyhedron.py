@@ -71,8 +71,8 @@ def main():
 
     ren.AddActor(actor)
     ren.ResetCamera()
-    ren.GetActiveCamera().Azimuth(30)
-    ren.GetActiveCamera().Elevation(30)
+    ren.active_camera.Azimuth(30)
+    ren.active_camera.Elevation(30)
     ren_win.Render()
     iren.Start()
 

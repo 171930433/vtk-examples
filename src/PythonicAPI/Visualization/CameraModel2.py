@@ -205,7 +205,7 @@ def main():
 
     # Render the image.
 
-    cam1 = (ren.GetActiveCamera())
+    cam1 = (ren.active_camera)
     ren.ResetCamera()
     cam1.Azimuth(150)
     cam1.Elevation(30)

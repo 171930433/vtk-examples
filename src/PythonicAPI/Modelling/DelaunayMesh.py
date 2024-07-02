@@ -106,7 +106,7 @@ def main():
     ren.AddActor(edge_actor)
 
     ren.ResetCamera()
-    ren.GetActiveCamera().Zoom(1.3)
+    ren.active_camera.Zoom(1.3)
 
     # Interact with the data.
     iren.Initialize()

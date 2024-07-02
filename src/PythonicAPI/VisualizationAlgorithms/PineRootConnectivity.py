@@ -93,7 +93,7 @@ def pine_root_connectivity(file_name, no_connectivity):
     ren.AddActor(outline_actor)
     ren.AddActor(iso_actor)
 
-    cam = ren.GetActiveCamera()
+    cam = ren.active_camera
     cam.focal_point = (40.6018, 37.2813, 50.1953)
     cam.position = (40.6018, -280.533, 47.0172)
     cam.ComputeViewPlaneNormal()

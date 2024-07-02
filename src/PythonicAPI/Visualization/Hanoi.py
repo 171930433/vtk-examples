@@ -190,7 +190,7 @@ def hanoi():
         print(s.format(gv.number_of_moves, 3 * 8 + 1 + gv.number_of_pucks * (2 + gv.puck_resolution),
                        gv.number_of_moves * 3 * gv.number_of_steps))
 
-    iren.AddObserver('EndInteractionEvent', OrientationObserver(ren.GetActiveCamera()))
+    iren.AddObserver('EndInteractionEvent', OrientationObserver(ren.active_camera))
 
     # Render the image.
     iren.Initialize()

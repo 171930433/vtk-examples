@@ -162,7 +162,7 @@ def main():
             renderers[k].AddActor(actor_butterfly)
 
         if k == 0:
-            camera = renderers[k].GetActiveCamera()
+            camera = renderers[k].active_camera
             camera.Elevation(-45)
         else:
             renderers[k].active_camera = camera

@@ -189,9 +189,9 @@ def main():
 
     # The renderers share one camera.
     ren_win.Render()
-    renderers['Original'].GetActiveCamera().Dolly(1.35)
+    renderers['Original'].active_camera.Dolly(1.35)
     renderers['Original'].ResetCameraClippingRange()
-    camera = renderers['Original'].GetActiveCamera()
+    camera = renderers['Original'].active_camera
     for k in actors.keys():
         if k != 'Original':
             renderers[k].SetActiveCamera(camera)

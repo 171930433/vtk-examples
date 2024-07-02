@@ -134,7 +134,7 @@ def main():
     ren_win.Render()
     ren_win.SetWindowName('Lorenz')
 
-    camera = renderer.GetActiveCamera()
+    camera = renderer.active_camera
     camera.position = (-67.645167, -25.714343, 63.483516)
     camera.focal_point = (3.224902, -4.398594, 29.552112)
     camera.view_up = (-0.232264, 0.965078, 0.121151)

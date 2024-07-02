@@ -73,7 +73,7 @@ def main():
         renderer.AddActor(actor)
 
         if first_run:
-            camera = renderer.GetActiveCamera()
+            camera = renderer.active_camera
             camera.Azimuth(30)
             camera.Elevation(30)
             first_run = False
