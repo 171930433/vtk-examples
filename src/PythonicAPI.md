@@ -168,6 +168,8 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [AlignTwoPolyDatas](/PythonicAPI/PolyData/AlignTwoPolyDatas) | Align two vtkPolyData's.
 [BooleanPolyDataFilters](/PythonicAPI/PolyData/BooleanPolyDataFilters) | This example performs a boolean operation (intersection, union or difference) of two PolyData using either a vtkBooleanOperationPolyDataFilter or a vtkLoopBooleanPolyDataFilter
+[Bottle](/PythonicAPI/Modelling/Bottle) | Model a rotationally symmetric object.
+[CappedSphere](/PythonicAPI/Modelling/CappedSphere) | Rotate an arc to create a capped sphere.
 [CellsInsideObject](/PythonicAPI/PolyData/CellsInsideObject) | Extract cells inside a closed surface.
 [ConnectivityFilter](/PythonicAPI/Filtering/ConnectivityFilter) | Color any dataset type based on connectivity.
 [Curvatures](/PythonicAPI/PolyData/Curvatures) | Compute Gaussian, and Mean Curvatures.
@@ -186,6 +188,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [PolyDataToImageDataStencil](/PythonicAPI/PolyData/PolyDataToImageDataStencil) |
 [RuledSurfaceFilter](/PythonicAPI/PolyData/RuledSurfaceFilter) |
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
+[Spring](/PythonicAPI/Modelling/Spring) | Rotation in combination with linear displacement and radius variation.
 [WarpTo](/PythonicAPI/Filtering/WarpTo) | Deform geometry by warping towards a point.
 [WarpVector](/PythonicAPI/PolyData/WarpVector) | This example warps/deflects a line.
 
