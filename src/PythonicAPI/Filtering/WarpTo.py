@@ -19,14 +19,14 @@ from vtkmodules.vtkRenderingCore import (
 
 def main():
     colors = vtkNamedColors()
-    # Create the RenderWindow, Renderer and both Actors
+    # Create the RenderWindow, Renderer and both Actors.
     renderer = vtkRenderer(background=colors.GetColor3d('Green'))
     ren_win = vtkRenderWindow(window_name='WarpTo')
     ren_win.AddRenderer(renderer)
     iren = vtkRenderWindowInteractor()
     iren.render_window = ren_win
 
-    # Create a line
+    # Create a line.
     line_source = vtkLineSource(point1=(0.0, 0.0, 0.0), point2=(0.0, 1.0, 0.0), resolution=20)
 
     # Create a tube (cylinder) around the line.
