@@ -308,6 +308,8 @@ This section includes ?vtkUnstructuredGrid?.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[ConstructTree](/PythonicAPI/Graphs/ConstructTree) | Construct a tree.
+[CreateTree](/PythonicAPI/Graphs/CreateTree) | Create a tree and label the vertices and edges.
 [GraphToPolyData](/PythonicAPI/Graphs/GraphToPolyData) | Convert a graph to a PolyData.
 [LabelVerticesAndEdges](/PythonicAPI/Graphs/LabelVerticesAndEdges) | Label vertices and edges.
 [SideBySideGraphs](/PythonicAPI/Graphs/SideBySideGraphs) | Display two graphs side by side.
