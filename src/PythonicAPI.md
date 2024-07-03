@@ -312,8 +312,10 @@ This section includes ?vtkUnstructuredGrid?.
 [CreateTree](/PythonicAPI/Graphs/CreateTree) | Create a tree and label the vertices and edges.
 [GraphToPolyData](/PythonicAPI/Graphs/GraphToPolyData) | Convert a graph to a PolyData.
 [LabelVerticesAndEdges](/PythonicAPI/Graphs/LabelVerticesAndEdges) | Label vertices and edges.
+[RandomGraphSource](/PythonicAPI/Graphs/RandomGraphSource) | Create a random graph.
 [SideBySideGraphs](/PythonicAPI/Graphs/SideBySideGraphs) | Display two graphs side by side.
 [ScaleVertices](/PythonicAPI/Graphs/ScaleVertices) | Size/scale vertices based on a data array.
+[SelectedVerticesAndEdges](/PythonicAPI/Graphs/SelectedVerticesAndEdges) |
 [VisualizeDirectedGraph](/PythonicAPI/Graphs/VisualizeDirectedGraph) | Visualize a directed graph.
 
 ### Graph Conversions
