@@ -400,6 +400,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [CubeAxesActor](/PythonicAPI/Visualization/CubeAxesActor) | Display three orthogonal axes with  with labels.
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
 [DataSetSurface](/PythonicAPI/VisualizationAlgorithms/DataSetSurface) | Cutting a hexahedron with a plane. The red line on the surface shows the cut.
+[DisplacementPlot](/PythonicAPI/VisualizationAlgorithms/DisplacementPlot) | Show modal lines for a vibrating beam.
 [FlyingHeadSlice](/PythonicAPI/VisualizationAlgorithms/FlyingHeadSlice) | Flying edges used to generate contour lines.
 [FroggieSurface](/PythonicAPI/Visualization/FroggieSurface) | Construct surfaces from a segmented frog dataset. Up to fifteen different surfaces may be extracted. You can turn on and off surfaces and control the camera position.
 [FroggieView](/PythonicAPI/Visualization/FroggieView) | View surfaces of a segmented frog dataset using preprocessed `*.vtk` tissue files. You can turn on and off surfaces, control their opacity through the use of sliders and control the camera position.
@@ -416,6 +417,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [PineRootConnectivity](/PythonicAPI/VisualizationAlgorithms/PineRootConnectivity) | Applying the connectivity filter to remove noisy isosurfaces.
 [PineRootConnectivityA](/PythonicAPI/VisualizationAlgorithms/PineRootConnectivityA) | The isosurface, with no connectivity filter applied.
 [PineRootDecimation](/PythonicAPI/VisualizationAlgorithms/PineRootDecimation) | Applying the decimation and connectivity filters to remove noisy isosurfaces and reduce data size.
+[PlateVibration](/PythonicAPI/VisualizationAlgorithms/PlateVibration) | Demonstrates the motion of a vibrating beam.
 [PointDataSubdivision](/PythonicAPI/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
 [ProgrammableGlyphFilter](/PythonicAPI/Visualization/ProgrammableGlyphFilter) | Generate a custom glyph at each point.
 [ProgrammableGlyphs](/PythonicAPI/Visualization/ProgrammableGlyphs) | Generate programmable glyphs.
