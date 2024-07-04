@@ -70,9 +70,9 @@ def main():
     interactor.Initialize()
     renwin.Render()
 
-    renderer.GetActiveCamera().SetPosition(5.0, -4.0, 1.6)
-    renderer.GetActiveCamera().SetViewUp(0.1, 0.5, 0.9)
-    renderer.GetActiveCamera().SetDistance(6.7)
+    renderer.active_camera.SetPosition(5.0, -4.0, 1.6)
+    renderer.active_camera.SetViewUp(0.1, 0.5, 0.9)
+    renderer.active_camera.SetDistance(6.7)
     renwin.Render()
     interactor.Start()
 

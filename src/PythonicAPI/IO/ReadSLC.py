@@ -65,7 +65,7 @@ def main():
     renderer.AddActor(outline_actor)
 
     # Pick a good view
-    cam1 = renderer.GetActiveCamera()
+    cam1 = renderer.active_camera
     cam1.focal_point = (0.0, 0.0, 0.0)
     cam1.position = (0.0, -1.0, 0.0)
     cam1.view_up = (0.0, 0.0, -1.0)

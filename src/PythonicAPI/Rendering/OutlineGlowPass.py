@@ -61,7 +61,6 @@ def main():
 
     # Create mapper and actor for the main renderer.
     cone_mapper_main = vtkPolyDataMapper()
-    cone_mapper_main.SetInputConnection(arrow_source.GetOutputPort())
     arrow_source >> cone_mapper_main
 
     cone_actor_main = vtkActor(mapper=cone_mapper_main)

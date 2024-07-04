@@ -115,9 +115,9 @@ def main():
     dx = 1.0 / float(num_steps) * 2.0
     transform0.Translate(-num_steps * dx - .3, 0.0, 0.0)
     render_window.Render()
-    renderer.GetActiveCamera().Azimuth(-60)
-    renderer.GetActiveCamera().Elevation(45)
-    renderer.GetActiveCamera().Dolly(1.2)
+    renderer.active_camera.Azimuth(-60)
+    renderer.active_camera.Elevation(45)
+    renderer.active_camera.Dolly(1.2)
 
     render_window.Render()
 

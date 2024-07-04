@@ -70,11 +70,10 @@ def main():
 
     # Outline
     outline = vtkOutlineFilter()
-    outline.SetInputConnection(reader.GetOutputPort())
+    reader >> outline
 
     outline_mapper = vtkPolyDataMapper()
     reader >> outline >> outline_mapper
-    outline_mapper.SetInputConnection(outline.GetOutputPort())
 
     outline_actor = vtkActor(mapper=outline_mapper)
     outline_actor.property.color = colors.GetColor3d('Black')
@@ -82,13 +81,10 @@ def main():
     #  Texture maps.
     texture_maps = list()
     for i in range(2, len(vec_anim_paths)):
-        tmap = vtkStructuredPointsReader()
-        tmap.SetFileName(vec_anim_paths[i])
+        tmap = vtkStructuredPointsReader(file_name=vec_anim_paths[i])
 
-        texture = vtkTexture()
-        texture.SetInputConnection(tmap.GetOutputPort())
-        texture.InterpolateOff()
-        texture.RepeatOff()
+        texture = vtkTexture(interpolate=False, repeat=False)
+        tmap >> texture
         texture_maps.append(texture)
 
     vector_actor.SetTexture(texture_maps[0])

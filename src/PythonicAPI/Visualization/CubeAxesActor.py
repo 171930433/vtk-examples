@@ -62,8 +62,8 @@ def main():
 
     renderer.AddActor(cube_axes_actor)
     renderer.AddActor(superquadric_actor)
-    renderer.GetActiveCamera().Azimuth(30)
-    renderer.GetActiveCamera().Elevation(30)
+    renderer.active_camera.Azimuth(30)
+    renderer.active_camera.Elevation(30)
 
     renderer.ResetCamera()
 

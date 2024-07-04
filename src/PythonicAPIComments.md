@@ -164,6 +164,7 @@ Sometimes we need to update part of a pipeline so that output can be used in oth
 | -------------- | ---------------------- | ------- |
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | One pipeline creates a smoothed dataset. However we need to update `smooth_loop` in the pipeline so that `?vtkCellLocator?` finds cells in order to create the spline.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | We need the smoother error for the scalar range in the mapper. So we create the pipeline and update `smoother` to get the needed scalar range. Of course, all other pipeline elements feeding into `smoother` will be updated also.
+[PineRootDecimation](/PythonicAPI/VisualizationAlgorithms/PineRootDecimation) | We update the pipeline in this line: `(reader >> deci >> connect >> iso_mapper).update()`. This allows us to output counts of triangles all in one place.
 
 ## Reusing a pipeline
 

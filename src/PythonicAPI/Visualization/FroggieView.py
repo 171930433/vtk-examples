@@ -214,7 +214,7 @@ def main(fn, select_figure, no_sliders, chosen_tissues):
         ren_win.size = (1024 + 400, 1024)
 
     #  Final view.
-    camera = ren.GetActiveCamera()
+    camera = ren.active_camera
     # Superior Anterior Left
     labels = 'sal'
     if select_figure == 'a':

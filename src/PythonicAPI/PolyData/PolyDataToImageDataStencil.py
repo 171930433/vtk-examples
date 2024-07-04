@@ -42,7 +42,6 @@ def main():
 
     sphere = vtkSphereSource(phi_resolution=12, theta_resolution=12, center=(102, 102, 0), radius=60)
     triangle = vtkTriangleFilter()
-    triangle.SetInputConnection(sphere.GetOutputPort())
 
     stripper = vtkStripper()
 
@@ -71,8 +70,7 @@ def main():
     image_append.AddInputConnection(stencil2.GetOutputPort())
 
     interator = vtkRenderWindowInteractor()
-    viewer = vtkImageViewer()
-    viewer.SetInputConnection(image_append.GetOutputPort())
+    viewer = vtkImageViewer(input_connection=image_append.output_port)
     viewer.SetupInteractor(interator)
     viewer.z_slice = 0
     viewer.color_window = 2000

@@ -95,6 +95,9 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [HDRReader](/PythonicAPI/IO/HDRReader) | Read a high-dynamic-range imaging file.
+[ReadDICOM](/PythonicAPI/IO/ReadDICOM) | Read DICOM file.
+[ReadDICOMSeries](/PythonicAPI/IO/ReadDICOMSeries) | This example demonstrates how to read a series of DICOM images and scroll through slices
+
 
 #### Output
 
@@ -115,6 +118,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [CellTypeSource](/PythonicAPI/GeometricObjects/CellTypeSource) | Generate tessellated cells.
 [ConvexPointSet](/PythonicAPI/GeometricObjects/ConvexPointSet) | Generate a ConvexPointSet cell.
+[Polyhedron](/PythonicAPI/GeometricObjects/Polyhedron) | Create an unstructured grid representation of a polyhedron (cube) and write it out to a file.
 
 ### Sources
 
@@ -122,6 +126,8 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [EarthSource](/PythonicAPI/GeometricObjects/EarthSource) | Create the Earth.
 [Frustum](/PythonicAPI/GeometricObjects/Frustum) |
+[OrientedArrow](/PythonicAPI/GeometricObjects/OrientedArrow) | Orient an arrow along an arbitrary vector.
+[OrientedCylinder](/PythonicAPI/GeometricObjects/OrientedCylinder) | Orient a cylinder along an arbitrary vector.
 [PlatonicSolids](/PythonicAPI/GeometricObjects/PlatonicSolids) | All five platonic solids are displayed.
 [TessellatedBoxSource](/PythonicAPI/GeometricObjects/TessellatedBoxSource) | Generate a box with tessellated sides.
 
@@ -146,6 +152,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [ContourTriangulator](/PythonicAPI/Modelling/ContourTriangulator) | Create a contour from a structured point set (image) and triangulate it.
 [DiscreteFlyingEdges3D](/PythonicAPI/Modelling/DiscreteFlyingEdges3D) | Generate surfaces from labeled data.
 [ExtractData](/PythonicAPI/VisualizationAlgorithms/ExtractData) | Implicit functions used to select data: Two ellipsoids are combined using the union operation used to select voxels from a volume. Voxels are shrunk 50 percent.
+[ExtractLargestIsosurface](/PythonicAPI/Modelling/ExtractLargestIsosurface) | Extract largest isosurface.
 [IceCream](/PythonicAPI/VisualizationAlgorithms/IceCream) | How to use boolean combinations of implicit functions to create a model of an ice cream cone.
 [ImplicitQuadric](/PythonicAPI/ImplicitFunctions/ImplicitQuadric) | Create an ellipsoid using an implicit quadric
 [ImplicitSphere](/PythonicAPI/ImplicitFunctions/ImplicitSphere) | Demonstrate sampling of a sphere implicit function
@@ -161,6 +168,8 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [AlignTwoPolyDatas](/PythonicAPI/PolyData/AlignTwoPolyDatas) | Align two vtkPolyData's.
 [BooleanPolyDataFilters](/PythonicAPI/PolyData/BooleanPolyDataFilters) | This example performs a boolean operation (intersection, union or difference) of two PolyData using either a vtkBooleanOperationPolyDataFilter or a vtkLoopBooleanPolyDataFilter
+[Bottle](/PythonicAPI/Modelling/Bottle) | Model a rotationally symmetric object.
+[CappedSphere](/PythonicAPI/Modelling/CappedSphere) | Rotate an arc to create a capped sphere.
 [CellsInsideObject](/PythonicAPI/PolyData/CellsInsideObject) | Extract cells inside a closed surface.
 [ConnectivityFilter](/PythonicAPI/Filtering/ConnectivityFilter) | Color any dataset type based on connectivity.
 [Curvatures](/PythonicAPI/PolyData/Curvatures) | Compute Gaussian, and Mean Curvatures.
@@ -171,6 +180,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [Finance](/PythonicAPI/Modelling/Finance) | Visualization of multidimensional financial data. The gray/wireframe surface represents the total data population. The red surface represents data points delinquent on loan payment.
 [FinanceFieldData](/PythonicAPI/Modelling/FinanceFieldData) | Visualization of multidimensional financial data. The yellow surface represents the total data population. The red surface represents data points delinquent on loan payment.
 [Glyph2D](/PythonicAPI/Filtering/Glyph2D) |
+[ImplicitPolyDataDistance](/PythonicAPI/PolyData/ImplicitPolyDataDistance) |
 [LineOnMesh](/PythonicAPI/DataManipulation/LineOnMesh) | Plot a spline on a terrain-like surface.
 [MeshLabelImageColor](/PythonicAPI/DataManipulation/MeshLabelImageColor) | Mesh a single label from a label image. Then smooth and color the vertices according to the displacement error introduced by the smoothing.
 [PerlinNoise](/PythonicAPI/Filtering/PerlinNoise) |
@@ -178,6 +188,9 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 [PolyDataToImageDataStencil](/PythonicAPI/PolyData/PolyDataToImageDataStencil) |
 [RuledSurfaceFilter](/PythonicAPI/PolyData/RuledSurfaceFilter) |
 [SmoothMeshGrid](/PythonicAPI/PolyData/SmoothMeshGrid) | Create a terrain with regularly spaced points and smooth it with ?vtkLoopSubdivisionFilter? and ?vtkButterflySubdivisionFilter?.
+[Spring](/PythonicAPI/Modelling/Spring) | Rotation in combination with linear displacement and radius variation.
+[WarpTo](/PythonicAPI/Filtering/WarpTo) | Deform geometry by warping towards a point.
+[WarpVector](/PythonicAPI/PolyData/WarpVector) | This example warps/deflects a line.
 
 ### Data Types
 
@@ -205,6 +218,8 @@ This section includes examples of manipulating meshes.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[ClipDataSetWithPolyData](/PythonicAPI/Meshes/ClipDataSetWithPolyData) | Clip a vtkRectilinearGrid with arbitrary polydata. In this example, use a vtkConeSource to generate polydata to slice the grid, resulting in an unstructured grid.
+[ClipDataSetWithPolyData1](/PythonicAPI/Meshes/ClipDataSetWithPolyData1) | Clip a vtkRectilinearGrid with arbitrary polydata. In this example, use a vtkConeSource to generate polydata to slice the grid, resulting in an unstructured grid.
 [SolidClip](/PythonicAPI/Meshes/SolidClip) | Create a "solid" clip. The "ghost" of the part clipped away is also shown.
 
 ### Working with Structured 3D Data
@@ -293,10 +308,14 @@ This section includes ?vtkUnstructuredGrid?.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[ConstructTree](/PythonicAPI/Graphs/ConstructTree) | Construct a tree.
+[CreateTree](/PythonicAPI/Graphs/CreateTree) | Create a tree and label the vertices and edges.
 [GraphToPolyData](/PythonicAPI/Graphs/GraphToPolyData) | Convert a graph to a PolyData.
 [LabelVerticesAndEdges](/PythonicAPI/Graphs/LabelVerticesAndEdges) | Label vertices and edges.
+[RandomGraphSource](/PythonicAPI/Graphs/RandomGraphSource) | Create a random graph.
 [SideBySideGraphs](/PythonicAPI/Graphs/SideBySideGraphs) | Display two graphs side by side.
 [ScaleVertices](/PythonicAPI/Graphs/ScaleVertices) | Size/scale vertices based on a data array.
+[SelectedVerticesAndEdges](/PythonicAPI/Graphs/SelectedVerticesAndEdges) |
 [VisualizeDirectedGraph](/PythonicAPI/Graphs/VisualizeDirectedGraph) | Visualize a directed graph.
 
 ### Graph Conversions
@@ -329,6 +348,13 @@ This section includes ?vtkUnstructuredGrid?.
 [GradientBackground](/PythonicAPI/Rendering/GradientBackground) | Demonstrates the background shading options.
 [MotionBlur](/PythonicAPI/Rendering/MotionBlur) | Example of motion blur.
 [OutlineGlowPass](/PythonicAPI/Rendering/OutlineGlowPass) | Demonstrates how to render a object in a scene with a glowing outline.
+[PBR_Anisotropy](/PythonicAPI/Rendering/PBR_Anisotropy) | Render spheres with different anisotropy values.
+[PBR_Clear_Coat](/PythonicAPI/Rendering/PBR_Clear_Coat) | Render a cube with custom texture mapping and a coat normal texture.
+[PBR_Edge_Tint](/PythonicAPI/Rendering/PBR_Edge_Tint) | Render spheres with different edge colors using a skybox as image based lighting.
+[PBR_HDR_Environment](/PythonicAPI/Rendering/PBR_HDR_Environment) | Renders spheres with different materials using a skybox as image based lighting.
+[PBR_Mapping](/PythonicAPI/Rendering/PBR_Mapping) | Render a cube with custom texture mapping.
+[PBR_Materials](/PythonicAPI/Rendering/PBR_Materials) | Renders spheres with different materials using a skybox as image based lighting.
+[PBR_Materials_Coat](/PythonicAPI/Rendering/PBR_Materials_Coat) | Render spheres with different coat materials using a skybox as image based lighting.
 [PBR_Skybox](/PythonicAPI/Rendering/PBR_Skybox) | Demonstrates physically based rendering, a skybox and image based lighting.
 [PBR_Skybox_Texturing](/PythonicAPI/Rendering/PBR_Skybox_Texturing) | Demonstrates physically based rendering, a skybox, image based lighting and texturing.
 [PBR_Skybox_Anisotropy](/PythonicAPI/Rendering/PBR_Skybox_Anisotropy) | Demonstrates physically based rendering, a skybox, image based lighting, and anisotropic texturing.
@@ -364,20 +390,37 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [AnnotatedCubeActor](/PythonicAPI/Visualization/AnnotatedCubeActor) | Annotated cube.
 [AssignCellColorsFromLUT](/PythonicAPI/Visualization/AssignCellColorsFromLUT) | Demonstrates how to assign colors to cells in a vtkPolyData structure using lookup tables.
 [BillboardTextActor3D](/PythonicAPI/Visualization/BillboardTextActor3D) | Label points with billboards.
+[Blow](/PythonicAPI/Visualization/Blow) | Ten frames from a blow molding finite element analysis.
+[CameraModel1](/PythonicAPI/Visualization/CameraModel1) | Illustrate camera movement around the focal point.
+[CameraModel2](/PythonicAPI/Visualization/CameraModel2) | Illustrate camera movement centered at the camera position.
+[ClipSphereCylinder](/PythonicAPI/VisualizationAlgorithms/ClipSphereCylinder) | A plane clipped with a sphere and an ellipse. The two transforms place each implicit function into the appropriate position. Two outputs are generated by the clipper.
 [ColoredAnnotatedCube](/PythonicAPI/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
 [CollisionDetection](/PythonicAPI/Visualization/CollisionDetection) | Collison between two spheres.
 [CreateBFont](/PythonicAPI/VisualizationAlgorithms/CreateBFont) | A scanned image clipped with a scalar value of 1/2 its maximum intensity produces a mixture of quadrilaterals and triangles.
 [CubeAxesActor](/PythonicAPI/Visualization/CubeAxesActor) | Display three orthogonal axes with  with labels.
 [CurvaturesNormalsElevations](/PythonicAPI/Visualization/CurvaturesNormalsElevations) | Gaussian and Mean curvatures of a surface with arrows colored by elevation to display the normals.
 [DataSetSurface](/PythonicAPI/VisualizationAlgorithms/DataSetSurface) | Cutting a hexahedron with a plane. The red line on the surface shows the cut.
+[DisplacementPlot](/PythonicAPI/VisualizationAlgorithms/DisplacementPlot) | Show modal lines for a vibrating beam.
 [FlyingHeadSlice](/PythonicAPI/VisualizationAlgorithms/FlyingHeadSlice) | Flying edges used to generate contour lines.
 [FroggieSurface](/PythonicAPI/Visualization/FroggieSurface) | Construct surfaces from a segmented frog dataset. Up to fifteen different surfaces may be extracted. You can turn on and off surfaces and control the camera position.
 [FroggieView](/PythonicAPI/Visualization/FroggieView) | View surfaces of a segmented frog dataset using preprocessed `*.vtk` tissue files. You can turn on and off surfaces, control their opacity through the use of sliders and control the camera position.
 [Hanoi](/PythonicAPI/Visualization/Hanoi) | Towers of Hanoi.
+[HanoiInitial](/PythonicAPI/Visualization/HanoiInitial) | Towers of Hanoi - Initial configuration.
+[HanoiIntermediate](/PythonicAPI/Visualization/HanoiIntermediate) | Towers of Hanoi - Intermediate configuration.
 [HeadBone](/PythonicAPI/VisualizationAlgorithms/HeadBone) | Marching cubes surface of human bone.
 [HyperStreamline](/PythonicAPI/VisualizationAlgorithms/HyperStreamline) | Example of hyperstreamlines, the four hyperstreamlines shown are integrated along the minor principal stress axis. A plane (colored with a different lookup table) is also shown.
+[IsosurfaceSampling](/PythonicAPI/Visualization/IsosurfaceSampling) | Demonstrates how to create point data on an isosurface.
 [Kitchen](/PythonicAPI/Visualization/Kitchen) | Demonstrates stream tracing in a kitchen.
+[Office](/PythonicAPI/VisualizationAlgorithms/Office) | Using random point seeds to create streamlines.
+[OfficeA](/PythonicAPI/VisualizationAlgorithms/OfficeA) | Corresponds to Fig 9-47(a) in the VTK textbook.
+[OfficeTube](/PythonicAPI/VisualizationAlgorithms/OfficeTube) | The stream polygon. Sweeping a polygon to form a tube.
+[PineRootConnectivity](/PythonicAPI/VisualizationAlgorithms/PineRootConnectivity) | Applying the connectivity filter to remove noisy isosurfaces.
+[PineRootConnectivityA](/PythonicAPI/VisualizationAlgorithms/PineRootConnectivityA) | The isosurface, with no connectivity filter applied.
+[PineRootDecimation](/PythonicAPI/VisualizationAlgorithms/PineRootDecimation) | Applying the decimation and connectivity filters to remove noisy isosurfaces and reduce data size.
+[PlateVibration](/PythonicAPI/VisualizationAlgorithms/PlateVibration) | Demonstrates the motion of a vibrating beam.
 [PointDataSubdivision](/PythonicAPI/Visualization/PointDataSubdivision) | Demonstrates the use of the vtkLinearSubdivisionFilter and vtkButterflySubdivisionFilter.
+[ProgrammableGlyphFilter](/PythonicAPI/Visualization/ProgrammableGlyphFilter) | Generate a custom glyph at each point.
+[ProgrammableGlyphs](/PythonicAPI/Visualization/ProgrammableGlyphs) | Generate programmable glyphs.
 [PseudoVolumeRendering](/PythonicAPI/VolumeRendering/PseudoVolumeRendering) | Here we use 20 cut planes, each with an opacity of of 0.25. They are then rendered back-to-front to simulate volume rendering.
 [QuadricVisualization](/PythonicAPI/Visualization/QuadricVisualization) | Visualizing a quadric function.
 [StreamlinesWithLineWidget](/PythonicAPI/VisualizationAlgorithms/StreamlinesWithLineWidget) | Using the vtkLineWidget to produce streamlines in the combustor dataset.  The StartInteractionEvent turns the visibility of the streamlines on; the InteractionEvent causes the streamlines to regenerate themselves.
@@ -467,7 +510,6 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
-[ParallelCoordinatesExtraction](/PythonicAPI/ParallelCoordinatesExtraction) | Extract data based on a selection in a Parallel Coordinates View.
 [ParallelCoordinatesView](/PythonicAPI/InfoVis/ParallelCoordinatesView) | How to use Parallel Coordinates View to plot and compare data set attributes.
 
 ## PyQt

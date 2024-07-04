@@ -55,7 +55,6 @@ def main():
     poly = vtkContourTriangulator()
 
     poly_mapper = vtkDataSetMapper(scalar_visibility=False)
-    poly_mapper.SetInputConnection(poly.GetOutputPort())
     iso >> poly >> poly_mapper
 
     poly_actor = vtkActor(mapper=poly_mapper)

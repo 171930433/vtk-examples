@@ -11,7 +11,8 @@ from vtkmodules.vtkCommonCore import (
     vtkLookupTable
 )
 from vtkmodules.vtkCommonDataModel import vtkMutableUndirectedGraph
-#from vtkmodules.vtkInfovisLayout import vtkForceDirectedLayoutStrategy
+# noinspection PyUnresolvedReferences
+from vtkmodules.vtkInfovisLayout import vtkForceDirectedLayoutStrategy
 from vtkmodules.vtkRenderingCore import vtkGraphToGlyphs
 from vtkmodules.vtkViewsCore import vtkViewTheme
 from vtkmodules.vtkViewsInfovis import (

@@ -102,10 +102,7 @@ ren_win = vtkRenderWindow(size=(1200, 750), window_name='Hanoi')
 peg_stack = [[vtkActor], [vtkActor], [vtkActor]]
 
 
-def main():
-    max_pucks = 20
-    if not verify_parameters(max_pucks):
-        return
+def hanoi():
 
     colors = vtkNamedColors()
 
@@ -193,7 +190,7 @@ def main():
         print(s.format(gv.number_of_moves, 3 * 8 + 1 + gv.number_of_pucks * (2 + gv.puck_resolution),
                        gv.number_of_moves * 3 * gv.number_of_steps))
 
-    iren.AddObserver('EndInteractionEvent', OrientationObserver(ren.GetActiveCamera()))
+    iren.AddObserver('EndInteractionEvent', OrientationObserver(ren.active_camera))
 
     # Render the image.
     iren.Initialize()
@@ -389,6 +386,12 @@ class WindowToImageFilter:
         VTK_RGBA: int = 4
         VTK_ZBUFFER: int = 5
 
+
+def main():
+    max_pucks = 20
+    if not verify_parameters(max_pucks):
+        return
+    hanoi()
 
 if __name__ == '__main__':
     main()

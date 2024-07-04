@@ -50,27 +50,22 @@ def main():
     nrms = [0.0] * 6
     nrms[0] = 1.0
     nrms[4] = 1.0
-    normals = vtkDoubleArray()
-    normals.SetNumberOfComponents(3)
-    normals.SetNumberOfTuples(2)
+    normals = vtkDoubleArray(number_of_components=3, number_of_tuples=2)
     normals.SetTuple(0, nrms[:3])
     normals.SetTuple(1, nrms[3:])
 
     planes = vtkPlanes(points=points, normals=normals)
 
     tcoords = vtkImplicitTextureCoords(r_function=planes)
-    tcoords.SetInputConnection(sphere2.GetOutputPort())
+    sphere2 >> tcoords
 
     outer_mapper = vtkDataSetMapper()
     sphere2 >> tcoords >> outer_mapper
 
-    tmap = vtkStructuredPointsReader()
-    tmap.SetFileName(file_name)
+    tmap = vtkStructuredPointsReader(file_name=file_name)
 
-    texture = vtkTexture()
-    texture.SetInputConnection(tmap.GetOutputPort())
-    texture.InterpolateOff()
-    texture.RepeatOff()
+    texture = vtkTexture(interpolate=False, repeat=False)
+    tmap >> texture
 
     outer_sphere = vtkActor(mapper=outer_mapper, texture=texture)
     outer_sphere.property.color = colors.GetColor3d('LightSalmon')

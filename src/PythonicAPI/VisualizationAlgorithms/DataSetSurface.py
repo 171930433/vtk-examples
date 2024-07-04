@@ -95,8 +95,8 @@ def main():
     renderer.AddActor(plane_actor)
 
     renderer.ResetCamera()
-    renderer.GetActiveCamera().Azimuth(-25)
-    renderer.GetActiveCamera().Elevation(30)
+    renderer.active_camera.Azimuth(-25)
+    renderer.active_camera.Elevation(30)
 
     # Render and interact.
     render_window.Render()

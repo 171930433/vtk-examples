@@ -151,7 +151,6 @@ class Sources:
         sphere_bounds = sphere.update().output.bounds
 
         elev = vtkElevationFilter(low_point=(0, sphere_bounds[2], 0), high_point=(0, sphere_bounds[3], 0))
-        elev.SetInputConnection(sphere.GetOutputPort())
         return sphere >> elev
 
     @staticmethod
@@ -180,25 +179,16 @@ class Sources:
 
     @staticmethod
     def cone_source():
-        cone = vtkConeSource()
-        cone.SetResolution(6)
-        cone.CappingOn()
-        cone.Update()
-        coneBounds = cone.GetOutput().GetBounds()
+        cone = vtkConeSource(resolution=6, capping=True)
+        cone_bounds = cone.update().output.bounds
 
         coneNormals = vtkPolyDataNormals()
-        coneNormals.SetInputConnection(cone.GetOutputPort())
 
-        elev = vtkElevationFilter()
-        elev.SetInputConnection(coneNormals.GetOutputPort())
-        elev.SetLowPoint(coneBounds[0], 0, 0)
-        elev.SetHighPoint(coneBounds[1], 0, 0)
+        elev = vtkElevationFilter(low_point=(cone_bounds[0], 0, 0), high_point=(cone_bounds[1], 0, 0))
 
         # vtkButterflySubdivisionFilter and vtkLinearSubdivisionFilter operate on triangles.
         tf = vtkTriangleFilter()
-        tf.SetInputConnection(elev.GetOutputPort())
-        tf.Update()
-        return tf
+        return cone >> coneNormals >> elev >> tf
 
 
 def make_lut(scalarRange):
@@ -258,8 +248,8 @@ def glyph_actor(source, glyph_points, scalar_range, scale_factor, lut):
 
     # Colour by scalars.
     arrow_glyph_mapper = vtkDataSetMapper(scalar_range=scalar_range,
-                                          scalar_visibility=True, lookup_table=lut)
-    arrow_glyph_mapper.SetColorModeToMapScalars()
+                                          scalar_visibility=True, lookup_table=lut,
+                                          color_mode=Mapper.ColorMode.VTK_COLOR_MODE_MAP_SCALARS)
     mask_pts >> arrow_glyph >> arrow_glyph_mapper
 
     glyph_actor = vtkActor(mapper=arrow_glyph_mapper)
@@ -410,12 +400,8 @@ def write_png(ren, fn, magnification=1):
     :param: magnification - the magnification, usually 1.
     """
     ren_lge_im = vtkRenderLargeImage(input=ren, magnification=magnification)
-    # ren_lge_im.SetInput(ren)
-    # ren_lge_im.SetMagnification(magnification)
     img_writer = vtkPNGWriter(file_name=fn)
-    # img_writer.SetInputConnection(ren_lge_im.GetOutputPort())
     ren_lge_im >> img_writer
-    # img_writer.SetFileName(fn)
     img_writer.Write()
 
 

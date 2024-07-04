@@ -92,7 +92,7 @@ def main():
 
     # Create the silhouette pipeline, the input data will be set in the
     # interactor.
-    silhouette = vtkPolyDataSilhouette(camera=renderer.GetActiveCamera())
+    silhouette = vtkPolyDataSilhouette(camera=renderer.active_camera)
 
     # Create mapper and actor for silhouette
     silhouette_mapper = vtkPolyDataMapper()

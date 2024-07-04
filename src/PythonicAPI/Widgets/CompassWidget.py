@@ -28,7 +28,7 @@ def compass_widget_value_changed_callback(widget, event):
     Callback to set the camera position according to the position parameters given by the vtkCompassWidget.
     """
     try:
-        camera = widget.GetCurrentRenderer().GetActiveCamera()
+        camera = widget.GetCurrentRenderer().active_camera
     except AttributeError:
         return
 

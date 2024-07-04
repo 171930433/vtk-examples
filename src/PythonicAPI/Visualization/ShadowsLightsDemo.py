@@ -150,7 +150,7 @@ def main():
 
     renderer.ResetCamera()
 
-    camera = renderer.GetActiveCamera()
+    camera = renderer.active_camera
     camera.Azimuth(40.0)
     camera.Elevation(10.0)
 

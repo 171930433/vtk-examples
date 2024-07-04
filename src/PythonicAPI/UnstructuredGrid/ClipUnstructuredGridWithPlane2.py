@@ -123,7 +123,7 @@ def main():
     renderer.AddViewProp(inside_actor)
 
     renderer.ResetCamera()
-    renderer.GetActiveCamera().Dolly(1.4)
+    renderer.active_camera.Dolly(1.4)
     renderer.ResetCameraClippingRange()
     render_window.Render()
 
