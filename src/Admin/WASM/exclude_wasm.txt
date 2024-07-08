@@ -208,6 +208,7 @@ OpenVROrientedArrow
 OpenVROrientedCylinder
 OpenVRSphere
 OpenVRTessellatedBoxSource
+OpenXRCone
 ImageValueRange
 NegativeIndices
 PKMeansClustering
