@@ -450,6 +450,20 @@ class Mapper:
         VTK_SCALAR_MODE_USE_FIELD_DATA: int = 5
 
 ```
+### PlatonicSolidSource
+
+``` Python
+@dataclass(frozen=True)
+class PlatonicSolidSource:
+    @dataclass(frozen=True)
+    class SolidType:
+        VTK_SOLID_TETRAHEDRON: int = 0
+        VTK_SOLID_CUBE: int = 1
+        VTK_SOLID_OCTAHEDRON: int = 2
+        VTK_SOLID_ICOSAHEDRON: int = 3
+        VTK_SOLID_DODECAHEDRON: int = 4
+
+```
 
 ### Property
 

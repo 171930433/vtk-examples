@@ -300,6 +300,12 @@ This section includes ?vtkUnstructuredGrid?.
 
 ### Arrays
 
+| Example Name | Description | Image |
+| -------------- | ------------- | ------- |
+[ArrayToTable](/PythonicAPI/InfoVis/ArrayToTable) | Convert a vtkDenseArray to a vtkTable.
+[ArrayWriter](/PythonicAPI/Utilities/ArrayWriter) | Write a DenseArray or SparseArray to a file.
+
+
 ### Events
 
 ## Math Operations
@@ -308,6 +314,7 @@ This section includes ?vtkUnstructuredGrid?.
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[AdjacencyMatrixToEdgeTable](/PythonicAPI/Graphs/AdjacencyMatrixToEdgeTable) | Convert an adjacency matrix to an edge table.
 [ConstructTree](/PythonicAPI/Graphs/ConstructTree) | Construct a tree.
 [CreateTree](/PythonicAPI/Graphs/CreateTree) | Create a tree and label the vertices and edges.
 [GraphToPolyData](/PythonicAPI/Graphs/GraphToPolyData) | Convert a graph to a PolyData.
@@ -477,6 +484,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [BalloonWidget](/PythonicAPI/Widgets/BalloonWidget) | Uses a vtkBalloonWidget to draw labels when the mouse stays above an actor.
+[BorderWidget](/PythonicAPI/Widgets/BorderWidget) | 2D selection, 2D box.
 [BoxWidget](/PythonicAPI/Widgets/BoxWidget) | This 3D widget defines a region of interest that is represented by an arbitrarily oriented hexahedron with interior face angles of 90 degrees (orthogonal faces). The object creates 7 handles that can be moused on and manipulated.
 [BoxWidget2](/PythonicAPI/Widgets/BoxWidget2) |  This 3D widget defines a region of interest that is represented by an arbitrarily oriented hexahedron with interior face angles of 90 degrees (orthogonal faces). The object creates 7 handles that can be moused on and manipulated. ?vtkBoxWidget2? and ?vtkBoxRepresentation? are used in this example.
 [CompassWidget](/PythonicAPI/Widgets/CompassWidget) | Draws an interactive compass.
