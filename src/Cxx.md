@@ -174,10 +174,15 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 [EllipticalCylinder](/Cxx/GeometricObjects/EllipticalCylinder) | Create an elliptical cylinder using extrusion.
 [EllipticalCylinderDemo](/Cxx/GeometricObjects/EllipticalCylinderDemo) | Show the base and extrusion vector.
 [GeometricObjectsDemo](/Cxx/GeometricObjects/GeometricObjectsDemo) | A demonstration of all geometric objects that work the same way.
-[OpenVRFrustum](/Cxx/GeometricObjects/OpenVRFrustum) | VTK + OpenVR Example.
-[OpenVROrientedArrow](/Cxx/GeometricObjects/OpenVROrientedArrow) | VTK + OpenVR Example.
-[OpenVROrientedCylinder](/Cxx/GeometricObjects/OpenVROrientedCylinder) | VTK + OpenVR Example.
-[OpenVRTessellatedBoxSource](/Cxx/GeometricObjects/OpenVRTessellatedBoxSource) | VTK + OpenVR Example.
+[OpenVRCone](/Cxx/GeometricObjects/OpenVRCone) | Show a cone in VR using OpenVR.
+[OpenVRCube](/Cxx/GeometricObjects/OpenVRCube) | Show a cube in VR using OpenVR.
+[OpenVRCylinder](/Cxx/GeometricObjects/OpenVRCylinder) | Show a cylinder in VR using OpenVR.
+[OpenVRFrustum](/Cxx/GeometricObjects/OpenVRFrustum) | Show a frustum in VR using OpenVR.
+[OpenVROrientedArrow](/Cxx/GeometricObjects/OpenVROrientedArrow) | Show an oriented arrow in VR using OpenVR.
+[OpenVROrientedCylinder](/Cxx/GeometricObjects/OpenVROrientedCylinder) | Show an oriented cylinder in VR using OpenVR.
+[OpenVRSphere](/Cxx/GeometricObjects/OpenVRSphere) | Show a sphere in VR using OpenVR.
+[OpenVRTessellatedBoxSource](/Cxx/GeometricObjects/OpenVRTessellatedBoxSource) | Show a tesselated box in VR using OpenVR.
+[OpenXRCone](/Cxx/GeometricObjects/OpenXRCone) | Show a cone in VR using OpenXR.
 [PlaneSourceDemo](/Cxx/GeometricObjects/PlaneSourceDemo) | Display the instance variables that define a vtkPlaneSource.
 [Planes](/Cxx/GeometricObjects/Planes) |
 [PlanesIntersection](/Cxx/GeometricObjects/PlanesIntersection) |
@@ -1148,6 +1153,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [HAVS](/Cxx/VolumeRendering/HAVSVolumeMapper) |
 [IntermixedUnstructuredGrid](/Cxx/VolumeRendering/IntermixedUnstructuredGrid) | mix of poly data and unstructured grid volume mapper.
 [MinIntensityRendering](/Cxx/VolumeRendering/MinIntensityRendering) | Min intensity rendering.
+[OpenVRVolume](/Cxx/VolumeRendering/OpenVRVolume) | Render synthetic volume dataset in VR using OpenVR.
 [RayCastIsosurface](/Cxx/VolumeRendering/RayCastIsosurface) | Isosufaces produced by volume rendering.
 [SimpleRayCast](/Cxx/VolumeRendering/SimpleRayCast) | Volume rendering of a high potential iron protein.
 [SmartVolumeMapper](/Cxx/VolumeRendering/SmartVolumeMapper) | Smart volume mapper.
