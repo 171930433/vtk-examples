@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
   volume->SetMapper(volMapper);
   volume->SetProperty(volProp);
   volume->SetVisibility(true);
+  volume->SetOrientation(30, -45, 0);
 
   // standard render window and renderer setup:
   vtkNew<vtkRenderer> renderer;
