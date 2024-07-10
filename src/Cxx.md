@@ -1151,6 +1151,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [RayCastIsosurface](/Cxx/VolumeRendering/RayCastIsosurface) | Isosufaces produced by volume rendering.
 [SimpleRayCast](/Cxx/VolumeRendering/SimpleRayCast) | Volume rendering of a high potential iron protein.
 [SmartVolumeMapper](/Cxx/VolumeRendering/SmartVolumeMapper) | Smart volume mapper.
+[MultiBlockVolumeMapper](/Cxx/VolumeRendering/MultiBlockVolumeMapper) | Using a vtkMultiBlockVolumeMapper to render a vtkMultiBlockDataSet containing eight subvolumes.
 
 ## User Interaction
 
