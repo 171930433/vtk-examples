@@ -66,6 +66,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
 [3DSImporter](/PythonicAPI/IO/3DSImporter) | Import a 3D Studio scene that includes multiple actors.
+[ImportToExport](/PythonicAPI/IO/ImportToExport)| Import a scene and optionally export the scene.
 
 ##### Output
 

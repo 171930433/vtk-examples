@@ -78,6 +78,7 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 [3DSImporter](/Cxx/IO/3DSImporter) | Import a 3D Studio scene that includes multiple actors.
 [GLTFImporter](/Cxx/IO/GLTFImporter) | Import a glTF scene.
 [ImportPolyDataScene](/Cxx/IO/ImportPolyDataScene) | Import a polydata scene using multiblock datasets.
+[ImportToExport](/Cxx/IO/ImportToExport)| Import a scene and export the scene using vtkOBJExporter. 
 [OBJImporter](/Cxx/IO/OBJImporter) | Import an OBJ scene that includes actors, materials and textures.
 [VRMLImporter](/Cxx/IO/VRMLImporter) | Import a VRML 2.0 (WRL) file.
 [VRMLImporterDemo](/Cxx/IO/VRMLImporterDemo) | Import a VRML 2.0 (WRL) file and add normals if necessary.
