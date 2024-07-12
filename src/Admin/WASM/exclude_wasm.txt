@@ -324,3 +324,4 @@ RayCastIsosurface
 SimpleRayCast
 CameraOrientationWidget
 MinIntensityRendering
+MultiBlockVolumeMapper
