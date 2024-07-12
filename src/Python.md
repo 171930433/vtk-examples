@@ -42,6 +42,7 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 | -------------- | ------------- | ------- |
 [CSVReadEdit](/Python/IO/CSVReadEdit) | Read and edit a CSV file using pandas and numpy.
 [CSVReadEdit1](/Python/IO/CSVReadEdit1) | Read and edit a CSV file using pandas and vtkDelimitedTextReader.
+[PolyDataToImageDataConverter](/Python/IO/PolyDataToImageDataConverter) | Converts PolyData to binary LabelImage.
 [ReadExodusData](/Python/IO/ReadExodusData) | A simple script for reading and viewing ExodusII data interactively.
 [ReadPLOT3D](/Python/IO/ReadPLOT3D) | Read CFD (computational fluid dynamics) data produced by PLOT3D.
 [ReadSLC](/Python/IO/ReadSLC) | Read an SLC file.
