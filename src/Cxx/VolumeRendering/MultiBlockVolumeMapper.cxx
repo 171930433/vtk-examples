@@ -1,9 +1,14 @@
+#include <vtkCamera.h>
 #include <vtkColorSeries.h>
 #include <vtkImageData.h>
+#include <vtkMatrix4x4.h>
 #include <vtkMultiBlockDataSet.h>
 #include <vtkMultiBlockVolumeMapper.h>
 #include <vtkNamedColors.h>
 #include <vtkNew.h>
+#include <vtkOutlineFilter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkProperty.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
@@ -11,7 +16,9 @@
 
 int main(int argc, char* argv[])
 {
-  // set up vtkMultiBlockDataSet (just a bunch of colored blocks):
+  vtkNew<vtkNamedColors> namedColors;
+
+  // Set up vtkMultiBlockDataSet (just a bunch of colored blocks):
   const int dim[3] = {10, 10, 10};
   double spc[3] = {0.1, 0.1, 0.1};
   vtkNew<vtkMultiBlockDataSet> mb;
@@ -24,8 +31,9 @@ int main(int argc, char* argv[])
     img->AllocateScalars(VTK_UNSIGNED_CHAR, 4);
     img->SetSpacing(spc);
 
-    // position the volumes by their origin:
-    // shift object by the length of a volume in the axis directions so as to make them non-overlapping:
+    // Position the volumes by their origin:
+    // Shift object by the length of a volume in the axis
+    //  directions so as to make them non-overlapping:
     std::array<int, 3> ofs{ i % 2, (i / 2) % 2,  i / 4 };
     img->SetOrigin(
         ofs[0] * (dim[0]-1) * spc[0],
@@ -33,7 +41,7 @@ int main(int argc, char* argv[])
         ofs[2] * (dim[2]-1) * spc[2]
     );
 
-    // set colors:
+    // Set colors:
     auto col = colors->GetColor(i);
     for (int x = 0; x < dim[0]; ++x)
     {
@@ -52,7 +60,7 @@ int main(int argc, char* argv[])
     mb->SetBlock(i, img);
   }
 
-  // setting up the vtkMultiBlockVolumeMapper:
+  // Setting up the vtkMultiBlockVolumeMapper:
   vtkNew<vtkMultiBlockVolumeMapper> volMapper;
   volMapper->SetInputDataObject(mb);
   vtkNew<vtkVolume> volume;
@@ -61,18 +69,36 @@ int main(int argc, char* argv[])
   volume->SetMapper(volMapper);
   volume->SetProperty(volProp);
   volume->SetVisibility(true);
-  volume->SetOrientation(30, -45, 0);
+  // volume->SetOrientation(30, -45, 0);
 
-  // standard render window and renderer setup:
+  // An outline provides context around the data.
+  vtkNew<vtkOutlineFilter> outlineData;
+  outlineData->SetInputData(mb);
+
+  vtkNew<vtkPolyDataMapper> mapOutline;
+  mapOutline->SetInputConnection(outlineData->GetOutputPort());
+
+  vtkNew<vtkActor> outline;
+  // outline->SetOrientation(30, -45, 0);
+  outline->SetMapper(mapOutline);
+  outline->GetProperty()->SetColor(namedColors->GetColor3d("Black").GetData());
+
+  // Standard render window and renderer setup:
   vtkNew<vtkRenderer> renderer;
-  vtkNew<vtkNamedColors> namedColors;
   renderer->SetBackground(namedColors->GetColor3d("ForestGreen").GetData());
   renderer->AddVolume(volume);
+  renderer->AddActor(outline);
   vtkNew<vtkRenderWindow> renWin;
   renWin->AddRenderer(renderer);
-  renWin->Render();
+  renWin->Render(); 
   vtkNew<vtkRenderWindowInteractor> iren;
   iren->SetRenderWindow(renWin);
+
+  auto camera = renderer->GetActiveCamera();
+  camera->Elevation(30);
+  camera->Azimuth(45);
+  renderer->ResetCamera();
+
   iren->Start();
 
   return EXIT_SUCCESS;
