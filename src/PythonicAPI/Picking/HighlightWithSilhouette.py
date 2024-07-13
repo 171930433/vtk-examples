@@ -120,13 +120,13 @@ class MouseInteractorHighLightActor(vtkInteractorStyleTrackballCamera):
     def __init__(self, silhouette=None, silhouette_actor=None):
         super().__init__()
 
-        self.AddObserver("LeftButtonPressEvent", self.on_left_button_down)
+        self.AddObserver("LeftButtonPressEvent", self.OnLeftButtonDown)
 
         self.last_picked_actor = None
         self.silhouette = silhouette
         self.silhouette_actor = silhouette_actor
 
-    def on_left_button_down(self, obj, event):
+    def OnLeftButtonDown(self, obj, event):
         click_pos = self.interactor.GetEventPosition()
 
         #  Pick from this location.
@@ -144,7 +144,7 @@ class MouseInteractorHighLightActor(vtkInteractorStyleTrackballCamera):
             self.GetDefaultRenderer().AddActor(self.silhouette_actor)
 
         #  Forward events
-        self.OnLeftButtonDown()
+        super().OnLeftButtonDown()
         return
 
     def set_silhouette(self, silhouette):
