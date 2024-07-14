@@ -101,13 +101,13 @@ class MouseInteractorHighLightActor(vtkInteractorStyleTrackballCamera):
     def __init__(self, parent=None):
         super().__init__()
 
-        self.AddObserver("LeftButtonPressEvent", self.left_button_press_event)
+        self.AddObserver("LeftButtonPressEvent", self.LeftButtonPressEvent)
 
         self.new_picked_actor = None
         self.last_picked_actor = None
         self.last_picked_property = vtkProperty()
 
-    def left_button_press_event(self, obj, event):
+    def LeftButtonPressEvent(self, obj, event):
         click_pos = self.interactor.GetEventPosition()
 
         picker = vtkPropPicker()
@@ -134,7 +134,7 @@ class MouseInteractorHighLightActor(vtkInteractorStyleTrackballCamera):
             # Save the last picked actor.
             self.last_picked_actor = self.new_picked_actor
 
-        self.OnLeftButtonDown()
+        super().OnLeftButtonDown()
         return
 
 

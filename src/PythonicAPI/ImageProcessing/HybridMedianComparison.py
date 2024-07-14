@@ -120,7 +120,7 @@ def main():
     iren = vtkRenderWindowInteractor()
     iren.render_window = ren_win
     style = vtkInteractorStyleImage()
-    iren.interactor_stype = style
+    iren.interactor_style = style
 
     viewports = dict()
     VP_Params = namedtuple('VP_Params', ['viewport', 'border'])

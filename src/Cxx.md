@@ -78,6 +78,7 @@ If you are new to VTK then these [tutorials](#tutorial) will help to get you sta
 [3DSImporter](/Cxx/IO/3DSImporter) | Import a 3D Studio scene that includes multiple actors.
 [GLTFImporter](/Cxx/IO/GLTFImporter) | Import a glTF scene.
 [ImportPolyDataScene](/Cxx/IO/ImportPolyDataScene) | Import a polydata scene using multiblock datasets.
+[ImportToExport](/Cxx/IO/ImportToExport)| Import a scene and export the scene using vtkOBJExporter. 
 [OBJImporter](/Cxx/IO/OBJImporter) | Import an OBJ scene that includes actors, materials and textures.
 [VRMLImporter](/Cxx/IO/VRMLImporter) | Import a VRML 2.0 (WRL) file.
 [VRMLImporterDemo](/Cxx/IO/VRMLImporterDemo) | Import a VRML 2.0 (WRL) file and add normals if necessary.
@@ -1007,6 +1008,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 [ColorGlyphs](/Cxx/Visualization/ColorGlyphs) | Color glyphs.
 [ColorSeriesPatches](/Cxx/Visualization/ColorSeriesPatches) | Creates a HTML file called [VTKColorSeriesPatches](https://htmlpreview.github.io/?https://github.com/Kitware/vtk-examples/blob/gh-pages/VTKColorSeriesPatches.html)
 [ColoredAnnotatedCube](/Cxx/Visualization/ColoredAnnotatedCube) | How to color the individual faces of an annotated cube.
+[CombineImportedActors](/Cxx/PolyData/CombineImportedActors) | Combine actors from a scene into one actor.
 [CombustorIsosurface](/Cxx/VisualizationAlgorithms/CombustorIsosurface) | Generate an isosurface of constant flow density.
 [ComplexV](/Cxx/Visualization/ComplexV) | ComplexV from the VTK Textbook.
 [ContourQuadric](/Cxx/VisualizationAlgorithms/ContourQuadric) | Contouring a quadric function.
