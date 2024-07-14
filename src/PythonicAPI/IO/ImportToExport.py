@@ -102,68 +102,22 @@ def main():
     iren.render_window = ren_win
 
     # Read the file(s).
-    importer = None
-
-    if ifp.suffix.lower() == '.wrl':
-        importer = vtkVRMLImporter(file_name=ifp, render_window=ren_win)
-        ren_win = importer.GetRenderWindow()
-        importer.active_renderer = ren
-
-    if ifp.suffix.lower() == '.3ds':
-        importer = vtk3DSImporter(file_name=ifp, render_window=ren_win, compute_normals=True)
-        ren_win = importer.GetRenderWindow()
-        importer.active_renderer = ren
-
-    if ifp.suffix.lower() in ('.gltf', 'glb'):
-        importer = vtkGLTFImporter(file_name=ifp, render_window=ren_win)
-        ren_win = importer.GetRenderWindow()
-        importer.active_renderer = ren
-
-    if ifp.suffix.lower() == '.obj':
-        importer = vtkOBJImporter(file_name=ifp, render_window=ren_win)
-        ren_win = importer.GetRenderWindow()
-        if mtlp:
-            importer.file_name_mtl = mtlp
-        if texd:
-            importer.texture_path = texd
+    importer = get_importer(ifp, mtlp, texd, ren_win)
 
     if not importer:
         print(f'No suitable reader found for {ifp}')
         return
 
+    importer.active_renderer = ren
     importer.Update()
     # This is needed before writing out a .wrl file.
     # So we may as well render here anyway.
     ren_win.Render()
 
-    if ofn:
-        exporter = None
-        if ofp.suffix == '.wrl':
-            exporter = vtkVRMLExporter(file_name=ofp,
-                                       active_renderer=ren, render_window=ren_win)
-        if ofp.suffix.lower() in ('.gltf', 'glb'):
-            exporter = vtkGLTFExporter(file_name=ofp,
-                                       active_renderer=ren, render_window=ren_win)
-        if ofp.suffix.lower() == '.x3d':
-            exporter = vtkX3DExporter(file_name=ofp,
-                                      active_renderer=ren, render_window=ren_win)
-        if ofp.suffix.lower() == '.obj':
-            parent_stem = ofp.parent / ofp.stem
-            comment = f'Converted by ImportExport from {ifp.name}'
-            exporter = vtkOBJExporter(file_prefix=parent_stem,
-                                      active_renderer=ren, render_window=ren_win,
-                                      obj_file_comment=comment, mtl_file_comment=comment)
-        if exporter:
-            print(f'Writing {ofp}')
-            exporter.Write()
-        else:
-            print(f'Not Writing {ofp}')
-            print(f'Is the extension correct?')
-
     actors = ren.actors
     actors.InitTraversal()
     actors_sz = actors.number_of_items
-    if actors_sz < 2:
+    if actors_sz == 1:
         print(f'There is {actors_sz} actors')
     else:
         print(f'There are {actors_sz} actors')
@@ -200,7 +154,58 @@ def main():
     ren.ResetCameraClippingRange()
 
     ren_win.Render()
+
+    if ofn:
+        export(ifp, ofp, ren, ren_win)
+
     iren.Start()
+
+
+def get_importer(ifp, mtlp, texd, ren_win):
+    importer = None
+
+    if ifp.suffix.lower() == '.wrl':
+        importer = vtkVRMLImporter(file_name=ifp, render_window=ren_win)
+
+    if ifp.suffix.lower() == '.3ds':
+        importer = vtk3DSImporter(file_name=ifp, render_window=ren_win, compute_normals=True)
+
+    if ifp.suffix.lower() in ('.gltf', 'glb'):
+        importer = vtkGLTFImporter(file_name=ifp, render_window=ren_win)
+
+    if ifp.suffix.lower() == '.obj':
+        importer = vtkOBJImporter(file_name=ifp, render_window=ren_win)
+        if mtlp:
+            importer.file_name_mtl = mtlp
+        if texd:
+            importer.texture_path = texd
+
+    return importer
+
+
+def export(ifp, ofp, ren, ren_win):
+    exporter = None
+    if ofp.suffix == '.wrl':
+        exporter = vtkVRMLExporter(file_name=ofp,
+                                   active_renderer=ren, render_window=ren_win)
+    if ofp.suffix.lower() in ('.gltf', 'glb'):
+        exporter = vtkGLTFExporter(file_name=ofp,
+                                   active_renderer=ren, render_window=ren_win)
+    if ofp.suffix.lower() == '.x3d':
+        exporter = vtkX3DExporter(file_name=ofp,
+                                  active_renderer=ren, render_window=ren_win)
+    if ofp.suffix.lower() == '.obj':
+        parent_stem = ofp.parent / ofp.stem
+        comment = f'Converted by ImportExport from {ifp.name}'
+        exporter = vtkOBJExporter(file_prefix=parent_stem,
+                                  active_renderer=ren, render_window=ren_win,
+                                  obj_file_comment=comment, mtl_file_comment=comment)
+    if exporter:
+        print(f'Writing {ofp}')
+        exporter.Write()
+    else:
+        print(f'Not Writing {ofp}')
+        print(f'Is the extension correct?')
 
 
 if __name__ == '__main__':
