@@ -31,23 +31,22 @@ from vtkmodules.vtkRenderingCore import (
 
 def get_program_parameters():
     import argparse
-    description = 'Importing a 3ds file.'
+    description = 'Combining imported actors.'
     epilogue = '''
    '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('in_fn', help='iflamingo.3ds.')
-    parser.add_argument('-o', '--out_fn', default=None, help='Output file name e.g. iflamingo.obj')
     # Optional additional input file and folder for the OBJ reader.
     parser.add_argument('-m', '--mtl_fn', default=None, help='Optional OBJ MTL file name e.g. iflamingo.obj')
     parser.add_argument('-t', '--texture_dir', default=None, help='Optional OBJ texture folder.')
 
     args = parser.parse_args()
-    return args.in_fn, args.out_fn, args.mtl_fn, args.texture_dir
+    return args.in_fn, args.mtl_fn, args.texture_dir
 
 
 def main():
-    ifn, ofn, mtl_fn, texture_dir = get_program_parameters()
+    ifn, mtl_fn, texture_dir = get_program_parameters()
 
     input_suffixes = ('.3ds', '.glb', '.gltf', '.obj', '.wrl')
     output_suffixes = ('.glb', '.gltf', '.obj', '.wrl', '.x3d')
@@ -64,19 +63,6 @@ def main():
     if not ifp.suffix.lower() in input_suffixes:
         print(f'Available input file suffixes are: {sorted_suffixes(input_suffixes)}')
         return
-
-    ofp = None
-    if ofn:
-        ofp = Path(ofn)
-        if not ofp.suffix.lower() in output_suffixes:
-            print(f'Available output file suffixes are: {sorted_suffixes(output_suffixes)}')
-            return
-        if ofp.is_file():
-            print(f'Destination must not exist: {ofp}')
-            return
-        if ofp.suffix.lower() == '.obj':
-            # We may need to create the parent folder.
-            ofp.parent.mkdir(parents=True, exist_ok=True)
 
     mtlp = None
     if mtl_fn:

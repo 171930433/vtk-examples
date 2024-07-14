@@ -488,6 +488,7 @@ See [this tutorial](http://www.vtk.org/Wiki/VTK/Tutorials/3DDataTypes) for a bri
 
 | Example Name | Description | Image |
 | -------------- | ------------- | ------- |
+[AffineWidget](/PythonicAPI/Widgets/AffineWidget) | Apply an affine transformation interactively.
 [BalloonWidget](/PythonicAPI/Widgets/BalloonWidget) | Uses a vtkBalloonWidget to draw labels when the mouse stays above an actor.
 [BorderWidget](/PythonicAPI/Widgets/BorderWidget) | 2D selection, 2D box.
 [BoxWidget](/PythonicAPI/Widgets/BoxWidget) | This 3D widget defines a region of interest that is represented by an arbitrarily oriented hexahedron with interior face angles of 90 degrees (orthogonal faces). The object creates 7 handles that can be moused on and manipulated.
