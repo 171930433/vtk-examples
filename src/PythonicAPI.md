@@ -119,6 +119,7 @@ This Python script, [SelectExamples](../PythonicAPI/Utilities/SelectExamples), w
 | -------------- | ------------- | ------- |
 [CellTypeSource](/PythonicAPI/GeometricObjects/CellTypeSource) | Generate tessellated cells.
 [ConvexPointSet](/PythonicAPI/GeometricObjects/ConvexPointSet) | Generate a ConvexPointSet cell.
+[LinearCellDemo](/PythonicAPI/GeometricObjects/LinearCellDemo) | Linear cell types found in VTK. The numbers define the ordering of the points making the cell.
 [Polyhedron](/PythonicAPI/GeometricObjects/Polyhedron) | Create an unstructured grid representation of a polyhedron (cube) and write it out to a file.
 
 ### Sources

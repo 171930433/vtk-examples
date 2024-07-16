@@ -1,5 +1,4 @@
-# !/usr/bin/env python
-# -*- coding: utf-8 -*-
+# !/usr/bin/env python3
 
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
@@ -8,22 +7,7 @@ import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
 from vtkmodules.vtkCommonCore import vtkPoints
 from vtkmodules.vtkCommonDataModel import (
-    # VTK_HEXAGONAL_PRISM,
-    # VTK_HEXAHEDRON,
-    # VTK_LINE,
-    # VTK_PENTAGONAL_PRISM,
-    # VTK_PIXEL,
-    # VTK_POLY_LINE,
-    # VTK_POLY_VERTEX,
-    # VTK_POLYGON,
-    # VTK_PYRAMID,
-    # VTK_QUAD,
     VTK_TETRA,
-    # VTK_TRIANGLE,
-    # VTK_TRIANGLE_STRIP,
-    # VTK_VERTEX,
-    # VTK_VOXEL,
-    # VTK_WEDGE,
     vtkCellArray,
     vtkHexagonalPrism,
     vtkHexahedron,
@@ -61,8 +45,9 @@ from vtkmodules.vtkRenderingLabel import vtkLabeledDataMapper
 
 def get_program_parameters():
     import argparse
-    description = 'Demonstrate the linear cell types found in VTK. Numbers define ordering of the defining points.'
+    description = 'Demonstrate the linear cell types found in VTK.'
     epilogue = '''
+         The numbers define the ordering of the points making the cell.
     '''
     parser = argparse.ArgumentParser(description=description, epilog=epilogue,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -78,48 +63,6 @@ def get_program_parameters():
 def main():
     wireframe_on, backface_on = get_program_parameters()
 
-    titles = list()
-    text_mappers = list()
-    text_actors = list()
-
-    u_grids = list()
-    mappers = list()
-    actors = list()
-    renderers = list()
-
-    u_grids.append(make_vertex())
-    titles.append('VTK_VERTEX (=1)')
-    u_grids.append(make_poly_vertex())
-    titles.append('VTK_POLY_VERTEX (=2)')
-    u_grids.append(make_line())
-    titles.append('VTK_LINE (=3)')
-    u_grids.append(make_polyline())
-    titles.append('VTK_POLY_LINE (=4)')
-    u_grids.append(make_triangle())
-    titles.append('VTK_TRIANGLE (=5)')
-    u_grids.append(make_triangle_strip())
-    titles.append('VTK_TRIANGLE_STRIP (=6)')
-    u_grids.append(make_polygon())
-    titles.append('VTK_POLYGON (=7)')
-    u_grids.append(make_pixel())
-    titles.append('VTK_PIXEL (=8)')
-    u_grids.append(make_quad())
-    titles.append('VTK_QUAD (=9)')
-    u_grids.append(make_tetra())
-    titles.append('VTK_TETRA (=10)')
-    u_grids.append(make_voxel())
-    titles.append('VTK_VOXEL (=11)')
-    u_grids.append(make_hexahedron())
-    titles.append('VTK_HEXAHEDRON (=12)')
-    u_grids.append(make_wedge())
-    titles.append('VTK_WEDGE (=13)')
-    u_grids.append(make_pyramid())
-    titles.append('VTK_PYRAMID (=14)')
-    u_grids.append(make_pentagonal_prism())
-    titles.append('VTK_PENTAGONAL_PRISM (=15)')
-    u_grids.append(make_hexagonal_prism())
-    titles.append('VTK_HEXAGONAL_PRISM (=16)')
-
     colors = vtkNamedColors()
 
     ren_win = vtkRenderWindow()
@@ -128,178 +71,167 @@ def main():
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(ren_win)
 
-    # Create one sphere for all
+    # Create one sphere for all.
     sphere = vtkSphereSource()
     sphere.SetPhiResolution(21)
     sphere.SetThetaResolution(21)
-    sphere.SetRadius(.08)
+    sphere.SetRadius(0.04)
 
-    # Create one text property for all
+    renderer_size = 300
+
+    # Create one text property for all.
     text_property = vtkTextProperty()
-    text_property.SetFontSize(10)
+    text_property.SetFontSize(int(renderer_size / 18))
+    text_property.BoldOn()
     text_property.SetJustificationToCentered()
     text_property.SetColor(colors.GetColor3d('Black'))
 
+    label_property = vtkTextProperty()
+    label_property.SetFontSize(int(renderer_size / 12))
+    label_property.BoldOn()
+    label_property.SetJustificationToCentered()
+    label_property.SetColor(colors.GetColor3d('FireBrick'))
+
     back_property = vtkProperty()
-    back_property.SetColor(colors.GetColor3d('MediumSeaGreen'))
+    back_property.SetColor(colors.GetColor3d('Coral'))
 
-    # Create and link the mappers actors and renderers together.
-    for i in range(0, len(u_grids)):
-        print('Creating:', titles[i])
-        text_mappers.append(vtkTextMapper())
-        text_actors.append(vtkActor2D())
+    renderers = dict()
 
-        mappers.append(vtkDataSetMapper())
-        actors.append(vtkActor())
-        renderers.append(vtkRenderer())
-        mappers[i].SetInputData(u_grids[i])
-        actors[i].SetMapper(mappers[i])
+    cells = get_cells()
+    # Create and link the mappers, actors and renderers together.
+    keys = cells.keys()
+    for key in keys:
+        print('Creating:', key)
+
+        text_mapper = vtkTextMapper()
+        text_mapper.SetTextProperty(text_property)
+        text_mapper.SetInput(key)
+        text_actor = vtkActor2D()
+        text_actor.SetMapper(text_mapper)
+        text_actor.SetPosition(renderer_size / 2.0, 8)
+
+        mapper = vtkDataSetMapper()
+        mapper.SetInputData(cells[key][0])
+        actor = vtkActor()
+        actor.SetMapper(mapper)
         if wireframe_on:
-            actors[i].GetProperty().SetRepresentationToWireframe()
-            actors[i].GetProperty().SetLineWidth(2)
-            actors[i].GetProperty().SetOpacity(1)
-            actors[i].GetProperty().SetColor(colors.GetColor3d('Black'))
+            actor.GetProperty().SetRepresentationToWireframe()
+            actor.GetProperty().SetLineWidth(2)
+            actor.GetProperty().SetOpacity(1)
+            actor.GetProperty().SetColor(colors.GetColor3d('Black'))
         else:
-            actors[i].GetProperty().EdgeVisibilityOn()
-            actors[i].GetProperty().SetLineWidth(3)
-            actors[i].GetProperty().SetColor(colors.GetColor3d('Tomato'))
+            actor.GetProperty().EdgeVisibilityOn()
+            actor.GetProperty().SetLineWidth(3)
+            actor.GetProperty().SetColor(colors.GetColor3d('Snow'))
             if backface_on:
-                actors[i].SetBackfaceProperty(back_property)
-                actors[i].GetProperty().SetOpacity(1)
+                actor.GetProperty().SetOpacity(0.4)
+                actor.SetBackfaceProperty(back_property)
+                back_property.SetOpacity(0.6)
             else:
-                actors[i].GetProperty().SetOpacity(0.5)
-        renderers[i].AddViewProp(actors[i])
+                actor.GetProperty().SetOpacity(0.8)
 
-        text_mappers[i].SetInput(titles[i])
-        text_actors[i].SetMapper(text_mappers[i])
-        text_actors[i].SetPosition(50, 10)
-        if wireframe_on:
-            text_actors[i].GetProperty().SetColor(colors.GetColor3d('Black'))
-        renderers[i].AddViewProp(text_actors[i])
-
-        # Label the points
+        # Label the points.
         label_mapper = vtkLabeledDataMapper()
-        label_mapper.SetInputData(u_grids[i])
+        label_mapper.SetInputData(cells[key][0])
+        label_mapper.SetLabelTextProperty(label_property)
         label_actor = vtkActor2D()
         label_actor.SetMapper(label_mapper)
-        if wireframe_on:
-            label_actor.GetProperty().SetColor(colors.GetColor3d('Snow'))
-        renderers[i].AddViewProp(label_actor)
 
-        # Glyph the points
+        # Glyph the points.
         point_mapper = vtkGlyph3DMapper()
-        point_mapper.SetInputData(u_grids[i])
+        point_mapper.SetInputData(cells[key][0])
         point_mapper.SetSourceConnection(sphere.GetOutputPort())
         point_mapper.ScalingOn()
         point_mapper.ScalarVisibilityOff()
 
         point_actor = vtkActor()
         point_actor.SetMapper(point_mapper)
-        if wireframe_on:
-            point_actor.GetProperty().SetColor(colors.GetColor3d('Banana'))
-        else:
-            point_actor.GetProperty().SetColor(colors.GetColor3d('Banana'))
-        point_actor.GetProperty().SetSpecular(.6)
-        point_actor.GetProperty().SetSpecularColor(1.0, 1.0, 1.0)
+        point_actor.GetProperty().SetColor(colors.GetColor3d('Yellow'))
+        point_actor.GetProperty().SetSpecular(1.0)
+        point_actor.GetProperty().SetSpecularColor(colors.GetColor3d('White'))
         point_actor.GetProperty().SetSpecularPower(100)
-        renderers[i].AddViewProp(point_actor)
 
-        ren_win.AddRenderer(renderers[i])
+        renderer = vtkRenderer()
+        renderer.SetBackground(colors.GetColor3d('CornflowerBlue'))
+        renderer.AddActor(text_actor)
+        renderer.AddActor(actor)
+        renderer.AddActor(label_actor)
+        renderer.AddActor(point_actor)
+
+        renderers[key] = renderer
+
+        ren_win.AddRenderer(renderers[key])
 
     # Set up the viewports
-    grid_dimensions_x = 4
-    grid_dimensions_y = 4
-    renderer_size = 300
-    ren_win.SetSize(renderer_size * grid_dimensions_x, renderer_size * grid_dimensions_y)
-    for row in range(0, grid_dimensions_y):
-        for col in range(0, grid_dimensions_x):
-            index = row * grid_dimensions_x + col
+    grid_row_dimensions = 4
+    grid_column_dimensions = 4
+    size = (renderer_size * grid_column_dimensions, renderer_size * grid_row_dimensions)
+    ren_win.SetSize(size)
+    for row in range(0, grid_row_dimensions):
+        for col in range(0, grid_column_dimensions):
+            index = row * grid_column_dimensions + col
 
-            # (xmin, ymin, xmax, ymax)
-            viewport = [float(col) / grid_dimensions_x,
-                        float(grid_dimensions_y - (row + 1)) / grid_dimensions_y,
-                        float(col + 1) / grid_dimensions_x,
-                        float(grid_dimensions_y - row) / grid_dimensions_y]
+            # Set the renderer's viewport dimensions (xmin, ymin, xmax, ymax) within the render window.
+            # Note that for the Y values, we need to subtract the row index from grid_rows
+            #  because the viewport Y axis points upwards, and we want to draw the grid from top to down.
+            viewport = (
+                float(col) / grid_column_dimensions,
+                float(grid_row_dimensions - row - 1) / grid_row_dimensions,
+                float(col + 1) / grid_column_dimensions,
+                float(grid_row_dimensions - row) / grid_row_dimensions
+            )
 
-            if index > (len(actors) - 1):
+            if index > (len(renderers) - 1):
                 # Add a renderer even if there is no actor.
                 # This makes the render window background all the same color.
                 ren = vtkRenderer()
-                if wireframe_on:
-                    ren.SetBackground(colors.GetColor3d('LightSlateGray'))
-                else:
-                    ren.SetBackground(colors.GetColor3d('SlateGray'))
+                ren.SetBackground(colors.GetColor3d('CornflowerBlue'))
                 ren.SetViewport(viewport)
                 ren_win.AddRenderer(ren)
                 continue
 
-            if wireframe_on:
-                renderers[index].SetBackground(colors.GetColor3d('LightSlateGray'))
-            else:
-                renderers[index].SetBackground(colors.GetColor3d('SlateGray'))
-            renderers[index].SetViewport(viewport)
-            renderers[index].ResetCamera()
-            if index == 0:
-                renderers[index].GetActiveCamera().Dolly(0.1)
-                renderers[index].GetActiveCamera().Azimuth(30)
-                renderers[index].GetActiveCamera().Elevation(-30)
-            elif index == 1:
-                renderers[index].GetActiveCamera().Dolly(0.8)
-                renderers[index].GetActiveCamera().Azimuth(30)
-                renderers[index].GetActiveCamera().Elevation(-30)
-            elif index == 2:
-                renderers[index].GetActiveCamera().Dolly(0.4)
-                renderers[index].GetActiveCamera().Azimuth(30)
-                renderers[index].GetActiveCamera().Elevation(-30)
-            elif index == 4:
-                renderers[index].GetActiveCamera().Dolly(0.7)
-                renderers[index].GetActiveCamera().Azimuth(30)
-                renderers[index].GetActiveCamera().Elevation(-30)
-            elif index == 5:
-                renderers[index].GetActiveCamera().Dolly(1.1)
-                renderers[index].GetActiveCamera().Azimuth(30)
-                renderers[index].GetActiveCamera().Elevation(-30)
-            elif index == 6:
-                renderers[index].GetActiveCamera().Azimuth(0)
-                renderers[index].GetActiveCamera().Elevation(-45)
-            elif index == 7:
-                renderers[index].GetActiveCamera().Azimuth(0)
-                renderers[index].GetActiveCamera().Elevation(-45)
-            elif index == 8:
-                renderers[index].GetActiveCamera().Azimuth(0)
-                renderers[index].GetActiveCamera().Elevation(-45)
-            elif index == 9:
-                renderers[index].GetActiveCamera().Azimuth(0)
-                renderers[index].GetActiveCamera().Elevation(-22.5)
-            elif index == 10:
-                renderers[index].GetActiveCamera().Azimuth(-22.5)
-                renderers[index].GetActiveCamera().Elevation(15)
-            elif index == 11:
-                renderers[index].GetActiveCamera().Azimuth(-22.5)
-                renderers[index].GetActiveCamera().Elevation(15)
-            elif index == 12:
-                renderers[index].GetActiveCamera().Azimuth(-45)
-                renderers[index].GetActiveCamera().Elevation(15)
-            elif index == 13:
-                renderers[index].GetActiveCamera().Azimuth(0)
-                renderers[index].GetActiveCamera().Elevation(-30)
-            elif index == 14:
-                renderers[index].GetActiveCamera().Azimuth(-22.5)
-                renderers[index].GetActiveCamera().Elevation(10)
-            elif index == 15:
-                renderers[index].GetActiveCamera().Azimuth(-30)
-                renderers[index].GetActiveCamera().Elevation(15)
-            else:
-                renderers[index].GetActiveCamera().Azimuth(30)
-                renderers[index].GetActiveCamera().Elevation(-30)
-            renderers[index].ResetCameraClippingRange()
+            key = list(keys)[index]
+            renderers[key].SetBackground(colors.GetColor3d('CornflowerBlue'))
+            renderers[key].SetViewport(viewport)
+            renderers[key].ResetCamera()
+            renderers[key].GetActiveCamera().Dolly(cells[key][1])
+            renderers[key].GetActiveCamera().Azimuth(cells[key][2])
+            renderers[key].GetActiveCamera().Elevation(cells[key][3])
+            renderers[key].ResetCameraClippingRange()
 
     ren_win.Render()
     iren.Initialize()
     iren.Start()
 
 
-# These functions return a vtkUnstructured grid corresponding to the object.
+def get_cells():
+    """
+    get the cells along with their orientation.
+    :return: A dictionary of cells.
+    """
+    cells = dict()
+    # name, unsigned grid source, dolly, azimuth, elevation.
+    cells['VTK_VERTEX (=1)'] = (make_vertex(), 0.1, 30, -30)
+    cells['VTK_POLY_VERTEX (=2)'] = (make_poly_vertex(), 0.8, 30, -30)
+    cells['VTK_LINE (=3)'] = (make_line(), 0.4, 30, -30)
+    cells['VTK_POLY_LINE (=4)'] = (make_polyline(), 1.0, 30, -30)
+    cells['VTK_TRIANGLE (=5)'] = (make_triangle(), 0.7, 30, -30)
+    cells['VTK_TRIANGLE_STRIP (=6)'] = (make_triangle_strip(), 1.1, 30, -30)
+    cells['VTK_POLYGON (=7)'] = (make_polygon(), 1.0, 0, -45)
+    cells['VTK_PIXEL (=8)'] = (make_pixel(), 1.0, 0, -45)
+    cells['VTK_QUAD (=9)'] = (make_quad(), 1.0, 0, -22.5)
+    cells['VTK_TETRA (=10)'] = (make_tetra(), 1.0, 0, -22.5)
+    cells['VTK_VOXEL (=11)'] = (make_voxel(), 1.0, -22.5, 15)
+    cells['VTK_HEXAHEDRON (=12)'] = (make_hexahedron(), 1.0, -22.5, 15)
+    cells['VTK_WEDGE (=13)'] = (make_wedge(), 1.0, -45, 15)
+    cells['VTK_PYRAMID (=14)'] = (make_pyramid(), 1.0, 0, -30)
+    cells['VTK_PENTAGONAL_PRISM (=15)'] = (make_pentagonal_prism(), 1.0, -22.5, 15)
+    cells['VTK_HEXAGONAL_PRISM (=16)'] = (make_hexagonal_prism(), 1.0, -30, 15)
+
+    return cells
+
+
+# These functions return an vtkUnstructured grid corresponding to the object.
 
 def make_vertex():
     # A vertex is a cell that represents a 3D point
