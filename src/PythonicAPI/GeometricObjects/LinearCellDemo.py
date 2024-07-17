@@ -32,7 +32,10 @@ from vtkmodules.vtkCommonDataModel import (
     vtkWedge
 )
 from vtkmodules.vtkFiltersCore import vtkAppendPolyData
-from vtkmodules.vtkFiltersSources import vtkSphereSource
+from vtkmodules.vtkFiltersSources import (
+    vtkCubeSource,
+    vtkSphereSource
+)
 from vtkmodules.vtkInteractionWidgets import (
     vtkTextRepresentation,
     vtkTextWidget
@@ -43,6 +46,7 @@ from vtkmodules.vtkRenderingCore import (
     vtkCoordinate,
     vtkDataSetMapper,
     vtkGlyph3DMapper,
+    vtkPolyDataMapper,
     vtkPolyDataMapper2D,
     vtkProperty,
     vtkRenderWindow,
@@ -80,6 +84,14 @@ def main():
     sphere = vtkSphereSource(phi_resolution=21, theta_resolution=21, radius=0.04)
 
     cells = get_cell_orientation()
+    needs_a_tile = ('VTK_TETRA (=10)',
+                    'VTK_VOXEL (=11)',
+                    'VTK_HEXAHEDRON (=12)',
+                    'VTK_WEDGE (=13)',
+                    'VTK_PYRAMID (=14)',
+                    'VTK_PENTAGONAL_PRISM (=15)',
+                    'VTK_HEXAGONAL_PRISM (=16)',
+                    )
 
     # Set up the viewports.
     grid_column_dimensions = 4
@@ -146,7 +158,7 @@ def main():
     text_positions = get_text_positions(keys,
                                         justification=TextProperty.Justification.VTK_TEXT_CENTERED,
                                         vertical_justification=TextProperty.VerticalJustification.VTK_TEXT_BOTTOM,
-                                        width=0.75, height=0.075)
+                                        width=0.85, height=0.1)
 
     ren_win = vtkRenderWindow(size=size, window_name='LinearCellDemo')
     ren_win.SetWindowName('LinearCellDemo')
@@ -205,6 +217,12 @@ def main():
         renderer.AddActor(actor)
         renderer.AddActor(label_actor)
         renderer.AddActor(point_actor)
+        # Add a plane.
+        if key in needs_a_tile:
+            tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
+            tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
+            tile_actor.GetProperty().SetOpacity(0.3)
+            renderer.AddActor(tile_actor)
 
         # Create the text actor and representation.
         text_actor = vtkTextActor(input=key,
@@ -269,13 +287,13 @@ def get_cell_orientation():
         'VTK_POLYGON (=7)': (make_polygon(), make_orientation(0, -45, 1.0)),
         'VTK_PIXEL (=8)': (make_pixel(), make_orientation(0, -45, 1.0)),
         'VTK_QUAD (=9)': (make_quad(), make_orientation(0, -22.5, 0)),
-        'VTK_TETRA (=10)': (make_tetra(), make_orientation(0, -22.5, 1.0)),
-        'VTK_VOXEL (=11)': (make_voxel(), make_orientation(-22.5, 15, 1.0)),
-        'VTK_HEXAHEDRON (=12)': (make_hexahedron(), make_orientation(-22.5, 15, 1.0)),
-        'VTK_WEDGE (=13)': (make_wedge(), make_orientation(-45, 15, 1.0)),
-        'VTK_PYRAMID (=14)': (make_pyramid(), make_orientation(0, -30)),
-        'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-22.5, 15)),
-        'VTK_HEXAGONAL_PRISM (=16)': (make_hexagonal_prism(), make_orientation(-30, 15)),
+        'VTK_TETRA (=10)': (make_tetra(), make_orientation(22.5, 15, 0.95)),
+        'VTK_VOXEL (=11)': (make_voxel(), make_orientation(-22.5, 15, 0.95)),
+        'VTK_HEXAHEDRON (=12)': (make_hexahedron(), make_orientation(-22.5, 15, 0.95)),
+        'VTK_WEDGE (=13)': (make_wedge(), make_orientation(45, 15, 0.9)),
+        'VTK_PYRAMID (=14)': (make_pyramid(), make_orientation(22.5, 15, 1.0)),
+        'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-22.5, 15, 0.95)),
+        'VTK_HEXAGONAL_PRISM (=16)': (make_hexagonal_prism(), make_orientation(-30, 15, 0.95)),
     }
 
 
@@ -827,6 +845,39 @@ def draw_viewport_border(renderer, border, color=(0, 0, 0), line_width=2):
     actor.property.line_width = line_width
 
     renderer.AddViewProp(actor)
+
+
+def make_tile(bounds, expansion_factor=0.1, thickness_ratio=0.05):
+    """
+    Make a tile slightly larger or smaller than the bounds in the
+      X and Z directions and thinner or thicker in the Y direction.
+
+    A thickness_ratio of zero reduces the tile to an XZ plane.
+
+    :param bounds: The bounds for the tile.
+    :param expansion_factor: The expansion factor in the XZ plane.
+    :param thickness_ratio: The thickness ratio in the Y direction, >= 0.
+    :return: An actor corresponding to the tile.
+    """
+
+    d_xyz = (
+        bounds[1] - bounds[0],
+        bounds[3] - bounds[2],
+        bounds[5] - bounds[4]
+    )
+    thickness = d_xyz[2] * thickness_ratio
+    center = ((bounds[1] + bounds[0]) / 2.0,
+              bounds[2] - thickness / 2.0,
+              (bounds[5] + bounds[4]) / 2.0)
+    x_length = bounds[1] - bounds[0] + (d_xyz[0] * expansion_factor)
+    z_length = bounds[5] - bounds[4] + (d_xyz[2] * expansion_factor)
+
+    plane = vtkCubeSource(center=center, x_length=x_length, y_length=thickness, z_length=z_length)
+    plane_mapper = vtkPolyDataMapper()
+    plane >> plane_mapper
+    tile_actor = vtkActor(mapper=plane_mapper)
+
+    return tile_actor
 
 
 @dataclass(frozen=True)

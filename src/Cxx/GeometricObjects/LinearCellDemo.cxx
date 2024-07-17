@@ -2,12 +2,14 @@
 #include <vtkActor2D.h>
 #include <vtkCamera.h>
 #include <vtkCellArray.h>
+#include <vtkCubeSource.h>
 #include <vtkDataSetMapper.h>
 #include <vtkGlyph3DMapper.h>
 #include <vtkLabeledDataMapper.h>
 #include <vtkNamedColors.h>
 #include <vtkNew.h>
 #include <vtkPoints.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkRenderWindow.h>
@@ -61,6 +63,22 @@ vtkNew<vtkUnstructuredGrid> MakeWedge();
 vtkNew<vtkUnstructuredGrid> MakePyramid();
 vtkNew<vtkUnstructuredGrid> MakePentagonalPrism();
 vtkNew<vtkUnstructuredGrid> MakeHexagonalPrism();
+
+/**
+ * Make a tile slightly larger or smaller than the bounds in the
+ *   X and Z directions and thinner or thicker in the Y direction.
+ *
+ * A thickness_ratio of zero reduces the tile to an XZ plane.
+ *
+ * @param bounds - the bounds for the tile.
+ * @param expansionFactor - the expansion factor in the XZ plane.
+ * @param thicknessRatio - the thickness ratio in the Y direction, >= 0.
+ * @return An actor corresponding to the tile.
+ */
+vtkNew<vtkActor> MakeTile(double* const& bounds,
+                          double const& expansionFactor = 0.1,
+                          double const& thicknessRatio = 0.05);
+
 } // namespace
 
 int main(int argc, char* argv[])
@@ -120,6 +138,13 @@ int main(int argc, char* argv[])
   titles.push_back("VTK_PENTAGONAL_PRISM (=15)");
   uGrids.push_back(MakeHexagonalPrism());
   titles.push_back("VTK_HEXAGONAL_PRISM (=16)");
+
+  std::vector<std::string> needsTile = {
+      "VTK_TETRA (=10)",           "VTK_VOXEL (=11)",
+      "VTK_HEXAHEDRON (=12)",      "VTK_WEDGE (=13)",
+      "VTK_PYRAMID (=14)",         "VTK_PENTAGONAL_PRISM (=15)",
+      "VTK_HEXAGONAL_PRISM (=16)",
+  };
 
   vtkNew<vtkNamedColors> colors;
 
@@ -209,7 +234,7 @@ int main(int argc, char* argv[])
     pointMapper->ScalingOff();
     pointMapper->ScalarVisibilityOff();
 
-    vtkNew<vtkActor> pointActor = vtkNew<vtkActor>();
+    vtkNew<vtkActor> pointActor;
     pointActor->SetMapper(pointMapper);
     pointActor->GetProperty()->SetColor(colors->GetColor3d("Yellow").GetData());
     pointActor->GetProperty()->SetSpecular(1.0);
@@ -222,6 +247,15 @@ int main(int argc, char* argv[])
     renderer->AddViewProp(actor);
     renderer->AddViewProp(labelActor);
     renderer->AddViewProp(pointActor);
+    if (std::find(needsTile.cbegin(), needsTile.cend(), titles[i]) !=
+        needsTile.cend())
+    {
+      auto tileActor = MakeTile(uGrids[i]->GetBounds(), 0.1, 0.05);
+      tileActor->GetProperty()->SetColor(
+          colors->GetColor3d("SpringGreen").GetData());
+      tileActor->GetProperty()->SetOpacity(0.3);
+      renderer->AddViewProp(tileActor);
+    }
 
     renderers.push_back(renderer);
 
@@ -271,73 +305,89 @@ int main(int argc, char* argv[])
       switch (index)
       {
       case 0:
-        renderers[index]->GetActiveCamera()->Dolly(0.1);
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Dolly(0.1);
         break;
       case 1:
-        renderers[index]->GetActiveCamera()->Dolly(0.8);
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Dolly(0.8);
         break;
       case 2:
-        renderers[index]->GetActiveCamera()->Dolly(0.4);
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Dolly(0.4);
+        break;
+      case 3:
+        renderers[index]->GetActiveCamera()->Azimuth(30);
+        renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 4:
-        renderers[index]->GetActiveCamera()->Dolly(0.7);
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Dolly(0.7);
         break;
       case 5:
-        renderers[index]->GetActiveCamera()->Dolly(1.1);
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Dolly(1.1);
         break;
       case 6:
         renderers[index]->GetActiveCamera()->Azimuth(0);
         renderers[index]->GetActiveCamera()->Elevation(-45);
+        renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 7:
         renderers[index]->GetActiveCamera()->Azimuth(0);
         renderers[index]->GetActiveCamera()->Elevation(-45);
+        renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 8:
         renderers[index]->GetActiveCamera()->Azimuth(0);
         renderers[index]->GetActiveCamera()->Elevation(-45);
+        renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 9:
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(-22.5);
+        renderers[index]->GetActiveCamera()->Azimuth(22.5);
+        renderers[index]->GetActiveCamera()->Elevation(15);
+        renderers[index]->GetActiveCamera()->Dolly(0.95);
         break;
       case 10:
         renderers[index]->GetActiveCamera()->Azimuth(-22.5);
         renderers[index]->GetActiveCamera()->Elevation(15);
+        renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 11:
         renderers[index]->GetActiveCamera()->Azimuth(-22.5);
         renderers[index]->GetActiveCamera()->Elevation(15);
+        renderers[index]->GetActiveCamera()->Dolly(0.95);
         break;
       case 12:
-        renderers[index]->GetActiveCamera()->Azimuth(-45);
+        renderers[index]->GetActiveCamera()->Azimuth(45);
         renderers[index]->GetActiveCamera()->Elevation(15);
+        renderers[index]->GetActiveCamera()->Dolly(0.9);
         break;
       case 13:
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Azimuth(22.5);
+        renderers[index]->GetActiveCamera()->Elevation(15);
+        renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 14:
         renderers[index]->GetActiveCamera()->Azimuth(-22.5);
-        renderers[index]->GetActiveCamera()->Elevation(10);
+        renderers[index]->GetActiveCamera()->Elevation(15);
+        renderers[index]->GetActiveCamera()->Dolly(0.95);
         break;
       case 15:
         renderers[index]->GetActiveCamera()->Azimuth(-30);
         renderers[index]->GetActiveCamera()->Elevation(15);
+        renderers[index]->GetActiveCamera()->Dolly(0.95);
         break;
       default:
-        renderers[index]->GetActiveCamera()->Azimuth(30);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
+        renderers[index]->GetActiveCamera()->Azimuth(0);
+        renderers[index]->GetActiveCamera()->Elevation(0);
+        renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       }
       renderers[index]->ResetCameraClippingRange();
@@ -800,4 +850,41 @@ vtkNew<vtkUnstructuredGrid> MakeHexagonalPrism()
   return ug;
 }
 
+/**
+ * Make a tile slightly larger or smaller than the bounds in the
+ *   X and Z directions and thinner or thicker in the Y direction.
+ *
+ * A thickness_ratio of zero reduces the tile to an XZ plane.
+ *
+ * @param bounds - the bounds for the tile.
+ * @param expansionFactor - the expansion factor in the XZ plane.
+ * @param thicknessRatio - the thickness ratio in the Y direction, >= 0.
+ * @return An actor corresponding to the tile.
+ */
+vtkNew<vtkActor> MakeTile(double* const& bounds, double const& expansionFactor,
+                          double const& thicknessRatio)
+{
+  std::vector<double> d_xyz = {bounds[1] - bounds[0], bounds[3] - bounds[2],
+                               bounds[5] - bounds[4]};
+  auto thickness = d_xyz[2] * std::abs(thicknessRatio);
+  std::vector<double> center = {(bounds[1] + bounds[0]) / 2.0,
+                                bounds[2] - thickness / 2.0,
+                                (bounds[5] + bounds[4]) / 2.0};
+  auto x_length = bounds[1] - bounds[0] + (d_xyz[0] * expansionFactor);
+  auto z_length = bounds[5] - bounds[4] + (d_xyz[2] * expansionFactor);
+
+  vtkNew<vtkCubeSource> plane;
+  plane->SetCenter(center[0], center[1], center[2]);
+  plane->SetXLength(x_length);
+  plane->SetYLength(thickness);
+  plane->SetZLength(z_length);
+
+  vtkNew<vtkPolyDataMapper> planeMapper;
+  planeMapper->SetInputConnection(plane->GetOutputPort());
+
+  vtkNew<vtkActor> planeActor;
+  planeActor->SetMapper(planeMapper);
+
+  return planeActor;
+}
 } // namespace

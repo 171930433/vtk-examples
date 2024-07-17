@@ -27,12 +27,16 @@ from vtkmodules.vtkCommonDataModel import (
     vtkVoxel,
     vtkWedge
 )
-from vtkmodules.vtkFiltersSources import vtkSphereSource
+from vtkmodules.vtkFiltersSources import (
+    vtkCubeSource,
+    vtkSphereSource
+)
 from vtkmodules.vtkRenderingCore import (
     vtkActor,
     vtkActor2D,
     vtkDataSetMapper,
     vtkGlyph3DMapper,
+    vtkPolyDataMapper,
     vtkProperty,
     vtkRenderWindow,
     vtkRenderWindowInteractor,
@@ -66,6 +70,7 @@ def main():
     colors = vtkNamedColors()
 
     ren_win = vtkRenderWindow()
+    ren_win.SetMultiSamples(0)
     ren_win.SetWindowName('LinearCellDemo')
 
     iren = vtkRenderWindowInteractor()
@@ -98,6 +103,15 @@ def main():
     renderers = dict()
 
     cells = get_cells()
+    needs_a_tile = ('VTK_TETRA (=10)',
+                    'VTK_VOXEL (=11)',
+                    'VTK_HEXAHEDRON (=12)',
+                    'VTK_WEDGE (=13)',
+                    'VTK_PYRAMID (=14)',
+                    'VTK_PENTAGONAL_PRISM (=15)',
+                    'VTK_HEXAGONAL_PRISM (=16)',
+                    )
+
     # Create and link the mappers, actors and renderers together.
     keys = cells.keys()
     for key in keys:
@@ -153,10 +167,17 @@ def main():
 
         renderer = vtkRenderer()
         renderer.SetBackground(colors.GetColor3d('CornflowerBlue'))
+
         renderer.AddActor(text_actor)
         renderer.AddActor(actor)
         renderer.AddActor(label_actor)
         renderer.AddActor(point_actor)
+        # Add a plane.
+        if key in needs_a_tile:
+            tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
+            tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
+            tile_actor.GetProperty().SetOpacity(0.3)
+            renderer.AddActor(tile_actor)
 
         renderers[key] = renderer
 
@@ -194,9 +215,9 @@ def main():
             renderers[key].SetBackground(colors.GetColor3d('CornflowerBlue'))
             renderers[key].SetViewport(viewport)
             renderers[key].ResetCamera()
-            renderers[key].GetActiveCamera().Dolly(cells[key][1])
-            renderers[key].GetActiveCamera().Azimuth(cells[key][2])
-            renderers[key].GetActiveCamera().Elevation(cells[key][3])
+            renderers[key].GetActiveCamera().Azimuth(cells[key][1])
+            renderers[key].GetActiveCamera().Elevation(cells[key][2])
+            renderers[key].GetActiveCamera().Dolly(cells[key][3])
             renderers[key].ResetCameraClippingRange()
 
     ren_win.Render()
@@ -211,22 +232,22 @@ def get_cells():
     """
     cells = dict()
     # name, unsigned grid source, dolly, azimuth, elevation.
-    cells['VTK_VERTEX (=1)'] = (make_vertex(), 0.1, 30, -30)
-    cells['VTK_POLY_VERTEX (=2)'] = (make_poly_vertex(), 0.8, 30, -30)
-    cells['VTK_LINE (=3)'] = (make_line(), 0.4, 30, -30)
-    cells['VTK_POLY_LINE (=4)'] = (make_polyline(), 1.0, 30, -30)
-    cells['VTK_TRIANGLE (=5)'] = (make_triangle(), 0.7, 30, -30)
-    cells['VTK_TRIANGLE_STRIP (=6)'] = (make_triangle_strip(), 1.1, 30, -30)
-    cells['VTK_POLYGON (=7)'] = (make_polygon(), 1.0, 0, -45)
-    cells['VTK_PIXEL (=8)'] = (make_pixel(), 1.0, 0, -45)
-    cells['VTK_QUAD (=9)'] = (make_quad(), 1.0, 0, -22.5)
-    cells['VTK_TETRA (=10)'] = (make_tetra(), 1.0, 0, -22.5)
-    cells['VTK_VOXEL (=11)'] = (make_voxel(), 1.0, -22.5, 15)
-    cells['VTK_HEXAHEDRON (=12)'] = (make_hexahedron(), 1.0, -22.5, 15)
-    cells['VTK_WEDGE (=13)'] = (make_wedge(), 1.0, -45, 15)
-    cells['VTK_PYRAMID (=14)'] = (make_pyramid(), 1.0, 0, -30)
-    cells['VTK_PENTAGONAL_PRISM (=15)'] = (make_pentagonal_prism(), 1.0, -22.5, 15)
-    cells['VTK_HEXAGONAL_PRISM (=16)'] = (make_hexagonal_prism(), 1.0, -30, 15)
+    cells['VTK_VERTEX (=1)'] = (make_vertex(), 30, -30, 0.1)
+    cells['VTK_POLY_VERTEX (=2)'] = (make_poly_vertex(), 30, -30, 0.8)
+    cells['VTK_LINE (=3)'] = (make_line(), 30, -30, 0.4)
+    cells['VTK_POLY_LINE (=4)'] = (make_polyline(), 30, -30, 1.0)
+    cells['VTK_TRIANGLE (=5)'] = (make_triangle(), 30, -30, 0.7)
+    cells['VTK_TRIANGLE_STRIP (=6)'] = (make_triangle_strip(), 30, -30, 1.1)
+    cells['VTK_POLYGON (=7)'] = (make_polygon(), 0, -45, 1.0)
+    cells['VTK_PIXEL (=8)'] = (make_pixel(), 0, -45, 1.0)
+    cells['VTK_QUAD (=9)'] = (make_quad(), 0, -22.5, 1.0)
+    cells['VTK_TETRA (=10)'] = (make_tetra(), 22.5, 15, 0.95)
+    cells['VTK_VOXEL (=11)'] = (make_voxel(), -22.5, 15, 0.95)
+    cells['VTK_HEXAHEDRON (=12)'] = (make_hexahedron(), -22.5, 15, 0.95)
+    cells['VTK_WEDGE (=13)'] = (make_wedge(), 45, 15, 0.9)
+    cells['VTK_PYRAMID (=14)'] = (make_pyramid(), 22.5, 15, 1.0)
+    cells['VTK_PENTAGONAL_PRISM (=15)'] = (make_pentagonal_prism(), -22.5, 15, 0.95)
+    cells['VTK_HEXAGONAL_PRISM (=16)'] = (make_hexagonal_prism(), -30, 15, 0.95)
 
     return cells
 
@@ -635,6 +656,45 @@ def make_hexagonal_prism():
     ug.InsertNextCell(hexagonal_prism.GetCellType(), hexagonal_prism.GetPointIds())
 
     return ug
+
+
+def make_tile(bounds, expansion_factor=0.1, thickness_ratio=0.05):
+    """
+    Make a tile slightly larger or smaller than the bounds in the
+      X and Z directions and thinner or thicker in the Y direction.
+
+    A thickness_ratio of zero reduces the tile to an XZ plane.
+
+    :param bounds: The bounds for the tile.
+    :param expansion_factor: The expansion factor in the XZ plane.
+    :param thickness_ratio: The thickness ratio in the Y direction, >= 0.
+    :return: An actor corresponding to the tile.
+    """
+
+    d_xyz = (
+        bounds[1] - bounds[0],
+        bounds[3] - bounds[2],
+        bounds[5] - bounds[4]
+    )
+    thickness = d_xyz[2] * abs(thickness_ratio)
+    center = ((bounds[1] + bounds[0]) / 2.0,
+              bounds[2] - thickness / 2.0,
+              (bounds[5] + bounds[4]) / 2.0)
+    x_length = bounds[1] - bounds[0] + (d_xyz[0] * expansion_factor)
+    z_length = bounds[5] - bounds[4] + (d_xyz[2] * expansion_factor)
+    plane = vtkCubeSource()
+    plane.SetCenter(center)
+    plane.SetXLength(x_length)
+    plane.SetYLength(thickness)
+    plane.SetZLength(z_length)
+
+    plane_mapper = vtkPolyDataMapper()
+    plane_mapper.SetInputConnection(plane.GetOutputPort())
+
+    tile_actor = vtkActor()
+    tile_actor.SetMapper(plane_mapper)
+
+    return tile_actor
 
 
 if __name__ == '__main__':
