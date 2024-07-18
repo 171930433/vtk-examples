@@ -103,14 +103,14 @@ def main():
     renderers = dict()
 
     cells = get_cells()
-    needs_a_tile = ('VTK_TETRA (=10)',
-                    'VTK_VOXEL (=11)',
-                    'VTK_HEXAHEDRON (=12)',
-                    'VTK_WEDGE (=13)',
-                    'VTK_PYRAMID (=14)',
-                    'VTK_PENTAGONAL_PRISM (=15)',
-                    'VTK_HEXAGONAL_PRISM (=16)',
-                    )
+    # needs_a_tile = ('VTK_TETRA (=10)',
+    #                 'VTK_VOXEL (=11)',
+    #                 'VTK_HEXAHEDRON (=12)',
+    #                 'VTK_WEDGE (=13)',
+    #                 'VTK_PYRAMID (=14)',
+    #                 'VTK_PENTAGONAL_PRISM (=15)',
+    #                 'VTK_HEXAGONAL_PRISM (=16)',
+    #                 )
 
     # Create and link the mappers, actors and renderers together.
     keys = cells.keys()
@@ -172,12 +172,12 @@ def main():
         renderer.AddActor(actor)
         renderer.AddActor(label_actor)
         renderer.AddActor(point_actor)
-        # Add a plane.
-        if key in needs_a_tile:
-            tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
-            tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
-            tile_actor.GetProperty().SetOpacity(0.3)
-            renderer.AddActor(tile_actor)
+        # # Add a plane.
+        # if key in needs_a_tile:
+        #     tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
+        #     tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
+        #     tile_actor.GetProperty().SetOpacity(0.3)
+        #     renderer.AddActor(tile_actor)
 
         renderers[key] = renderer
 
@@ -240,13 +240,14 @@ def get_cells():
     cells['VTK_TRIANGLE_STRIP (=6)'] = (make_triangle_strip(), 30, -30, 1.1)
     cells['VTK_POLYGON (=7)'] = (make_polygon(), 0, -45, 1.0)
     cells['VTK_PIXEL (=8)'] = (make_pixel(), 0, -45, 1.0)
-    cells['VTK_QUAD (=9)'] = (make_quad(), 0, -22.5, 1.0)
-    cells['VTK_TETRA (=10)'] = (make_tetra(), 22.5, 15, 0.95)
+    cells['VTK_QUAD (=9)'] = (make_quad(), 0, -45, 1.0)
+    cells['VTK_TETRA (=10)'] = (make_tetra(), 0, -45, 0.95)
     cells['VTK_VOXEL (=11)'] = (make_voxel(), -22.5, 15, 0.95)
     cells['VTK_HEXAHEDRON (=12)'] = (make_hexahedron(), -22.5, 15, 0.95)
-    cells['VTK_WEDGE (=13)'] = (make_wedge(), 45, 15, 0.9)
-    cells['VTK_PYRAMID (=14)'] = (make_pyramid(), 22.5, 15, 1.0)
-    cells['VTK_PENTAGONAL_PRISM (=15)'] = (make_pentagonal_prism(), -22.5, 15, 0.95)
+    cells['VTK_WEDGE (=13)'] = (make_wedge(), -45, 15, 0.9)
+    cells['VTK_PYRAMID (=14)'] = (make_pyramid(), 0, -30, 1.0)
+    # cells['VTK_PENTAGONAL_PRISM (=15)'] = (make_pentagonal_prism(), -22.5, 15, 0.95)
+    cells['VTK_PENTAGONAL_PRISM (=15)'] = (make_pentagonal_prism(), -30, 15, 0.95)
     cells['VTK_HEXAGONAL_PRISM (=16)'] = (make_hexagonal_prism(), -30, 15, 0.95)
 
     return cells

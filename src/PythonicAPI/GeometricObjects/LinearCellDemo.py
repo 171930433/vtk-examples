@@ -84,14 +84,14 @@ def main():
     sphere = vtkSphereSource(phi_resolution=21, theta_resolution=21, radius=0.04)
 
     cells = get_cell_orientation()
-    needs_a_tile = ('VTK_TETRA (=10)',
-                    'VTK_VOXEL (=11)',
-                    'VTK_HEXAHEDRON (=12)',
-                    'VTK_WEDGE (=13)',
-                    'VTK_PYRAMID (=14)',
-                    'VTK_PENTAGONAL_PRISM (=15)',
-                    'VTK_HEXAGONAL_PRISM (=16)',
-                    )
+    # needs_a_tile = ('VTK_TETRA (=10)',
+    #                 'VTK_VOXEL (=11)',
+    #                 'VTK_HEXAHEDRON (=12)',
+    #                 'VTK_WEDGE (=13)',
+    #                 'VTK_PYRAMID (=14)',
+    #                 'VTK_PENTAGONAL_PRISM (=15)',
+    #                 'VTK_HEXAGONAL_PRISM (=16)',
+    #                 )
 
     # Set up the viewports.
     grid_column_dimensions = 4
@@ -164,6 +164,7 @@ def main():
     ren_win.SetWindowName('LinearCellDemo')
     iren = vtkRenderWindowInteractor()
     iren.render_window = ren_win
+    iren.interactor_style.SetCurrentStyleToTrackballCamera()
 
     renderers = dict()
     text_representations = list()
@@ -217,12 +218,12 @@ def main():
         renderer.AddActor(actor)
         renderer.AddActor(label_actor)
         renderer.AddActor(point_actor)
-        # Add a plane.
-        if key in needs_a_tile:
-            tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
-            tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
-            tile_actor.GetProperty().SetOpacity(0.3)
-            renderer.AddActor(tile_actor)
+        # # Add a plane.
+        # if key in needs_a_tile:
+        #     tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
+        #     tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
+        #     tile_actor.GetProperty().SetOpacity(0.3)
+        #     renderer.AddActor(tile_actor)
 
         # Create the text actor and representation.
         text_actor = vtkTextActor(input=key,
@@ -286,13 +287,14 @@ def get_cell_orientation():
         'VTK_TRIANGLE_STRIP (=6)': (make_triangle_strip(), make_orientation(30, -30, 1.1)),
         'VTK_POLYGON (=7)': (make_polygon(), make_orientation(0, -45, 1.0)),
         'VTK_PIXEL (=8)': (make_pixel(), make_orientation(0, -45, 1.0)),
-        'VTK_QUAD (=9)': (make_quad(), make_orientation(0, -22.5, 0)),
-        'VTK_TETRA (=10)': (make_tetra(), make_orientation(22.5, 15, 0.95)),
+        'VTK_QUAD (=9)': (make_quad(), make_orientation(0, -45, 0)),
+        'VTK_TETRA (=10)': (make_tetra(), make_orientation(0, -45, 0.95)),
         'VTK_VOXEL (=11)': (make_voxel(), make_orientation(-22.5, 15, 0.95)),
         'VTK_HEXAHEDRON (=12)': (make_hexahedron(), make_orientation(-22.5, 15, 0.95)),
-        'VTK_WEDGE (=13)': (make_wedge(), make_orientation(45, 15, 0.9)),
-        'VTK_PYRAMID (=14)': (make_pyramid(), make_orientation(22.5, 15, 1.0)),
-        'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-22.5, 15, 0.95)),
+        'VTK_WEDGE (=13)': (make_wedge(), make_orientation(-45, 15, 1.0)),
+        'VTK_PYRAMID (=14)': (make_pyramid(), make_orientation(0, -30, 1.0)),
+        # 'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-22.5, 15, 0.95)),
+        'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-30, 15, 0.95)),
         'VTK_HEXAGONAL_PRISM (=16)': (make_hexagonal_prism(), make_orientation(-30, 15, 0.95)),
     }
 
@@ -582,6 +584,7 @@ def make_wedge():
 
     points = vtkPoints()
 
+    # Original Points.
     points.InsertNextPoint(0, 1, 0)
     points.InsertNextPoint(0, 0, 0)
     points.InsertNextPoint(0, 0.5, 0.5)
@@ -589,12 +592,31 @@ def make_wedge():
     points.InsertNextPoint(1, 0.0, 0.0)
     points.InsertNextPoint(1, 0.5, 0.5)
 
+    # RotateX(-90), Translate(0,-1,0).
+    # points.InsertNextPoint(0.0, 0.0, 0.0)
+    # points.InsertNextPoint(0.0,0 , 1.0)
+    # points.InsertNextPoint(0.0, 0.5, 0.5)
+    # points.InsertNextPoint(1.0, 0.0, 0.0)
+    # points.InsertNextPoint(1.0, 0, 1.0)
+    # points.InsertNextPoint(1.0, 0.5, 0.5)
+
     wedge = vtkWedge()
     for i in range(0, number_of_vertices):
         wedge.point_ids.SetId(i, i)
 
     ug = vtkUnstructuredGrid(points=points)
     ug.InsertNextCell(wedge.cell_type, wedge.point_ids)
+
+    # pd = vtkPolyData(points=points)
+    # t = vtkTransform()
+    # # t.Translate(1,1,1)
+    # t.RotateX(-90)
+    # t.Translate(0,-1,0)
+    # tf = vtkTransformFilter(transform=t)
+    # (pd >> tf).update()
+    # pts = tf.output.GetPoints()
+    # for i in range(0, pts.number_of_points):
+    #     print(f'points.InsertNextPoint{pts.GetPoint(i)}')
 
     return ug
 
@@ -605,11 +627,19 @@ def make_pyramid():
 
     points = vtkPoints()
 
+    # Original points.
     p0 = [1.0, 1.0, 0.0]
     p1 = [-1.0, 1.0, 0.0]
     p2 = [-1.0, -1.0, 0.0]
     p3 = [1.0, -1.0, 0.0]
     p4 = [0.0, 0.0, 1.0]
+
+    # # RotateX(-90)
+    # p0 = (1.0, 0, -1.0)
+    # p1 = (-1.0, 0, -1.0)
+    # p2 = (-1.0, 0, 1.0)
+    # p3 = (1.0, 0, 1.0)
+    # p4 = (0.0, 2.0, 0)
 
     points.InsertNextPoint(p0)
     points.InsertNextPoint(p1)
@@ -623,6 +653,16 @@ def make_pyramid():
 
     ug = vtkUnstructuredGrid(points=points)
     ug.InsertNextCell(pyramid.cell_type, pyramid.point_ids)
+
+    # pd = vtkPolyData(points=points)
+    # t = vtkTransform()
+    # t.RotateX(-90)
+    # t.Translate(0,0,0)
+    # tf = vtkTransformFilter(transform=t)
+    # (pd >> tf).update()
+    # pts = tf.output.GetPoints()
+    # for i in range(0, pts.number_of_points):
+    #     print(f'p{i} = {pts.GetPoint(i)}')
 
     return ug
 

@@ -139,12 +139,12 @@ int main(int argc, char* argv[])
   uGrids.push_back(MakeHexagonalPrism());
   titles.push_back("VTK_HEXAGONAL_PRISM (=16)");
 
-  std::vector<std::string> needsTile = {
-      "VTK_TETRA (=10)",           "VTK_VOXEL (=11)",
-      "VTK_HEXAHEDRON (=12)",      "VTK_WEDGE (=13)",
-      "VTK_PYRAMID (=14)",         "VTK_PENTAGONAL_PRISM (=15)",
-      "VTK_HEXAGONAL_PRISM (=16)",
-  };
+  // std::vector<std::string> needsTile = {
+  //     "VTK_TETRA (=10)",           "VTK_VOXEL (=11)",
+  //     "VTK_HEXAHEDRON (=12)",      "VTK_WEDGE (=13)",
+  //     "VTK_PYRAMID (=14)",         "VTK_PENTAGONAL_PRISM (=15)",
+  //     "VTK_HEXAGONAL_PRISM (=16)",
+  // };
 
   vtkNew<vtkNamedColors> colors;
 
@@ -247,15 +247,15 @@ int main(int argc, char* argv[])
     renderer->AddViewProp(actor);
     renderer->AddViewProp(labelActor);
     renderer->AddViewProp(pointActor);
-    if (std::find(needsTile.cbegin(), needsTile.cend(), titles[i]) !=
-        needsTile.cend())
-    {
-      auto tileActor = MakeTile(uGrids[i]->GetBounds(), 0.1, 0.05);
-      tileActor->GetProperty()->SetColor(
-          colors->GetColor3d("SpringGreen").GetData());
-      tileActor->GetProperty()->SetOpacity(0.3);
-      renderer->AddViewProp(tileActor);
-    }
+    // if (std::find(needsTile.cbegin(), needsTile.cend(), titles[i]) !=
+    //     needsTile.cend())
+    // {
+    //   auto tileActor = MakeTile(uGrids[i]->GetBounds(), 0.1, 0.05);
+    //   tileActor->GetProperty()->SetColor(
+    //       colors->GetColor3d("SpringGreen").GetData());
+    //   tileActor->GetProperty()->SetOpacity(0.3);
+    //   renderer->AddViewProp(tileActor);
+    // }
 
     renderers.push_back(renderer);
 
@@ -305,81 +305,103 @@ int main(int argc, char* argv[])
       switch (index)
       {
       case 0:
+        // VTK_VERTEX (=1)
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
         renderers[index]->GetActiveCamera()->Dolly(0.1);
         break;
       case 1:
+        // VTK_POLY_VERTEX (=2)
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
         renderers[index]->GetActiveCamera()->Dolly(0.8);
         break;
       case 2:
+        // VTK_LINE (=3)
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
         renderers[index]->GetActiveCamera()->Dolly(0.4);
         break;
       case 3:
+        // VTK_POLY_LINE (=4)
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
         renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 4:
+        // VTK_TRIANGLE (=5)
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
         renderers[index]->GetActiveCamera()->Dolly(0.7);
         break;
       case 5:
+        // VTK_TRIANGLE_STRIP (=6)
         renderers[index]->GetActiveCamera()->Azimuth(30);
         renderers[index]->GetActiveCamera()->Elevation(-30);
         renderers[index]->GetActiveCamera()->Dolly(1.1);
         break;
       case 6:
+        // VTK_POLYGON (=7)
         renderers[index]->GetActiveCamera()->Azimuth(0);
         renderers[index]->GetActiveCamera()->Elevation(-45);
         renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 7:
+        // VTK_PIXEL (=8)
         renderers[index]->GetActiveCamera()->Azimuth(0);
         renderers[index]->GetActiveCamera()->Elevation(-45);
         renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 8:
+        // VTK_QUAD (=9)
         renderers[index]->GetActiveCamera()->Azimuth(0);
         renderers[index]->GetActiveCamera()->Elevation(-45);
         renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 9:
-        renderers[index]->GetActiveCamera()->Azimuth(22.5);
-        renderers[index]->GetActiveCamera()->Elevation(15);
+        // VTK_TETRA (=10)
+        renderers[index]->GetActiveCamera()->Azimuth(0);
+        renderers[index]->GetActiveCamera()->Elevation(-45);
         renderers[index]->GetActiveCamera()->Dolly(0.95);
         break;
       case 10:
+        // VTK_VOXEL (=11)
         renderers[index]->GetActiveCamera()->Azimuth(-22.5);
         renderers[index]->GetActiveCamera()->Elevation(15);
         renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
       case 11:
+        // VTK_HEXAHEDRON (=12)
         renderers[index]->GetActiveCamera()->Azimuth(-22.5);
         renderers[index]->GetActiveCamera()->Elevation(15);
         renderers[index]->GetActiveCamera()->Dolly(0.95);
         break;
       case 12:
-        renderers[index]->GetActiveCamera()->Azimuth(45);
+        // VTK_WEDGE (=13)
+        renderers[index]->GetActiveCamera()->Azimuth(-45);
         renderers[index]->GetActiveCamera()->Elevation(15);
         renderers[index]->GetActiveCamera()->Dolly(0.9);
         break;
       case 13:
-        renderers[index]->GetActiveCamera()->Azimuth(22.5);
-        renderers[index]->GetActiveCamera()->Elevation(15);
+        // VTK_PYRAMID (=14)
+        renderers[index]->GetActiveCamera()->Azimuth(0);
+        renderers[index]->GetActiveCamera()->Elevation(-30);
         renderers[index]->GetActiveCamera()->Dolly(1.0);
         break;
+      // case 14:
+      //   // VTK_PENTAGONAL_PRISM (=15)
+      //   renderers[index]->GetActiveCamera()->Azimuth(-22.5);
+      //   renderers[index]->GetActiveCamera()->Elevation(15);
+      //   renderers[index]->GetActiveCamera()->Dolly(0.95);
+      //   break;
       case 14:
-        renderers[index]->GetActiveCamera()->Azimuth(-22.5);
+        // VTK_PENTAGONAL_PRISM (=15)
+        renderers[index]->GetActiveCamera()->Azimuth(-30);
         renderers[index]->GetActiveCamera()->Elevation(15);
         renderers[index]->GetActiveCamera()->Dolly(0.95);
         break;
       case 15:
+        // VTK_HEXAGONAL_PRISM (=16)
         renderers[index]->GetActiveCamera()->Azimuth(-30);
         renderers[index]->GetActiveCamera()->Elevation(15);
         renderers[index]->GetActiveCamera()->Dolly(0.95);
