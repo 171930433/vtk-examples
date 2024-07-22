@@ -84,20 +84,17 @@ def main():
     sphere = vtkSphereSource(phi_resolution=21, theta_resolution=21, radius=0.04)
 
     cells = get_cell_orientation()
-    # needs_a_tile = ('VTK_TETRA (=10)',
-    #                 'VTK_VOXEL (=11)',
-    #                 'VTK_HEXAHEDRON (=12)',
-    #                 'VTK_WEDGE (=13)',
-    #                 'VTK_PYRAMID (=14)',
-    #                 'VTK_PENTAGONAL_PRISM (=15)',
-    #                 'VTK_HEXAGONAL_PRISM (=16)',
-    #                 )
+    needs_a_tile = ('VTK_VOXEL (=11)',
+                    'VTK_HEXAHEDRON (=12)',
+                    'VTK_PENTAGONAL_PRISM (=15)',
+                    'VTK_HEXAGONAL_PRISM (=16)',
+                    )
 
     # Set up the viewports.
     grid_column_dimensions = 4
     grid_row_dimensions = 4
     renderer_size = 300
-    size = (grid_column_dimensions * renderer_size, grid_row_dimensions * renderer_size)
+    window_size = (grid_column_dimensions * renderer_size, grid_row_dimensions * renderer_size)
 
     keys = list(cells.keys())
 
@@ -106,6 +103,7 @@ def main():
     last_col = False
     last_row = False
     blank = len(cells)
+    blank_viewports = list()
 
     for row in range(0, grid_row_dimensions):
         if row == grid_row_dimensions - 1:
@@ -137,7 +135,9 @@ def main():
             if index < blank:
                 viewports[keys[index]] = vp_params
             else:
-                viewports[index] = vp_params
+                s = f'vp_{col:d}_{row:d}'
+                viewports[s] = vp_params
+                blank_viewports.append(s)
 
     # Create one text property for all.
     text_property = vtkTextProperty(color=colors.GetColor3d('Black'),
@@ -160,7 +160,7 @@ def main():
                                         vertical_justification=TextProperty.VerticalJustification.VTK_TEXT_BOTTOM,
                                         width=0.85, height=0.1)
 
-    ren_win = vtkRenderWindow(size=size, window_name='LinearCellDemo')
+    ren_win = vtkRenderWindow(size=window_size, window_name='LinearCellDemo')
     ren_win.SetWindowName('LinearCellDemo')
     iren = vtkRenderWindowInteractor()
     iren.render_window = ren_win
@@ -218,12 +218,12 @@ def main():
         renderer.AddActor(actor)
         renderer.AddActor(label_actor)
         renderer.AddActor(point_actor)
-        # # Add a plane.
-        # if key in needs_a_tile:
-        #     tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
-        #     tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
-        #     tile_actor.GetProperty().SetOpacity(0.3)
-        #     renderer.AddActor(tile_actor)
+        # Add a plane.
+        if key in needs_a_tile:
+            tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
+            tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
+            tile_actor.GetProperty().SetOpacity(0.3)
+            renderer.AddActor(tile_actor)
 
         # Create the text actor and representation.
         text_actor = vtkTextActor(input=key,
@@ -244,18 +244,18 @@ def main():
         text_widgets.append(text_widget)
 
         renderer.ResetCamera()
-        renderer.active_camera.Dolly(cells[key][1].zoom)
         renderer.active_camera.Azimuth(cells[key][1].azimuth)
         renderer.active_camera.Elevation(cells[key][1].elevation)
+        renderer.active_camera.Dolly(cells[key][1].zoom)
         renderer.ResetCameraClippingRange()
 
         renderers[key] = renderer
 
         ren_win.AddRenderer(renderers[key])
 
-    for i in range(blank, grid_column_dimensions * grid_row_dimensions):
-        viewport = viewports[i].viewport
-        border = viewports[i].border
+    for name in blank_viewports:
+        viewport = viewports[name].viewport
+        border = viewports[name].border
         renderer = vtkRenderer(background=colors.GetColor3d('CornflowerBlue'), viewport=viewport)
         draw_viewport_border(renderer, border=border, color=colors.GetColor3d('Yellow'), line_width=4)
         ren_win.AddRenderer(renderer)
@@ -272,7 +272,7 @@ def get_cell_orientation():
     """
     Get the linear cell names, the cells and initial orientations.
 
-    :return: The linear cell names, the cells and initial orientations
+    :return: The linear cell names, the cells and initial orientations.
     """
 
     def make_orientation(azimuth: float = 0, elevation: float = 0, zoom: float = 1.0):
@@ -283,7 +283,7 @@ def get_cell_orientation():
         'VTK_POLY_VERTEX (=2)': (make_poly_vertex(), make_orientation(30, -30, 0.8)),
         'VTK_LINE (=3)': (make_line(), make_orientation(30, -30, 0.4)),
         'VTK_POLY_LINE (=4)': (make_polyline(), make_orientation(30, -30, 1.0)),
-        'VTK_TRIANGLE (=5)': (make_polyline(), make_orientation(30, -30, 0.7)),
+        'VTK_TRIANGLE (=5)': (make_triangle(), make_orientation(30, -30, 0.7)),
         'VTK_TRIANGLE_STRIP (=6)': (make_triangle_strip(), make_orientation(30, -30, 1.1)),
         'VTK_POLYGON (=7)': (make_polygon(), make_orientation(0, -45, 1.0)),
         'VTK_PIXEL (=8)': (make_pixel(), make_orientation(0, -45, 1.0)),

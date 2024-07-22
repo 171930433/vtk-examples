@@ -69,13 +69,6 @@ def main():
 
     colors = vtkNamedColors()
 
-    ren_win = vtkRenderWindow()
-    ren_win.SetMultiSamples(0)
-    ren_win.SetWindowName('LinearCellDemo')
-
-    iren = vtkRenderWindowInteractor()
-    iren.SetRenderWindow(ren_win)
-
     # Create one sphere for all.
     sphere = vtkSphereSource()
     sphere.SetPhiResolution(21)
@@ -103,14 +96,52 @@ def main():
     renderers = dict()
 
     cells = get_cells()
-    # needs_a_tile = ('VTK_TETRA (=10)',
-    #                 'VTK_VOXEL (=11)',
-    #                 'VTK_HEXAHEDRON (=12)',
-    #                 'VTK_WEDGE (=13)',
-    #                 'VTK_PYRAMID (=14)',
-    #                 'VTK_PENTAGONAL_PRISM (=15)',
-    #                 'VTK_HEXAGONAL_PRISM (=16)',
-    #                 )
+    needs_a_tile = ('VTK_VOXEL (=11)',
+                    'VTK_HEXAHEDRON (=12)',
+                    'VTK_PENTAGONAL_PRISM (=15)',
+                    'VTK_HEXAGONAL_PRISM (=16)',
+                    )
+
+    # Set up the viewports.
+    grid_column_dimensions = 4
+    grid_row_dimensions = 4
+    renderer_size = 300
+    window_size = (grid_column_dimensions * renderer_size, grid_row_dimensions * renderer_size)
+
+    keys = list(cells.keys())
+
+    viewports = dict()
+    blank = len(cells)
+    blank_viewports = list()
+
+    for row in range(0, grid_row_dimensions):
+        if row == grid_row_dimensions - 1:
+            last_row = True
+        for col in range(0, grid_column_dimensions):
+            if col == grid_column_dimensions - 1:
+                last_col = True
+            index = row * grid_column_dimensions + col
+            # Set the renderer's viewport dimensions (xmin, ymin, xmax, ymax) within the render window.
+            # Note that for the Y values, we need to subtract the row index from grid_rows
+            #  because the viewport Y axis points upwards, and we want to draw the grid from top to down.
+            viewport = (float(col) / grid_column_dimensions,
+                        float(grid_row_dimensions - (row + 1)) / grid_row_dimensions,
+                        float(col + 1) / grid_column_dimensions,
+                        float(grid_row_dimensions - row) / grid_row_dimensions)
+
+            if index < blank:
+                viewports[keys[index]] = viewport
+            else:
+                s = f'vp_{col:d}_{row:d}'
+                viewports[s] = viewport
+                blank_viewports.append(s)
+
+    ren_win = vtkRenderWindow()
+    ren_win.SetSize(window_size)
+    ren_win.SetWindowName('LinearCellDemo')
+
+    iren = vtkRenderWindowInteractor()
+    iren.SetRenderWindow(ren_win)
 
     # Create and link the mappers, actors and renderers together.
     keys = cells.keys()
@@ -165,60 +196,33 @@ def main():
         point_actor.GetProperty().SetSpecularColor(colors.GetColor3d('White'))
         point_actor.GetProperty().SetSpecularPower(100)
 
-        renderer = vtkRenderer()
-        renderer.SetBackground(colors.GetColor3d('CornflowerBlue'))
+        renderer = vtkRenderer(background=colors.GetColor3d('CornflowerBlue'), viewport=viewports[key])
 
         renderer.AddActor(text_actor)
         renderer.AddActor(actor)
         renderer.AddActor(label_actor)
         renderer.AddActor(point_actor)
-        # # Add a plane.
-        # if key in needs_a_tile:
-        #     tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
-        #     tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
-        #     tile_actor.GetProperty().SetOpacity(0.3)
-        #     renderer.AddActor(tile_actor)
+        # Add a plane.
+        if key in needs_a_tile:
+            tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
+            tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
+            tile_actor.GetProperty().SetOpacity(0.3)
+            renderer.AddActor(tile_actor)
+
+        renderer.ResetCamera()
+        renderer.GetActiveCamera().Azimuth(cells[key][1])
+        renderer.GetActiveCamera().Elevation(cells[key][2])
+        renderer.GetActiveCamera().Dolly(cells[key][3])
+        renderer.ResetCameraClippingRange()
 
         renderers[key] = renderer
 
         ren_win.AddRenderer(renderers[key])
 
-    # Set up the viewports
-    grid_row_dimensions = 4
-    grid_column_dimensions = 4
-    size = (renderer_size * grid_column_dimensions, renderer_size * grid_row_dimensions)
-    ren_win.SetSize(size)
-    for row in range(0, grid_row_dimensions):
-        for col in range(0, grid_column_dimensions):
-            index = row * grid_column_dimensions + col
-
-            # Set the renderer's viewport dimensions (xmin, ymin, xmax, ymax) within the render window.
-            # Note that for the Y values, we need to subtract the row index from grid_rows
-            #  because the viewport Y axis points upwards, and we want to draw the grid from top to down.
-            viewport = (
-                float(col) / grid_column_dimensions,
-                float(grid_row_dimensions - row - 1) / grid_row_dimensions,
-                float(col + 1) / grid_column_dimensions,
-                float(grid_row_dimensions - row) / grid_row_dimensions
-            )
-
-            if index > (len(renderers) - 1):
-                # Add a renderer even if there is no actor.
-                # This makes the render window background all the same color.
-                ren = vtkRenderer()
-                ren.SetBackground(colors.GetColor3d('CornflowerBlue'))
-                ren.SetViewport(viewport)
-                ren_win.AddRenderer(ren)
-                continue
-
-            key = list(keys)[index]
-            renderers[key].SetBackground(colors.GetColor3d('CornflowerBlue'))
-            renderers[key].SetViewport(viewport)
-            renderers[key].ResetCamera()
-            renderers[key].GetActiveCamera().Azimuth(cells[key][1])
-            renderers[key].GetActiveCamera().Elevation(cells[key][2])
-            renderers[key].GetActiveCamera().Dolly(cells[key][3])
-            renderers[key].ResetCameraClippingRange()
+    for name in blank_viewports:
+        viewport = viewports[name]
+        renderer = vtkRenderer(background=colors.GetColor3d('CornflowerBlue'), viewport=viewport)
+        ren_win.AddRenderer(renderer)
 
     ren_win.Render()
     iren.Initialize()

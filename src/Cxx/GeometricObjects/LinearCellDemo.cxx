@@ -39,13 +39,27 @@
 #include <vtkWedge.h>
 
 #include <vtk_cli11.h>
+#include <vtk_fmt.h>
+// clang-format off
+#include VTK_FMT(fmt/format.h)
+// clang-format on
 
 #include <cstdlib>
 #include <string>
 #include <vector>
 
+using cellPair =
+    std::pair<vtkSmartPointer<vtkUnstructuredGrid>, std::array<double, 3>>;
+using cellMap = std::map<std::string, cellPair>;
+
 // These functions return an vtkUnstructured grid corresponding to the object.
 namespace {
+
+/**
+ * @brief GetNameCellOrientation
+ * @return A map of cell names, cells and their initial orientations.
+ */
+cellMap GetNameCellOrientation();
 
 vtkNew<vtkUnstructuredGrid> MakeVertex();
 vtkNew<vtkUnstructuredGrid> MakePolyVertex();
@@ -75,14 +89,13 @@ vtkNew<vtkUnstructuredGrid> MakeHexagonalPrism();
  * @param thicknessRatio - the thickness ratio in the Y direction, >= 0.
  * @return An actor corresponding to the tile.
  */
-vtkNew<vtkActor> MakeTile(double* const& bounds,
-                          double const& expansionFactor = 0.1,
-                          double const& thicknessRatio = 0.05);
+vtkNew<vtkActor> MakeTile(double *const &bounds,
+                          double const &expansionFactor = 0.1,
+                          double const &thicknessRatio = 0.05);
 
 } // namespace
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char *argv[]) {
   CLI::App app{
       "Demonstrate the linear cell types found in VTK. "
       "The numbers define the ordering of the points making the cell."};
@@ -95,72 +108,78 @@ int main(int argc, char* argv[])
   app.add_flag("-b, --backface", backfaceOn,
                "Display the back face in a different colour.");
   CLI11_PARSE(app, argc, argv);
-  if (wireframeOn && backfaceOn)
-  {
+  if (wireframeOn && backfaceOn) {
     std::cerr << "error: argument -b/--backface: not allowed with argument "
                  "-w/--wireframe"
               << std::endl;
     return EXIT_FAILURE;
   }
 
-  std::vector<vtkNew<vtkUnstructuredGrid>> uGrids;
-  std::vector<std::string> titles;
+  std::vector<std::string> needsTile = {
+      "VTK_VOXEL (=11)",
+      "VTK_HEXAHEDRON (=12)",
+      "VTK_PENTAGONAL_PRISM (=15)",
+      "VTK_HEXAGONAL_PRISM (=16)",
+  };
 
-  uGrids.push_back(MakeVertex());
-  titles.push_back("VTK_VERTEX (=1)");
-  uGrids.push_back(MakePolyVertex());
-  titles.push_back("VTK_POLY_VERTEX (=2)");
-  uGrids.push_back(MakeLine());
-  titles.push_back("VTK_LINE (=3)");
-  uGrids.push_back(MakePolyLine());
-  titles.push_back("VTK_POLY_LINE (=4)");
-  uGrids.push_back(MakeTriangle());
-  titles.push_back("VTK_TRIANGLE (=5)");
-  uGrids.push_back(MakeTriangleStrip());
-  titles.push_back("VTK_TRIANGLE_STRIP (=6)");
-  uGrids.push_back(MakePolygon());
-  titles.push_back("VTK_POLYGON (=7)");
-  uGrids.push_back(MakePixel());
-  titles.push_back("VTK_PIXEL (=8)");
-  uGrids.push_back(MakeQuad());
-  titles.push_back("VTK_QUAD (=9)");
-  uGrids.push_back(MakeTetra());
-  titles.push_back("VTK_TETRA (=10)");
-  uGrids.push_back(MakeVoxel());
-  titles.push_back("VTK_VOXEL (=11)");
-  uGrids.push_back(MakeHexahedron());
-  titles.push_back("VTK_HEXAHEDRON (=12)");
-  uGrids.push_back(MakeWedge());
-  titles.push_back("VTK_WEDGE (=13)");
-  uGrids.push_back(MakePyramid());
-  titles.push_back("VTK_PYRAMID (=14)");
-  uGrids.push_back(MakePentagonalPrism());
-  titles.push_back("VTK_PENTAGONAL_PRISM (=15)");
-  uGrids.push_back(MakeHexagonalPrism());
-  titles.push_back("VTK_HEXAGONAL_PRISM (=16)");
+  // clang-format off
+  std::array<std::string, 16> keys = {
+      "VTK_VERTEX (=1)",            "VTK_POLY_VERTEX (=2)",
+      "VTK_LINE (=3)",              "VTK_POLY_LINE (=4)",
+      "VTK_TRIANGLE (=5)",          "VTK_TRIANGLE_STRIP (=6)",
+      "VTK_POLYGON (=7)",           "VTK_PIXEL (=8)",
+      "VTK_QUAD (=9)",              "VTK_TETRA (=10)",
+      "VTK_VOXEL (=11)",            "VTK_HEXAHEDRON (=12)",
+      "VTK_WEDGE (=13)",            "VTK_PYRAMID (=14)",
+      "VTK_PENTAGONAL_PRISM (=15)", "VTK_HEXAGONAL_PRISM (=16)"};
+  // clang-format on
 
-  // std::vector<std::string> needsTile = {
-  //     "VTK_TETRA (=10)",           "VTK_VOXEL (=11)",
-  //     "VTK_HEXAHEDRON (=12)",      "VTK_WEDGE (=13)",
-  //     "VTK_PYRAMID (=14)",         "VTK_PENTAGONAL_PRISM (=15)",
-  //     "VTK_HEXAGONAL_PRISM (=16)",
-  // };
+  auto cells = GetNameCellOrientation();
+
+  // Set up the viewports.
+  auto gridRowDimensions = 4;
+  auto gridColumnDimensions = 4;
+  auto rendererSize = 300;
+  std::array<int, 2> windowSize{gridColumnDimensions * rendererSize,
+                                gridRowDimensions * rendererSize};
+
+  auto blank = cells.size();
+  std::vector<std::string> blankViewports;
+
+  std::map<std::string, std::array<double, 4>> viewports;
+  for (int row = 0; row < gridRowDimensions; row++) {
+    for (int col = 0; col < gridColumnDimensions; col++) {
+      int index = row * gridColumnDimensions + col;
+
+      // Set the renderer's viewport dimensions (xmin, ymin, xmax, ymax)
+      //  within the render window.
+      // Note that for the Y values, we need to subtract the row index
+      //  from grid rows because the viewport Y axis points upwards
+      //  and we want to draw the grid from top to down.
+      std::array<double, 4> viewport{
+          static_cast<double>(col) / gridColumnDimensions,
+          static_cast<double>(gridRowDimensions - row - 1) / gridRowDimensions,
+          static_cast<double>(col + 1) / gridColumnDimensions,
+          static_cast<double>(gridRowDimensions - row) / gridRowDimensions};
+      // std::cout << viewport[0] << " " << viewport[1]
+      //           << " " << viewport[2] << " "<< viewport[3] << std::endl;
+      if (index < blank) {
+        viewports[keys[index]] = viewport;
+      } else {
+        auto s = fmt::format("vp_{:d}_{:d}", col, row);
+        viewports[s] = viewport;
+        blankViewports.push_back(s);
+      }
+    }
+  }
 
   vtkNew<vtkNamedColors> colors;
-
-  vtkNew<vtkRenderWindow> renWin;
-  renWin->SetWindowName("LinearCellDemo");
-
-  vtkNew<vtkRenderWindowInteractor> iRen;
-  iRen->SetRenderWindow(renWin);
 
   // Create one sphere for all.
   vtkNew<vtkSphereSource> sphere;
   sphere->SetPhiResolution(21);
   sphere->SetThetaResolution(21);
   sphere->SetRadius(0.04);
-
-  int rendererSize = 300;
 
   // Create one text property for all.
   vtkNew<vtkTextProperty> textProperty;
@@ -178,58 +197,58 @@ int main(int argc, char* argv[])
   vtkNew<vtkProperty> backProperty;
   backProperty->SetColor(colors->GetColor3d("Coral").GetData());
 
-  std::vector<vtkSmartPointer<vtkRenderer>> renderers;
+  std::map<std::string, vtkSmartPointer<vtkRenderer>> renderers;
+
+  vtkNew<vtkRenderWindow> renWin;
+  renWin->SetWindowName("LinearCellDemo");
+  renWin->SetSize(windowSize.data());
+
+  vtkNew<vtkRenderWindowInteractor> iRen;
+  iRen->SetRenderWindow(renWin);
 
   // Create and link the mappers, actors and renderers together.
-  for (unsigned int i = 0; i < uGrids.size(); ++i)
-  {
-    std::cout << "Creating: " << titles[i] << std::endl;
+  for (const auto &name : keys) {
+    std::cout << "Creating: " << name << std::endl;
 
     vtkNew<vtkTextMapper> textMapper;
     textMapper->SetTextProperty(textProperty);
-    textMapper->SetInput(titles[i].c_str());
+    textMapper->SetInput(name.c_str());
     vtkNew<vtkActor2D> textActor;
     textActor->SetMapper(textMapper);
     textActor->SetPosition(rendererSize / 2.0, 8);
 
     vtkNew<vtkDataSetMapper> mapper;
-    mapper->SetInputData(uGrids[i]);
+    mapper->SetInputData(cells[name].first);
     vtkNew<vtkActor> actor;
     actor->SetMapper(mapper);
-    if (wireframeOn)
-    {
+    if (wireframeOn) {
       actor->GetProperty()->SetRepresentationToWireframe();
       actor->GetProperty()->SetLineWidth(2);
       actor->GetProperty()->SetOpacity(1);
       actor->GetProperty()->SetColor(colors->GetColor3d("Black").GetData());
-    }
-    else
-    {
+    } else {
       actor->GetProperty()->EdgeVisibilityOn();
       actor->GetProperty()->SetLineWidth(3);
       actor->GetProperty()->SetColor(colors->GetColor3d("Snow").GetData());
-      if (backfaceOn)
-      {
+      if (backfaceOn) {
         actor->GetProperty()->SetOpacity(0.4);
         actor->SetBackfaceProperty(backProperty);
         backProperty->SetOpacity(0.6);
-      }
-      else
-      {
+      } else {
         actor->GetProperty()->SetOpacity(0.8);
       }
     }
 
     // Label the points.
     vtkNew<vtkLabeledDataMapper> labelMapper;
-    labelMapper->SetInputData(uGrids[i]);
+    labelMapper->SetInputData(cells[name].first);
     labelMapper->SetLabelTextProperty(labelProperty);
     vtkNew<vtkActor2D> labelActor;
     labelActor->SetMapper(labelMapper);
 
     // Glyph the points.
     vtkNew<vtkGlyph3DMapper> pointMapper;
-    pointMapper->SetInputData(uGrids[i]);
+    pointMapper->SetInputData(cells[name].first);
     pointMapper->SetSourceConnection(sphere->GetOutputPort());
     pointMapper->ScalingOff();
     pointMapper->ScalarVisibilityOff();
@@ -243,177 +262,38 @@ int main(int argc, char* argv[])
     pointActor->GetProperty()->SetSpecularPower(100);
 
     vtkNew<vtkRenderer> renderer;
+    renderer->SetBackground(colors->GetColor3d("CornflowerBlue").GetData());
+    renderer->SetViewport(viewports[name].data());
     renderer->AddViewProp(textActor);
     renderer->AddViewProp(actor);
     renderer->AddViewProp(labelActor);
     renderer->AddViewProp(pointActor);
-    // if (std::find(needsTile.cbegin(), needsTile.cend(), titles[i]) !=
-    //     needsTile.cend())
-    // {
-    //   auto tileActor = MakeTile(uGrids[i]->GetBounds(), 0.1, 0.05);
-    //   tileActor->GetProperty()->SetColor(
-    //       colors->GetColor3d("SpringGreen").GetData());
-    //   tileActor->GetProperty()->SetOpacity(0.3);
-    //   renderer->AddViewProp(tileActor);
-    // }
+    if (std::find(needsTile.cbegin(), needsTile.cend(), name) !=
+        needsTile.cend()) {
+      auto tileActor = MakeTile(cells[name].first->GetBounds(), 0.1, 0.05);
+      tileActor->GetProperty()->SetColor(
+          colors->GetColor3d("SpringGreen").GetData());
+      tileActor->GetProperty()->SetOpacity(0.3);
+      renderer->AddViewProp(tileActor);
+    }
 
-    renderers.push_back(renderer);
+    // renderer->Render();
+    renderer->ResetCamera();
+    renderer->GetActiveCamera()->Azimuth(cells[name].second[0]);
+    renderer->GetActiveCamera()->Elevation(cells[name].second[1]);
+    renderer->GetActiveCamera()->Dolly(cells[name].second[2]);
+    renderer->ResetCameraClippingRange();
 
-    renWin->AddRenderer(renderers[i]);
+    renWin->AddRenderer(renderer);
+    renderers[name] = renderer;
   }
 
-  // Set up the viewports
-  int gridRowDimensions = 4;
-  int gridColumnDimensions = 4;
-
-  renWin->SetSize(rendererSize * gridColumnDimensions,
-                  rendererSize * gridRowDimensions);
-
-  for (int row = 0; row < gridRowDimensions; row++)
-  {
-    for (int col = 0; col < gridColumnDimensions; col++)
-    {
-      int index = row * gridColumnDimensions + col;
-
-      // Set the renderer's viewport dimensions (xmin, ymin, xmax, ymax)
-      //  within the render window.
-      // Note that for the Y values, we need to subtract the row index
-      //  from grid rows because the viewport Y axis points upwards
-      //  and we want to draw the grid from top to down.
-      double viewport[4] = {
-          static_cast<double>(col) / gridColumnDimensions,
-          static_cast<double>(gridRowDimensions - row - 1) / gridRowDimensions,
-          static_cast<double>(col + 1) / gridColumnDimensions,
-          static_cast<double>(gridRowDimensions - row) / gridRowDimensions};
-      // std::cout << viewport[0] << " " << viewport[1]
-      //           << " " << viewport[2] << " "<< viewport[3] << std::endl;
-      if (index > int(renderers.size()) - 1)
-      {
-        // Add a renderer even if there is no actor.
-        // This makes the render window background all the same color.
-        vtkNew<vtkRenderer> ren;
-        ren->SetBackground(colors->GetColor3d("CornflowerBlue").GetData());
-        ren->SetViewport(viewport);
-        renWin->AddRenderer(ren);
-        continue;
-      }
-
-      renderers[index]->SetBackground(
-          colors->GetColor3d("CornflowerBlue").GetData());
-      renderers[index]->SetViewport(viewport);
-      renderers[index]->ResetCamera();
-      switch (index)
-      {
-      case 0:
-        // VTK_VERTEX (=1)
-        renderers[index]->GetActiveCamera()->Azimuth(30);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
-        renderers[index]->GetActiveCamera()->Dolly(0.1);
-        break;
-      case 1:
-        // VTK_POLY_VERTEX (=2)
-        renderers[index]->GetActiveCamera()->Azimuth(30);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
-        renderers[index]->GetActiveCamera()->Dolly(0.8);
-        break;
-      case 2:
-        // VTK_LINE (=3)
-        renderers[index]->GetActiveCamera()->Azimuth(30);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
-        renderers[index]->GetActiveCamera()->Dolly(0.4);
-        break;
-      case 3:
-        // VTK_POLY_LINE (=4)
-        renderers[index]->GetActiveCamera()->Azimuth(30);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
-        renderers[index]->GetActiveCamera()->Dolly(1.0);
-        break;
-      case 4:
-        // VTK_TRIANGLE (=5)
-        renderers[index]->GetActiveCamera()->Azimuth(30);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
-        renderers[index]->GetActiveCamera()->Dolly(0.7);
-        break;
-      case 5:
-        // VTK_TRIANGLE_STRIP (=6)
-        renderers[index]->GetActiveCamera()->Azimuth(30);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
-        renderers[index]->GetActiveCamera()->Dolly(1.1);
-        break;
-      case 6:
-        // VTK_POLYGON (=7)
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(-45);
-        renderers[index]->GetActiveCamera()->Dolly(1.0);
-        break;
-      case 7:
-        // VTK_PIXEL (=8)
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(-45);
-        renderers[index]->GetActiveCamera()->Dolly(1.0);
-        break;
-      case 8:
-        // VTK_QUAD (=9)
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(-45);
-        renderers[index]->GetActiveCamera()->Dolly(1.0);
-        break;
-      case 9:
-        // VTK_TETRA (=10)
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(-45);
-        renderers[index]->GetActiveCamera()->Dolly(0.95);
-        break;
-      case 10:
-        // VTK_VOXEL (=11)
-        renderers[index]->GetActiveCamera()->Azimuth(-22.5);
-        renderers[index]->GetActiveCamera()->Elevation(15);
-        renderers[index]->GetActiveCamera()->Dolly(1.0);
-        break;
-      case 11:
-        // VTK_HEXAHEDRON (=12)
-        renderers[index]->GetActiveCamera()->Azimuth(-22.5);
-        renderers[index]->GetActiveCamera()->Elevation(15);
-        renderers[index]->GetActiveCamera()->Dolly(0.95);
-        break;
-      case 12:
-        // VTK_WEDGE (=13)
-        renderers[index]->GetActiveCamera()->Azimuth(-45);
-        renderers[index]->GetActiveCamera()->Elevation(15);
-        renderers[index]->GetActiveCamera()->Dolly(0.9);
-        break;
-      case 13:
-        // VTK_PYRAMID (=14)
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(-30);
-        renderers[index]->GetActiveCamera()->Dolly(1.0);
-        break;
-      // case 14:
-      //   // VTK_PENTAGONAL_PRISM (=15)
-      //   renderers[index]->GetActiveCamera()->Azimuth(-22.5);
-      //   renderers[index]->GetActiveCamera()->Elevation(15);
-      //   renderers[index]->GetActiveCamera()->Dolly(0.95);
-      //   break;
-      case 14:
-        // VTK_PENTAGONAL_PRISM (=15)
-        renderers[index]->GetActiveCamera()->Azimuth(-30);
-        renderers[index]->GetActiveCamera()->Elevation(15);
-        renderers[index]->GetActiveCamera()->Dolly(0.95);
-        break;
-      case 15:
-        // VTK_HEXAGONAL_PRISM (=16)
-        renderers[index]->GetActiveCamera()->Azimuth(-30);
-        renderers[index]->GetActiveCamera()->Elevation(15);
-        renderers[index]->GetActiveCamera()->Dolly(0.95);
-        break;
-      default:
-        renderers[index]->GetActiveCamera()->Azimuth(0);
-        renderers[index]->GetActiveCamera()->Elevation(0);
-        renderers[index]->GetActiveCamera()->Dolly(1.0);
-        break;
-      }
-      renderers[index]->ResetCameraClippingRange();
-    }
+  for (const auto &name : blankViewports) {
+    vtkNew<vtkRenderer> renderer;
+    renderer->SetBackground(colors->GetColor3d("CornflowerBlue").GetData());
+    renderer->SetViewport(viewports[name].data());
+    renWin->AddRenderer(renderer);
+    renderers[name] = renderer;
   }
 
   iRen->Initialize();
@@ -424,8 +304,36 @@ int main(int argc, char* argv[])
 }
 
 namespace {
-vtkNew<vtkUnstructuredGrid> MakeVertex()
-{
+
+cellMap GetNameCellOrientation() {
+  cellMap cells;
+
+  cells["VTK_VERTEX (=1)"] = cellPair(MakeVertex(), {30, -30, 0.1});
+  cells["VTK_POLY_VERTEX (=2)"] = cellPair(MakePolyVertex(), {30, -30, 0.8});
+  cells["VTK_LINE (=3)"] = cellPair(MakeLine(), {30, -30, 0.4});
+  cells["VTK_POLY_LINE (=4)"] = cellPair(MakePolyLine(), {30, -30, 1.0});
+  cells["VTK_TRIANGLE (=5)"] = cellPair(MakeTriangle(), {30, -30, 0.7});
+  cells["VTK_TRIANGLE_STRIP (=6)"] =
+      cellPair(MakeTriangleStrip(), {30, -30, 1.1});
+  cells["VTK_POLYGON (=7)"] = cellPair(MakePolygon(), {0, -45, 1.0});
+  cells["VTK_PIXEL (=8)"] = cellPair(MakePixel(), {0, -45, 1.0});
+  cells["VTK_QUAD (=9)"] = cellPair(MakeQuad(), {0, -45, 0});
+  cells["VTK_TETRA (=10)"] = cellPair(MakeTetra(), {0, -45, 0.95});
+  cells["VTK_VOXEL (=11)"] = cellPair(MakeVoxel(), {-22.5, 15, 0.95});
+  cells["VTK_HEXAHEDRON (=12)"] = cellPair(MakeHexahedron(), {-22.5, 15, 0.95});
+  cells["VTK_WEDGE (=13)"] = cellPair(MakeWedge(), {-45, 15, 1.0});
+  cells["VTK_PYRAMID (=14)"] = cellPair(MakePyramid(), {0, -30, 1.0});
+  // cells["VTK_PENTAGONAL_PRISM (=15)"]=cellPair(MakePentagonalPrism(), {-22.5,
+  // 15, 0.95});
+  cells["VTK_PENTAGONAL_PRISM (=15)"] =
+      cellPair(MakePentagonalPrism(), {-30, 15, 0.95});
+  cells["VTK_HEXAGONAL_PRISM (=16)"] =
+      cellPair(MakeHexagonalPrism(), {-30, 15, 0.95});
+
+  return cells;
+}
+
+vtkNew<vtkUnstructuredGrid> MakeVertex() {
   // A vertex is a cell that represents a 3D point
   int numberOfVertices = 1;
 
@@ -433,8 +341,7 @@ vtkNew<vtkUnstructuredGrid> MakeVertex()
   points->InsertNextPoint(0, 0, 0);
 
   vtkNew<vtkVertex> vertex;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     vertex->GetPointIds()->SetId(i, i);
   }
   vtkNew<vtkUnstructuredGrid> ug;
@@ -444,8 +351,7 @@ vtkNew<vtkUnstructuredGrid> MakeVertex()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakePolyVertex()
-{
+vtkNew<vtkUnstructuredGrid> MakePolyVertex() {
   // A polyvertex is a cell represents a set of 0D vertices
   int numberOfVertices = 6;
 
@@ -460,8 +366,7 @@ vtkNew<vtkUnstructuredGrid> MakePolyVertex()
   vtkNew<vtkPolyVertex> polyVertex;
   polyVertex->GetPointIds()->SetNumberOfIds(numberOfVertices);
 
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     polyVertex->GetPointIds()->SetId(i, i);
   }
 
@@ -472,8 +377,7 @@ vtkNew<vtkUnstructuredGrid> MakePolyVertex()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeLine()
-{
+vtkNew<vtkUnstructuredGrid> MakeLine() {
   // A line is a cell that represents a 1D point
   int numberOfVertices = 2;
 
@@ -482,8 +386,7 @@ vtkNew<vtkUnstructuredGrid> MakeLine()
   points->InsertNextPoint(0.5, 0.5, 0);
 
   vtkNew<vtkLine> line;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     line->GetPointIds()->SetId(i, i);
   }
 
@@ -494,8 +397,7 @@ vtkNew<vtkUnstructuredGrid> MakeLine()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakePolyLine()
-{
+vtkNew<vtkUnstructuredGrid> MakePolyLine() {
   // A polyline is a cell that represents a set of 1D lines
   int numberOfVertices = 5;
 
@@ -509,8 +411,7 @@ vtkNew<vtkUnstructuredGrid> MakePolyLine()
   vtkNew<vtkPolyLine> polyline;
   polyline->GetPointIds()->SetNumberOfIds(numberOfVertices);
 
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     polyline->GetPointIds()->SetId(i, i);
   }
 
@@ -521,8 +422,7 @@ vtkNew<vtkUnstructuredGrid> MakePolyLine()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeTriangle()
-{
+vtkNew<vtkUnstructuredGrid> MakeTriangle() {
   // A triangle is a cell that represents a 1D point
   int numberOfVertices = 3;
 
@@ -532,8 +432,7 @@ vtkNew<vtkUnstructuredGrid> MakeTriangle()
   points->InsertNextPoint(0.2, 1, 0);
 
   vtkNew<vtkTriangle> triangle;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     triangle->GetPointIds()->SetId(i, i);
   }
 
@@ -544,8 +443,7 @@ vtkNew<vtkUnstructuredGrid> MakeTriangle()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeTriangleStrip()
-{
+vtkNew<vtkUnstructuredGrid> MakeTriangleStrip() {
   // A triangle is a cell that represents a triangle strip
   int numberOfVertices = 10;
 
@@ -563,8 +461,7 @@ vtkNew<vtkUnstructuredGrid> MakeTriangleStrip()
 
   vtkNew<vtkTriangleStrip> trianglestrip;
   trianglestrip->GetPointIds()->SetNumberOfIds(numberOfVertices);
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     trianglestrip->GetPointIds()->SetId(i, i);
   }
 
@@ -576,8 +473,7 @@ vtkNew<vtkUnstructuredGrid> MakeTriangleStrip()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakePolygon()
-{
+vtkNew<vtkUnstructuredGrid> MakePolygon() {
   // A polygon is a cell that represents a polygon
   int numberOfVertices = 6;
 
@@ -591,8 +487,7 @@ vtkNew<vtkUnstructuredGrid> MakePolygon()
 
   vtkNew<vtkPolygon> polygon;
   polygon->GetPointIds()->SetNumberOfIds(numberOfVertices);
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     polygon->GetPointIds()->SetId(i, i);
   }
 
@@ -647,8 +542,7 @@ vtkNew<vtkUnstructuredGrid> MakeQuad()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeTetra()
-{
+vtkNew<vtkUnstructuredGrid> MakeTetra() {
   // Make a tetrahedron.
   int numberOfVertices = 4;
 
@@ -659,8 +553,7 @@ vtkNew<vtkUnstructuredGrid> MakeTetra()
   points->InsertNextPoint(0, 1, 1);
 
   vtkNew<vtkTetra> tetra;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     tetra->GetPointIds()->SetId(i, i);
   }
 
@@ -674,8 +567,7 @@ vtkNew<vtkUnstructuredGrid> MakeTetra()
   return unstructuredGrid;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeVoxel()
-{
+vtkNew<vtkUnstructuredGrid> MakeVoxel() {
   // A voxel is a representation of a regular grid in 3-D space.
   int numberOfVertices = 8;
 
@@ -690,8 +582,7 @@ vtkNew<vtkUnstructuredGrid> MakeVoxel()
   points->InsertNextPoint(1, 1, 1);
 
   vtkNew<vtkVoxel> voxel;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     voxel->GetPointIds()->SetId(i, i);
   }
 
@@ -702,8 +593,7 @@ vtkNew<vtkUnstructuredGrid> MakeVoxel()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeHexahedron()
-{
+vtkNew<vtkUnstructuredGrid> MakeHexahedron() {
   // A regular hexagon (cube) with all faces square and three squares around
   // each vertex is created below.
 
@@ -726,8 +616,7 @@ vtkNew<vtkUnstructuredGrid> MakeHexahedron()
 
   // Create a hexahedron from the points
   vtkNew<vtkHexahedron> hex;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     hex->GetPointIds()->SetId(i, i);
   }
 
@@ -739,8 +628,7 @@ vtkNew<vtkUnstructuredGrid> MakeHexahedron()
   return uGrid;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeWedge()
-{
+vtkNew<vtkUnstructuredGrid> MakeWedge() {
 
   // A wedge consists of two triangular ends and three rectangular faces.
 
@@ -756,8 +644,7 @@ vtkNew<vtkUnstructuredGrid> MakeWedge()
   points->InsertNextPoint(1, 0.5, 0.5);
 
   vtkNew<vtkWedge> wedge;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     wedge->GetPointIds()->SetId(i, i);
   }
 
@@ -768,8 +655,7 @@ vtkNew<vtkUnstructuredGrid> MakeWedge()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakePyramid()
-{
+vtkNew<vtkUnstructuredGrid> MakePyramid() {
   // Make a regular square pyramid.
   int numberOfVertices = 5;
 
@@ -788,8 +674,7 @@ vtkNew<vtkUnstructuredGrid> MakePyramid()
   points->InsertNextPoint(p4);
 
   vtkNew<vtkPyramid> pyramid;
-  for (int i = 0; i < numberOfVertices; ++i)
-  {
+  for (int i = 0; i < numberOfVertices; ++i) {
     pyramid->GetPointIds()->SetId(i, i);
   }
 
@@ -799,8 +684,7 @@ vtkNew<vtkUnstructuredGrid> MakePyramid()
 
   return ug;
 }
-vtkNew<vtkUnstructuredGrid> MakePentagonalPrism()
-{
+vtkNew<vtkUnstructuredGrid> MakePentagonalPrism() {
   vtkNew<vtkPentagonalPrism> pentagonalPrism;
 
   pentagonalPrism->GetPointIds()->SetId(0, 0);
@@ -834,8 +718,7 @@ vtkNew<vtkUnstructuredGrid> MakePentagonalPrism()
   return ug;
 }
 
-vtkNew<vtkUnstructuredGrid> MakeHexagonalPrism()
-{
+vtkNew<vtkUnstructuredGrid> MakeHexagonalPrism() {
   vtkNew<vtkHexagonalPrism> hexagonalPrism;
   hexagonalPrism->GetPointIds()->SetId(0, 0);
   hexagonalPrism->GetPointIds()->SetId(1, 1);
@@ -883,9 +766,8 @@ vtkNew<vtkUnstructuredGrid> MakeHexagonalPrism()
  * @param thicknessRatio - the thickness ratio in the Y direction, >= 0.
  * @return An actor corresponding to the tile.
  */
-vtkNew<vtkActor> MakeTile(double* const& bounds, double const& expansionFactor,
-                          double const& thicknessRatio)
-{
+vtkNew<vtkActor> MakeTile(double *const &bounds, double const &expansionFactor,
+                          double const &thicknessRatio) {
   std::vector<double> d_xyz = {bounds[1] - bounds[0], bounds[3] - bounds[2],
                                bounds[5] - bounds[4]};
   auto thickness = d_xyz[2] * std::abs(thicknessRatio);
