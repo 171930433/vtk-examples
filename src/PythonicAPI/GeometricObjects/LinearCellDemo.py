@@ -31,7 +31,11 @@ from vtkmodules.vtkCommonDataModel import (
     vtkVoxel,
     vtkWedge
 )
+# noinspection PyUnresolvedReferences
+from vtkmodules.vtkCommonTransforms import vtkTransform
 from vtkmodules.vtkFiltersCore import vtkAppendPolyData
+# noinspection PyUnresolvedReferences
+from vtkmodules.vtkFiltersGeneral import vtkTransformFilter
 from vtkmodules.vtkFiltersSources import (
     vtkCubeSource,
     vtkSphereSource
@@ -71,32 +75,39 @@ def get_program_parameters():
                         help='Render a wireframe.')
     group1.add_argument('-b', '--backface', action='store_true',
                         help='Display the back face in a different colour.')
+
+    parser.add_argument('-n', '--no_plinth', action='store_true',
+                        help='Remove the plinth.')
     args = parser.parse_args()
-    return args.wireframe, args.backface
+    return args.wireframe, args.backface, args.no_plinth
 
 
 def main():
-    wireframe_on, backface_on = get_program_parameters()
+    wireframe_on, backface_on, plinth_off = get_program_parameters()
 
     colors = vtkNamedColors()
 
     # Create one sphere for all.
     sphere = vtkSphereSource(phi_resolution=21, theta_resolution=21, radius=0.04)
 
-    cells = get_cell_orientation()
-    needs_a_tile = ('VTK_VOXEL (=11)',
-                    'VTK_HEXAHEDRON (=12)',
-                    'VTK_PENTAGONAL_PRISM (=15)',
-                    'VTK_HEXAGONAL_PRISM (=16)',
-                    )
+    cells = get_unstructured_grids()
+    keys = list(cells.keys())
+
+    add_plinth = ('VTK_TETRA (=10)',
+                  'VTK_VOXEL (=11)',
+                  'VTK_HEXAHEDRON (=12)',
+                  'VTK_WEDGE (=13)',
+                  'VTK_PYRAMID (=14)',
+                  'VTK_PENTAGONAL_PRISM (=15)',
+                  'VTK_HEXAGONAL_PRISM (=16)',
+                  )
+    lines = ('VTK_LINE (=3)', 'VTK_POLY_LINE (=4)')
 
     # Set up the viewports.
     grid_column_dimensions = 4
     grid_row_dimensions = 4
     renderer_size = 300
     window_size = (grid_column_dimensions * renderer_size, grid_row_dimensions * renderer_size)
-
-    keys = list(cells.keys())
 
     viewports = dict()
     VP_Params = namedtuple('VP_Params', ['viewport', 'border'])
@@ -146,13 +157,13 @@ def main():
                                     font_size=int(renderer_size / 18),
                                     justification=TextProperty.Justification.VTK_TEXT_CENTERED)
 
-    label_property = vtkTextProperty(color=colors.GetColor3d('FireBrick'),
-                                     bold=True, italic=False, shadow=False,
+    label_property = vtkTextProperty(color=colors.GetColor3d('DeepPink'),
+                                     bold=True, italic=False, shadow=True,
                                      font_family_as_string='Courier',
                                      font_size=int(renderer_size / 12),
                                      justification=TextProperty.Justification.VTK_TEXT_CENTERED)
 
-    back_property = vtkProperty(color=colors.GetColor3d('Coral'))
+    back_property = vtkProperty(color=colors.GetColor3d('DodgerBlue'))
 
     # Position text according to its length and centered in the viewport.
     text_positions = get_text_positions(keys,
@@ -178,7 +189,7 @@ def main():
         mapper = vtkDataSetMapper()
         cells[key][0] >> mapper
         actor = vtkActor(mapper=mapper)
-        if wireframe_on:
+        if wireframe_on or key in lines:
             actor.property.representation = Property.Representation.VTK_WIREFRAME
             actor.property.line_width = 2
             actor.property.opacity = 1
@@ -205,25 +216,23 @@ def main():
                                         source_connection=sphere.output_port)
         cells[key][0] >> point_mapper
         point_actor = vtkActor(mapper=point_mapper)
-        point_actor.property.color = colors.GetColor3d('Yellow')
-        point_actor.property.specular = 1.0
-        point_actor.property.specular_color = colors.GetColor3d('White')
-        point_actor.property.specular_power = 100
+        point_actor.property.color = colors.GetColor3d('Gold')
 
         viewport = viewports[key].viewport
         border = viewports[key].border
-        renderer = vtkRenderer(background=colors.GetColor3d('CornflowerBlue'), viewport=viewport)
-        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('Yellow'), line_width=4)
+        renderer = vtkRenderer(background=colors.GetColor3d('LightSteelBlue'), viewport=viewport)
+        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('MidnightBlue'), line_width=4)
 
         renderer.AddActor(actor)
         renderer.AddActor(label_actor)
         renderer.AddActor(point_actor)
-        # Add a plane.
-        if key in needs_a_tile:
-            tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.1, thickness_ratio=0.05)
-            tile_actor.GetProperty().SetColor(colors.GetColor3d('SpringGreen'))
-            tile_actor.GetProperty().SetOpacity(0.3)
-            renderer.AddActor(tile_actor)
+        if not plinth_off:
+            # Add a plinth.
+            if key in add_plinth:
+                tile_actor = make_tile(cells[key][0].GetBounds(), expansion_factor=0.5, thickness_ratio=0.05)
+                tile_actor.GetProperty().SetColor(colors.GetColor3d('Lavender'))
+                tile_actor.GetProperty().SetOpacity(0.3)
+                renderer.AddActor(tile_actor)
 
         # Create the text actor and representation.
         text_actor = vtkTextActor(input=key,
@@ -256,8 +265,8 @@ def main():
     for name in blank_viewports:
         viewport = viewports[name].viewport
         border = viewports[name].border
-        renderer = vtkRenderer(background=colors.GetColor3d('CornflowerBlue'), viewport=viewport)
-        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('Yellow'), line_width=4)
+        renderer = vtkRenderer(background=colors.GetColor3d('LightSteelBlue'), viewport=viewport)
+        draw_viewport_border(renderer, border=border, color=colors.GetColor3d('MidnightBlue'), line_width=4)
         ren_win.AddRenderer(renderer)
 
     for i in range(0, len(text_widgets)):
@@ -268,11 +277,11 @@ def main():
     iren.Start()
 
 
-def get_cell_orientation():
+def get_unstructured_grids():
     """
-    Get the linear cell names, the cells and initial orientations.
+    Get the unstructured grid names, the unstructured grid and initial orientations.
 
-    :return: The linear cell names, the cells and initial orientations.
+    :return: A dictionary of unstructured grids.
     """
 
     def make_orientation(azimuth: float = 0, elevation: float = 0, zoom: float = 1.0):
@@ -288,14 +297,13 @@ def get_cell_orientation():
         'VTK_POLYGON (=7)': (make_polygon(), make_orientation(0, -45, 1.0)),
         'VTK_PIXEL (=8)': (make_pixel(), make_orientation(0, -45, 1.0)),
         'VTK_QUAD (=9)': (make_quad(), make_orientation(0, -45, 0)),
-        'VTK_TETRA (=10)': (make_tetra(), make_orientation(0, -45, 0.95)),
+        'VTK_TETRA (=10)': (make_tetra(), make_orientation(20, 20, 1.0)),
         'VTK_VOXEL (=11)': (make_voxel(), make_orientation(-22.5, 15, 0.95)),
         'VTK_HEXAHEDRON (=12)': (make_hexahedron(), make_orientation(-22.5, 15, 0.95)),
-        'VTK_WEDGE (=13)': (make_wedge(), make_orientation(-45, 15, 1.0)),
-        'VTK_PYRAMID (=14)': (make_pyramid(), make_orientation(0, -30, 1.0)),
-        # 'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-22.5, 15, 0.95)),
-        'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-30, 15, 0.95)),
-        'VTK_HEXAGONAL_PRISM (=16)': (make_hexagonal_prism(), make_orientation(-30, 15, 0.95)),
+        'VTK_WEDGE (=13)': (make_wedge(), make_orientation(-30, 15, 1.0)),
+        'VTK_PYRAMID (=14)': (make_pyramid(), make_orientation(-60, 15, 1.0)),
+        'VTK_PENTAGONAL_PRISM (=15)': (make_pentagonal_prism(), make_orientation(-60, 10, 1.0)),
+        'VTK_HEXAGONAL_PRISM (=16)': (make_hexagonal_prism(), make_orientation(-60, 15, 1.0)),
     }
 
 
@@ -350,7 +358,7 @@ def make_poly_vertex():
 
 
 def make_line():
-    # A line is a cell that represents a 1D point
+    # A line is a cell that represents a 1D point.
     number_of_vertices = 2
 
     points = vtkPoints()
@@ -368,7 +376,7 @@ def make_line():
 
 
 def make_polyline():
-    # A polyline is a cell that represents a set of 1D lines
+    # A polyline is a cell that represents a set of 1D lines.
     number_of_vertices = 5
 
     points = vtkPoints()
@@ -391,7 +399,7 @@ def make_polyline():
 
 
 def make_triangle():
-    # A triangle is a cell that represents a 1D point
+    # A triangle is a cell that represents a triangle.
     number_of_vertices = 3
 
     points = vtkPoints()
@@ -410,7 +418,7 @@ def make_triangle():
 
 
 def make_triangle_strip():
-    # A triangle is a cell that represents a triangle strip
+    # A triangle is a cell that represents a triangle strip.
     number_of_vertices = 10
 
     points = vtkPoints()
@@ -425,19 +433,19 @@ def make_triangle_strip():
     points.InsertNextPoint(3.5, 0.8, 0)
     points.InsertNextPoint(4.5, 1.1, 0)
 
-    trianglestrip = vtkTriangleStrip()
-    trianglestrip.point_ids.SetNumberOfIds(number_of_vertices)
+    triangle_strip = vtkTriangleStrip()
+    triangle_strip.point_ids.SetNumberOfIds(number_of_vertices)
     for i in range(0, number_of_vertices):
-        trianglestrip.point_ids.SetId(i, i)
+        triangle_strip.point_ids.SetId(i, i)
 
     ug = vtkUnstructuredGrid(points=points)
-    ug.InsertNextCell(trianglestrip.GetCellType(), trianglestrip.GetPointIds())
+    ug.InsertNextCell(triangle_strip.GetCellType(), triangle_strip.GetPointIds())
 
     return ug
 
 
 def make_polygon():
-    # A polygon is a cell that represents a polygon
+    # A polygon is a cell that represents a polygon.
     number_of_vertices = 6
 
     points = vtkPoints()
@@ -460,17 +468,17 @@ def make_polygon():
 
 
 def make_pixel():
-    # A pixel is a cell that represents a pixel
+    # A pixel is a cell that represents a pixel.
+    number_of_vertices = 4
+
     pixel = vtkPixel()
     pixel.points.SetPoint(0, 0, 0, 0)
     pixel.points.SetPoint(1, 1, 0, 0)
     pixel.points.SetPoint(2, 0, 1, 0)
     pixel.points.SetPoint(3, 1, 1, 0)
 
-    pixel.point_ids.SetId(0, 0)
-    pixel.point_ids.SetId(1, 1)
-    pixel.point_ids.SetId(2, 2)
-    pixel.point_ids.SetId(3, 3)
+    for i in range(0, number_of_vertices):
+        pixel.point_ids.SetId(i, i)
 
     ug = vtkUnstructuredGrid(points=pixel.points)
     ug.InsertNextCell(pixel.GetCellType(), pixel.GetPointIds())
@@ -479,17 +487,17 @@ def make_pixel():
 
 
 def make_quad():
-    # A quad is a cell that represents a quad
+    # A quad is a cell that represents a quad.
+    number_of_vertices = 4
+
     quad = vtkQuad()
     quad.points.SetPoint(0, 0, 0, 0)
     quad.points.SetPoint(1, 1, 0, 0)
     quad.points.SetPoint(2, 1, 1, 0)
     quad.points.SetPoint(3, 0, 1, 0)
 
-    quad.point_ids.SetId(0, 0)
-    quad.point_ids.SetId(1, 1)
-    quad.point_ids.SetId(2, 2)
-    quad.point_ids.SetId(3, 3)
+    for i in range(0, number_of_vertices):
+        quad.point_ids.SetId(i, i)
 
     ug = vtkUnstructuredGrid(points=quad.points)
     ug.InsertNextCell(quad.cell_type, quad.point_ids)
@@ -498,14 +506,20 @@ def make_quad():
 
 
 def make_tetra():
-    # Make a tetrahedron.
     number_of_vertices = 4
+    # Make a tetrahedron.
 
     points = vtkPoints()
-    points.InsertNextPoint(0, 0, 0)
-    points.InsertNextPoint(1, 0, 0)
-    points.InsertNextPoint(1, 1, 0)
-    points.InsertNextPoint(0, 1, 1)
+    # points.InsertNextPoint(0, 0, 0)
+    # points.InsertNextPoint(1, 0, 0)
+    # points.InsertNextPoint(1, 1, 0)
+    # points.InsertNextPoint(0, 1, 1)
+
+    # Rotate the above points -90° about the X-axis.
+    points.InsertNextPoint((0.0, 0.0, 0.0))
+    points.InsertNextPoint((1.0, 0.0, 0.0))
+    points.InsertNextPoint((1.0, 0.0, -1.0))
+    points.InsertNextPoint((0.0, 1.0, -1.0))
 
     tetra = vtkTetra()
     for i in range(0, number_of_vertices):
@@ -516,6 +530,16 @@ def make_tetra():
 
     ug = vtkUnstructuredGrid(points=points)
     ug.SetCells(VTK_TETRA, cell_array)
+
+    # pd = vtkPolyData(points=points)
+    # t = vtkTransform()
+    # t.RotateX(-90)
+    # t.Translate(0, 0, 0)
+    # tf = vtkTransformFilter(transform=t)
+    # (pd >> tf).update()
+    # pts = tf.output.GetPoints()
+    # for i in range(0, pts.number_of_points):
+    #     print(f'points.InsertNextPoint({pts.GetPoint(i)})')
 
     return ug
 
@@ -545,16 +569,19 @@ def make_voxel():
 
 
 def make_hexahedron():
-    # A regular hexagon (cube) with all faces square and three squares around
-    # each vertex is created below.
+    """
+    A regular hexagon (cube) with all faces square and three squares
+     around each vertex is created below.
 
-    # Set up the coordinates of eight points
-    # (the two faces must be in counter-clockwise
-    # order as viewed from the outside).
+    Set up the coordinates of eight points, (the two faces must be
+     in counter-clockwise order as viewed from the outside).
+
+    :return:
+    """
 
     number_of_vertices = 8
 
-    # Create the points
+    # Create the points.
     points = vtkPoints()
     points.InsertNextPoint(0, 0, 0)
     points.InsertNextPoint(1, 0, 0)
@@ -565,7 +592,7 @@ def make_hexahedron():
     points.InsertNextPoint(1, 1, 1)
     points.InsertNextPoint(0, 1, 1)
 
-    # Create a hexahedron from the points
+    # Create a hexahedron from the points.
     hexhedr = vtkHexahedron()
     for i in range(0, number_of_vertices):
         hexhedr.point_ids.SetId(i, i)
@@ -578,27 +605,27 @@ def make_hexahedron():
 
 
 def make_wedge():
-    # A wedge consists of two triangular ends and three rectangular faces.
-
     number_of_vertices = 6
+    # A wedge consists of two triangular ends and three rectangular faces.
 
     points = vtkPoints()
 
     # Original Points.
-    points.InsertNextPoint(0, 1, 0)
-    points.InsertNextPoint(0, 0, 0)
-    points.InsertNextPoint(0, 0.5, 0.5)
-    points.InsertNextPoint(1, 1, 0)
-    points.InsertNextPoint(1, 0.0, 0.0)
-    points.InsertNextPoint(1, 0.5, 0.5)
+    # points.InsertNextPoint(0, 1, 0)
+    # points.InsertNextPoint(0, 0, 0)
+    # points.InsertNextPoint(0, 0.5, 0.5)
+    # points.InsertNextPoint(1, 1, 0)
+    # points.InsertNextPoint(1, 0.0, 0.0)
+    # points.InsertNextPoint(1, 0.5, 0.5)
 
-    # RotateX(-90), Translate(0,-1,0).
-    # points.InsertNextPoint(0.0, 0.0, 0.0)
-    # points.InsertNextPoint(0.0,0 , 1.0)
-    # points.InsertNextPoint(0.0, 0.5, 0.5)
-    # points.InsertNextPoint(1.0, 0.0, 0.0)
-    # points.InsertNextPoint(1.0, 0, 1.0)
-    # points.InsertNextPoint(1.0, 0.5, 0.5)
+    # Rotate the above points -90° about the X-axis
+    # and translate -1 along the Y-axis.
+    points.InsertNextPoint(0.0, 0.0, 0.0)
+    points.InsertNextPoint(0.0, 0, 1.0)
+    points.InsertNextPoint(0.0, 0.5, 0.5)
+    points.InsertNextPoint(1.0, 0.0, 0.0)
+    points.InsertNextPoint(1.0, 0, 1.0)
+    points.InsertNextPoint(1.0, 0.5, 0.5)
 
     wedge = vtkWedge()
     for i in range(0, number_of_vertices):
@@ -609,7 +636,6 @@ def make_wedge():
 
     # pd = vtkPolyData(points=points)
     # t = vtkTransform()
-    # # t.Translate(1,1,1)
     # t.RotateX(-90)
     # t.Translate(0,-1,0)
     # tf = vtkTransformFilter(transform=t)
@@ -628,18 +654,18 @@ def make_pyramid():
     points = vtkPoints()
 
     # Original points.
-    p0 = [1.0, 1.0, 0.0]
-    p1 = [-1.0, 1.0, 0.0]
-    p2 = [-1.0, -1.0, 0.0]
-    p3 = [1.0, -1.0, 0.0]
-    p4 = [0.0, 0.0, 1.0]
+    # p0 = [1.0, 1.0, 0.0]
+    # p1 = [-1.0, 1.0, 0.0]
+    # p2 = [-1.0, -1.0, 0.0]
+    # p3 = [1.0, -1.0, 0.0]
+    # p4 = [0.0, 0.0, 1.0]
 
-    # # RotateX(-90)
-    # p0 = (1.0, 0, -1.0)
-    # p1 = (-1.0, 0, -1.0)
-    # p2 = (-1.0, 0, 1.0)
-    # p3 = (1.0, 0, 1.0)
-    # p4 = (0.0, 2.0, 0)
+    # Rotate the above points -90° about the X-axis.
+    p0 = (1.0, 0, -1.0)
+    p1 = (-1.0, 0, -1.0)
+    p2 = (-1.0, 0, 1.0)
+    p3 = (1.0, 0, 1.0)
+    p4 = (0.0, 2.0, 0)
 
     points.InsertNextPoint(p0)
     points.InsertNextPoint(p1)
@@ -668,18 +694,9 @@ def make_pyramid():
 
 
 def make_pentagonal_prism():
-    pentagonal_prism = vtkPentagonalPrism()
+    number_of_vertices = 10
 
-    pentagonal_prism.point_ids.SetId(0, 0)
-    pentagonal_prism.point_ids.SetId(1, 1)
-    pentagonal_prism.point_ids.SetId(2, 2)
-    pentagonal_prism.point_ids.SetId(3, 3)
-    pentagonal_prism.point_ids.SetId(4, 4)
-    pentagonal_prism.point_ids.SetId(5, 5)
-    pentagonal_prism.point_ids.SetId(6, 6)
-    pentagonal_prism.point_ids.SetId(7, 7)
-    pentagonal_prism.point_ids.SetId(8, 8)
-    pentagonal_prism.point_ids.SetId(9, 9)
+    pentagonal_prism = vtkPentagonalPrism()
 
     scale = 2.0
     pentagonal_prism.points.SetPoint(0, 11 / scale, 10 / scale, 10 / scale)
@@ -693,6 +710,9 @@ def make_pentagonal_prism():
     pentagonal_prism.points.SetPoint(8, 12 / scale, 14 / scale, 14 / scale)
     pentagonal_prism.points.SetPoint(9, 10 / scale, 12 / scale, 14 / scale)
 
+    for i in range(0, number_of_vertices):
+        pentagonal_prism.point_ids.SetId(i, i)
+
     ug = vtkUnstructuredGrid(points=pentagonal_prism.points)
     ug.InsertNextCell(pentagonal_prism.cell_type, pentagonal_prism.point_ids)
 
@@ -700,19 +720,9 @@ def make_pentagonal_prism():
 
 
 def make_hexagonal_prism():
+    number_of_vertices = 12
+
     hexagonal_prism = vtkHexagonalPrism()
-    hexagonal_prism.point_ids.SetId(0, 0)
-    hexagonal_prism.point_ids.SetId(1, 1)
-    hexagonal_prism.point_ids.SetId(2, 2)
-    hexagonal_prism.point_ids.SetId(3, 3)
-    hexagonal_prism.point_ids.SetId(4, 4)
-    hexagonal_prism.point_ids.SetId(5, 5)
-    hexagonal_prism.point_ids.SetId(6, 6)
-    hexagonal_prism.point_ids.SetId(7, 7)
-    hexagonal_prism.point_ids.SetId(8, 8)
-    hexagonal_prism.point_ids.SetId(9, 9)
-    hexagonal_prism.point_ids.SetId(10, 10)
-    hexagonal_prism.point_ids.SetId(11, 11)
 
     scale = 2.0
     hexagonal_prism.points.SetPoint(0, 11 / scale, 10 / scale, 10 / scale)
@@ -727,6 +737,9 @@ def make_hexagonal_prism():
     hexagonal_prism.points.SetPoint(9, 13 / scale, 14 / scale, 14 / scale)
     hexagonal_prism.points.SetPoint(10, 11 / scale, 14 / scale, 14 / scale)
     hexagonal_prism.points.SetPoint(11, 10 / scale, 12 / scale, 14 / scale)
+
+    for i in range(0, number_of_vertices):
+        hexagonal_prism.point_ids.SetId(i, i)
 
     ug = vtkUnstructuredGrid(points=hexagonal_prism.points)
     ug.InsertNextCell(hexagonal_prism.cell_type, hexagonal_prism.point_ids)
