@@ -6,6 +6,9 @@ repo_url: https://github.com/Kitware/vtk-examples
 
 theme:
     name: material
+    features:
+        - content.code.copy
+        - content.code.select
     custom_dir: custom_theme/
 
 markdown_extensions:
@@ -20,6 +23,7 @@ markdown_extensions:
     - footnotes
     - toc:
         permalink: true
+
 #google_analytics:
 #    -  'UA-3660134-4'
 #    -  'auto'
