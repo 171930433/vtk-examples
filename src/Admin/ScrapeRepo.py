@@ -673,7 +673,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
     :param available_languages: Available languages
     :param src_path: The path to the sources.
     :param doc_path: The path to the docs.
-    :param site_url: The website URL.
+    :param site_url: The repository site URL.
     :param web_repo_url: The web repository URL.
     :param vtk_modules_cache: The VTK modules cache.
     :param example_to_cmake: A dictionary to hold CMakeLists.txt files.
@@ -712,7 +712,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
             with open(dest, 'w') as md_file:
                 #  This is the link to the file in the repository.
                 #  Clean the path (if needed).
-                split_pth = urlsplit(f'{site_url}//-/blob//master/{"//".join(parts[-4:])}')
+                split_pth = urlsplit(f'{site_url}/-/blob/master/{"/".join(parts[-4:])}')
                 split_pth=split_pth._replace(path=split_pth.path.replace('//', '/'))
                 rep_src_link = f'Repository source: [{source_path.stem}]({urlunsplit(split_pth)})\n\n'
                 md_file.write(rep_src_link)
@@ -1221,7 +1221,7 @@ def make_markdown_folder_example_page(example_paths, key, src_path, doc_path,
     :param key: The key to use in src_path.
     :param src_path: The path to the sources.
     :param doc_path: The path to the docs.
-    :param site_url: The website URL.
+    :param site_url: The repository site URL.
     :param web_repo_url: The web repository URL.
     :param vtk_classes: A set of known VTK Classes.
     :param stats: Statistics
