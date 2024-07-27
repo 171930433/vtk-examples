@@ -14,7 +14,7 @@ import tempfile
 import time
 from collections import Counter, defaultdict
 from pathlib import Path, PurePath
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urljoin, urlparse, urlsplit, urlunsplit
 from urllib.request import urlopen
 
 try:
@@ -665,7 +665,7 @@ def check_excluded(exclusion_list, example_name):
 
 
 def make_markdown_example_page(example_paths, available_languages, src_path, doc_path,
-                               repo_name, web_repo_url, vtk_modules_cache,
+                               site_url, web_repo_url, vtk_modules_cache,
                                example_to_cmake, vtk_classes, stats):
     """
 
@@ -673,7 +673,7 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
     :param available_languages: Available languages
     :param src_path: The path to the sources.
     :param doc_path: The path to the docs.
-    :param repo_name: The repository name.
+    :param site_url: The repository site URL.
     :param web_repo_url: The web repository URL.
     :param vtk_modules_cache: The VTK modules cache.
     :param example_to_cmake: A dictionary to hold CMakeLists.txt files.
@@ -710,9 +710,12 @@ def make_markdown_example_page(example_paths, available_languages, src_path, doc
             dest.parent.mkdir(parents=True, exist_ok=True)
             # Generate markdown for the example web page
             with open(dest, 'w') as md_file:
-                md_file.write(
-                    '[' + repo_name + '](/)/[' + lang + '](/' + lang + ')/' + parts[
-                        -2] + '/' + source_path.stem + '\n\n')
+                #  This is the link to the file in the repository.
+                #  Clean the path (if needed).
+                split_pth = urlsplit(f'{site_url}/-/blob/master/{"/".join(parts[-4:])}')
+                split_pth=split_pth._replace(path=split_pth.path.replace('//', '/'))
+                rep_src_link = f'Repository source: [{source_path.stem}]({urlunsplit(split_pth)})\n\n'
+                md_file.write(rep_src_link)
                 if baseline_path.is_file():
                     image_url = '/'.join([web_repo_url, 'blob/gh-pages/src/Testing/Baseline', parts[-3], parts[-2],
                                           'Test' + source_path.stem + '.png?raw=true'])
@@ -1210,15 +1213,15 @@ def insert_thumbnails_and_links(web_repo_url, web_repo_path, example_paths, key,
     dest.write_text('\n'.join(txt))
 
 
-def make_md_example_page(example_paths, key, src_path, doc_path,
-                         repo_name, web_repo_url, vtk_classes, stats):
+def make_markdown_folder_example_page(example_paths, key, src_path, doc_path,
+                                      site_url, web_repo_url, vtk_classes, stats):
     """
 
     :param example_paths: Example paths
     :param key: The key to use in src_path.
     :param src_path: The path to the sources.
     :param doc_path: The path to the docs.
-    :param repo_name: The repository name.
+    :param site_url: The repository site URL.
     :param web_repo_url: The web repository URL.
     :param vtk_classes: A set of known VTK Classes.
     :param stats: Statistics
@@ -1243,9 +1246,12 @@ def make_md_example_page(example_paths, key, src_path, doc_path,
         image_path = (doc_path.parent / 'src') / v['relative path'].relative_to(v['relative path'].anchor)
         image_suffixes = ['.jpg', '.png']
         with open(dest, 'w') as md_file:
-            md_file.write(
-                '[' + repo_name + '](/)/[' + key + '](/' + key + ')/' + parts[
-                    -2] + '/' + v['relative path'].stem + '\n\n')
+            #  This is the link to the folder in the repository.
+            #  Clean the path (if needed).
+            split_pth = urlsplit(f'{site_url}/-/blob/master/src/{"/".join(parts[1:])}')
+            split_pth = split_pth._replace(path=split_pth.path.replace('//', '/'))
+            rep_src_link = f'Repository source: [{v['relative path'].stem}]({urlunsplit(split_pth)})\n\n'
+            md_file.write(rep_src_link)
             for suffix in image_suffixes:
                 image_file = (image_path / parts[-1]).with_suffix(suffix)
                 if image_file.exists():
@@ -1672,7 +1678,7 @@ def main():
                     cf.write(str(key) + ' ' + ' '.join(contents) + '\n')
 
     make_markdown_example_page(example_paths, available_languages, src_path, doc_path,
-                               repo_name, web_repo_url, vtk_modules_cache,
+                               site_url, web_repo_url, vtk_modules_cache,
                                example_to_cmake, vtk_classes, stats)
 
     # This is not added to the web pages but can be useful for debugging.
@@ -1692,7 +1698,7 @@ def main():
     extract_paths(web_repo_dir, src_path, folder_paths, 'Trame')
     copy_images(web_repo_dir, folder_paths, 'Trame')
     insert_thumbnails_and_links(web_repo_url, web_repo_path, folder_paths, 'Trame', vtk_classes, stats)
-    make_md_example_page(folder_paths, 'Trame', src_path, doc_path, repo_name, web_repo_url, vtk_classes, stats)
+    make_markdown_folder_example_page(folder_paths, 'Trame', src_path, doc_path, site_url, web_repo_url, vtk_classes, stats)
 
     # Create tarballs for each example
     make_tarballs(folder_paths, 'Trame', ref_mtime, stats)
