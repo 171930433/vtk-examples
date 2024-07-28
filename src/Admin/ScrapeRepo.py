@@ -1250,7 +1250,7 @@ def make_markdown_folder_example_page(example_paths, key, src_path, doc_path,
             #  Clean the path (if needed).
             split_pth = urlsplit(f'{site_url}/-/blob/master/src/{"/".join(parts[1:])}')
             split_pth = split_pth._replace(path=split_pth.path.replace('//', '/'))
-            rep_src_link = f'Repository source: [{v['relative path'].stem}]({urlunsplit(split_pth)})\n\n'
+            rep_src_link = f'Repository source: [{v["relative path"].stem}]({urlunsplit(split_pth)})\n\n'
             md_file.write(rep_src_link)
             for suffix in image_suffixes:
                 image_file = (image_path / parts[-1]).with_suffix(suffix)
