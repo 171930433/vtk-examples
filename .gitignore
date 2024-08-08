@@ -16,3 +16,4 @@ __pycache__/
 
 # QtCreator
 CMakeLists.txt.user
+.vscode/
